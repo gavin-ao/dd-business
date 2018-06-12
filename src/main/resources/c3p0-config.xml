@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<c3p0-config>
+	<!-- 数据库配置 -->
+	<named-config name="mysqlServer">
+
+		<property name="driverClass">com.mysql.jdbc.Driver</property>
+
+		<property name="jdbcUrl">jdbc:mysql://localhost:3306/dd-business?characterEncoding=utf-8</property>
+		<property name="user">root</property>
+		<property name="password">AOyg123!@#</property>
+
+		<!--<property name="jdbcUrl">jdbc:mysql://localhost:3306/dd-business?characterEncoding=utf-8</property>-->
+		<!--<property name="user">root</property>-->
+		<!--<property name="password"></property>-->
+
+		<property name="acquireIncrement">1</property><!-- 如果池中数据连接不够时一次增长多少个 -->
+		<property name="initialPoolSize">5</property>
+		<property name="minPoolSize">5</property>
+		<property name="maxPoolSize">20</property>
+		<property name="maxStatements">0</property>
+		<property name="maxStatementsPerConnection">100</property>
+        <!-- 如果在设置的时间范围连接没有被使用，则丢弃该连接，mysql的wait_timeout默认是28800，这里必须比mysql的wait_timeout小 -->
+        <property name="maxIdleTime">8000</property>
+	</named-config>
+
+</c3p0-config>

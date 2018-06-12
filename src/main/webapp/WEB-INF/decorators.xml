@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/decorators">
+    <excludes>
+        <pattern>/static/*</pattern>
+    </excludes>
+
+    <decorator name="demo" page="demoNomal.vm">
+        <pattern>/demo/queryPage</pattern>
+    </decorator>
+</decorators>
