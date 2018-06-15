@@ -22,16 +22,16 @@ public class AESUtil {
     /**
      * AES解密
      * @param content 密文
+     * @param keyByte
+     * @param ivByte
      * @return
      * @throws InvalidAlgorithmParameterException
-     * @throws NoSuchProviderException
      */
     public static byte[] decrypt(byte[] content, byte[] keyByte, byte[] ivByte) throws InvalidAlgorithmParameterException {
         initialize();
         try {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
             Key sKeySpec = new SecretKeySpec(keyByte, "AES");
-
             cipher.init(Cipher.DECRYPT_MODE, sKeySpec, generateIV(ivByte));// 初始化
             byte[] result = cipher.doFinal(content);
             return result;
@@ -62,6 +62,7 @@ public class AESUtil {
     }
     //生成iv
     public static AlgorithmParameters generateIV(byte[] iv) throws Exception{
+        IvParameterSpec wiv = new IvParameterSpec(iv);
         AlgorithmParameters params = AlgorithmParameters.getInstance("AES");
         params.init(new IvParameterSpec(iv));
         return params;

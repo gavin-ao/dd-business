@@ -86,13 +86,17 @@ public class WXUtil {
      * @return
      */
     private static JSONObject executeDecodeUserInfo(String encryptedData, String iv, String session_key) {
+        System.out.println("开始解密：-------");
+        System.out.println("encryptedData:"+encryptedData);
+        System.out.println("iv:"+iv);
+        System.out.println("session_key:"+session_key);
         JSONObject result = null;
         try {
             byte[] resultByte  = AESUtil.decrypt(Base64.decodeBase64(encryptedData), Base64.decodeBase64(session_key), Base64.decodeBase64(iv));
             if(null != resultByte && resultByte.length > 0){
                 String userInfo = new String(resultByte, "UTF-8");
                 result = JSONUtil.putMsg(true, "200", "解密成功");
-                result.put("userInfo", userInfo);
+                result.put("userInfo", JSONObject.parseObject(userInfo));
             }else{
                 result = JSONUtil.putMsg(true, "109", "解密失败");
             }
@@ -106,27 +110,30 @@ public class WXUtil {
 
     public static void main(String[] args){
 
-        String appId = "wx4f4bc4dec97d474b";
-        String sessionKey = "tiihtNczf5v6AKRyjwEUhQ==";
-        String encryptedData =
-                "CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZM"+
-                        "QmRzooG2xrDcvSnxIMXFufNstNGTyaGS"+
-                        "9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+"+
-                        "3hVbJSRgv+4lGOETKUQz6OYStslQ142d"+
-                        "NCuabNPGBzlooOmB231qMM85d2/fV6Ch"+
-                        "evvXvQP8Hkue1poOFtnEtpyxVLW1zAo6"+
-                        "/1Xx1COxFvrc2d7UL/lmHInNlxuacJXw"+
-                        "u0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn"+
-                        "/Hz7saL8xz+W//FRAUid1OksQaQx4CMs"+
-                        "8LOddcQhULW4ucetDf96JcR3g0gfRK4P"+
-                        "C7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB"+
-                        "6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns"+
-                        "/8wR2SiRS7MNACwTyrGvt9ts8p12PKFd"+
-                        "lqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYV"+
-                        "oKlaRv85IfVunYzO0IKXsyl7JCUjCpoG"+
-                        "20f0a04COwfneQAGGwd5oa+T8yO5hzuy"+
-                        "Db/XcxxmK01EpqOyuxINew==";
-        String iv = "r7BXXKkLb8qrSNn05n0qiA==";
+        String encryptedData = "teIbD8HVfkePUGKX9rzraaUkHQm0MoORc37GeoBtla/aho0E4ZqKD2HVqfSYG4lAeoYYuar9RNoNBfMiIPMKpnSNAmjtvz4xzieLAjoiBg/l0inzuAbzVsCHPqcyMdZE8R9AvwI1O9bGb3RQWcY87kIvO7tyXUY5YOsCmV4y6TIlyII5Cgf+/2qIvfjzedSJrreOaF5UjMsscYyfXQhWKx0EZf/n0pZzGjoUGZx/xCURP2GUr2kh5JQ2OIfvasIp9EBFxOhlN+phYjgG2JP2z/cbSz4qm+Tl8WHsPQMrCGPHerBSk4TSUS8hLI4Vkhds";
+        String iv = "g8HxUw0mAHadR8iqwHPIwg==";
+        String sessionKey = "XFeGmty0TKKqpIbegcK7ug==";
+//        String appId = "wx4f4bc4dec97d474b";
+//        String sessionKey = "tiihtNczf5v6AKRyjwEUhQ==";
+//        String encryptedData =
+//                "CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZM"+
+//                        "QmRzooG2xrDcvSnxIMXFufNstNGTyaGS"+
+//                        "9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+"+
+//                        "3hVbJSRgv+4lGOETKUQz6OYStslQ142d"+
+//                        "NCuabNPGBzlooOmB231qMM85d2/fV6Ch"+
+//                        "evvXvQP8Hkue1poOFtnEtpyxVLW1zAo6"+
+//                        "/1Xx1COxFvrc2d7UL/lmHInNlxuacJXw"+
+//                        "u0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn"+
+//                        "/Hz7saL8xz+W//FRAUid1OksQaQx4CMs"+
+//                        "8LOddcQhULW4ucetDf96JcR3g0gfRK4P"+
+//                        "C7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB"+
+//                        "6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns"+
+//                        "/8wR2SiRS7MNACwTyrGvt9ts8p12PKFd"+
+//                        "lqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYV"+
+//                        "oKlaRv85IfVunYzO0IKXsyl7JCUjCpoG"+
+//                        "20f0a04COwfneQAGGwd5oa+T8yO5hzuy"+
+//                        "Db/XcxxmK01EpqOyuxINew==";
+//        String iv = "r7BXXKkLb8qrSNn05n0qiA==";
         JSONObject j = executeDecodeUserInfo(encryptedData, iv, sessionKey);
 //        System.out.println(getSessionKey("sss"));
 //        System.out.println(getSessionKey("a","b","2"));

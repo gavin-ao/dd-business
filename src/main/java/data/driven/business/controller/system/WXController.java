@@ -30,6 +30,7 @@ public class WXController {
     @ResponseBody
     @RequestMapping(path = "/decodeUserInfo")
     public JSONObject decodeUserInfo(String encryptedData, String iv, String code){
+        encryptedData = encryptedData.replace(" ","+");
         return WXUtil.decodeUserInfo(encryptedData, iv, code);
     }
 
