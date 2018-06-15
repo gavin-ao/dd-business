@@ -85,7 +85,7 @@ public class WXUtil {
      * @param session_key   利用code获取的session_key
      * @return
      */
-    private static JSONObject executeDecodeUserInfo(String encryptedData, String iv, String session_key) {
+    public static JSONObject executeDecodeUserInfo(String encryptedData, String iv, String session_key) {
         System.out.println("开始解密：-------");
         System.out.println("encryptedData:"+encryptedData);
         System.out.println("iv:"+iv);
