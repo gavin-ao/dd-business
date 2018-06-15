@@ -21,4 +21,16 @@ public class WXController {
         return WXUtil.getSessionKey(appid, secret, code);
     }
 
+    /**
+     * 解密用户信息
+     * @param encryptedData 用户信息密文
+     * @param iv    初始向量 - 微信接口返回
+     * @param code  微信登录接口返回的code，用于获取session_key
+     */
+    @ResponseBody
+    @RequestMapping(path = "/decodeUserInfo")
+    public JSONObject decodeUserInfo(String encryptedData, String iv, String code){
+        return WXUtil.decodeUserInfo(encryptedData, iv, code);
+    }
+
 }
