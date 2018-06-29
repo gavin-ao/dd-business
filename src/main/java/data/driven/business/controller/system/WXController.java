@@ -57,10 +57,10 @@ public class WXController {
         if(sessionJsonObject.containsKey("session_key")){
             session_key = sessionJsonObject.getString("session_key");
             session_Code = code;
+            return true;
         }else{
             return false;
         }
-        return true;
     }
 
 }

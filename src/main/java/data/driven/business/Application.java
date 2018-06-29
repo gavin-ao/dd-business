@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ImportResource;
  * @author 何晋凯
  * @date 2018/06/04
  */
+
 @ComponentScan
 @ImportResource("classpath:spring-content.xml")
 @EnableAutoConfiguration(exclude={MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})

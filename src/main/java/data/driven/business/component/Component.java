@@ -4,6 +4,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
+import javax.servlet.DispatcherType;
+
 /**
  * @author 何晋凯
  * @date 2018/06/04
@@ -15,6 +17,15 @@ public class Component {
     public FilterRegistrationBean sitemeshFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new com.opensymphony.sitemesh.webapp.SiteMeshFilter());
+        registration.addUrlPatterns("/*");
+        return registration;
+    }
+
+    @Bean
+    public FilterRegistrationBean authorityFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new AuthorityFilter());
+        registration.setDispatcherTypes(DispatcherType.FORWARD,DispatcherType.INCLUDE,DispatcherType.REQUEST);
         registration.addUrlPatterns("/*");
         return registration;
     }

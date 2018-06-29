@@ -37,6 +37,20 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <!-- 登录授权过滤器 -->
+    <filter>
+        <filter-name>authority-filter</filter-name>
+        <filter-class>data.driven.business.component.AuthorityFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>authority-filter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+
     <!-- sitemesh配置 -->
     <filter>
         <filter-name>site-mesh</filter-name>

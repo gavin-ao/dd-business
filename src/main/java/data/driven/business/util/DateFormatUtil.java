@@ -154,18 +154,18 @@ public class DateFormatUtil {
      * @param amount 添加的值
      * @return
      */
-    public static Date addDate(Date date, Integer type, Integer amount){
-        if(date == null || type == null || amount == null){
+    public static Date addDate(Date date, int type, int amount){
+        if(date == null){
             return null;
         }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int filed = 0;
-        if(type.intValue() == 1){
+        if(type == 1){
             filed = Calendar.YEAR;
-        }else if(type.intValue() == 2){
+        }else if(type == 2){
             filed = Calendar.MONTH;
-        }else if(type.intValue() == 3){
+        }else if(type == 3){
             filed = Calendar.DAY_OF_YEAR;
         }else{
             return null;
