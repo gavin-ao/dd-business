@@ -24,10 +24,12 @@ public class QRCodeUtil {
     private static final String fileType = "jpg"; // 二维码图片类型
 
     public static void main(String[] args)throws Exception {
-        String content = "http://101.201.34.29/tourism/scenery/findSceneryList?scenicSpotId=5b17a5bba9cbc1379427d3ba";
+//        String content = "http://101.201.34.29/tourism/scenery/findSceneryList?scenicSpotId=5b17a5bba9cbc1379427d3ba";
 //        content = decodeQRCode(filePath);
 //        System.out.println(content);
-        createQRCode(content, "D://sss.jpg");
+        String str = decodeQRCode( "e://a.jpg");
+        System.out.println(str);
+//        createQRCode(content, "e://a.jpg");
     }
 
     /**

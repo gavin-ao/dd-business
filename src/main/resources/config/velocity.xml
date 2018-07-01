@@ -20,7 +20,7 @@
 
 
     <!-- 配置视图的显示 -->
-    <bean id="ViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
         <property name="cache" value="true" />
         <property name="suffix" value=".vm" /><!-- 视图文件的后缀名 -->
         <property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml" />

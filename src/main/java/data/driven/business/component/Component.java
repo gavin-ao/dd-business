@@ -22,11 +22,24 @@ public class Component {
     }
 
     @Bean
-    public FilterRegistrationBean authorityFilterRegistration() {
+    public FilterRegistrationBean sessionFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(new AuthorityFilter());
+        registration.setFilter(new SessionFilter());
         registration.setDispatcherTypes(DispatcherType.FORWARD,DispatcherType.INCLUDE,DispatcherType.REQUEST);
         registration.addUrlPatterns("/*");
+        return registration;
+    }
+
+    /**
+     * 微信请求过滤器
+     * @return
+     */
+    @Bean
+    public FilterRegistrationBean wechatApiFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new WechatApiFilter());
+        registration.setDispatcherTypes(DispatcherType.FORWARD,DispatcherType.INCLUDE,DispatcherType.REQUEST);
+        registration.addUrlPatterns("/wechatapi/*");
         return registration;
     }
 

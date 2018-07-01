@@ -37,14 +37,28 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!-- 登录授权过滤器 -->
+    <!-- 默认请求过滤器，过滤非法请求 -->
     <filter>
-        <filter-name>authority-filter</filter-name>
-        <filter-class>data.driven.business.component.AuthorityFilter</filter-class>
+        <filter-name>session-filter</filter-name>
+        <filter-class>data.driven.business.component.SessionFilter</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>authority-filter</filter-name>
+        <filter-name>session-filter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+
+    <!-- 微信请求过滤器 -->
+    <filter>
+        <filter-name>wechat-api-filter</filter-name>
+        <filter-class>data.driven.business.component.WechatApiFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>wechat-api-filter</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>

@@ -2,7 +2,7 @@ package data.driven.business.controller.tourism;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import data.driven.business.business.system.PictureService;
+import data.driven.business.business.tourism.PictureService;
 import data.driven.business.business.tourism.TravelsService;
 import data.driven.business.entity.tourism.PictureEntity;
 import data.driven.business.entity.tourism.TravelsEntity;

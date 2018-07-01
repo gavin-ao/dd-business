@@ -13,6 +13,7 @@ public class Constant {
     public static String FILE_UPLOAD_PATH;
     /** 静态资源访问路径 **/
     public static String STATIC_FILE_PATH = "/static/file/";
+    public static final String SESSIONID_COOKIE_NAME = "SESSIONID";
 
     public void setFileUploadPath(String fileUploadPath) {
         FILE_UPLOAD_PATH = fileUploadPath;
