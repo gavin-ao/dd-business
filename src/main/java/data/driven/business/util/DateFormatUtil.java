@@ -174,4 +174,20 @@ public class DateFormatUtil {
         return calendar.getTime();
     }
 
+    /**
+     * 针对于yyyy-MM-dd格式的字符串，拼接23:59:59返回日期
+     * @param endDate
+     * @return
+     */
+    public static Date toEndDate(String endDate){
+        endDate += " 23:59:59";
+        SimpleDateFormat sdf = getLocal("yyyy-MM-dd HH:mm:ss");
+        try {
+            return sdf.parse(endDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

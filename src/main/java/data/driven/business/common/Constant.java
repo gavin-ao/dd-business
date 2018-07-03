@@ -14,6 +14,9 @@ public class Constant {
     /** 静态资源访问路径 **/
     public static String STATIC_FILE_PATH = "/static/file/";
     public static final String SESSIONID_COOKIE_NAME = "SESSIONID";
+    /** mysql日期格式字符串 **/
+    public static final String mysql_day_format = "%Y-%m-%d";
+    public static final String mysql_hour_format = "%Y-%m-%d %H";
 
     public void setFileUploadPath(String fileUploadPath) {
         FILE_UPLOAD_PATH = fileUploadPath;
