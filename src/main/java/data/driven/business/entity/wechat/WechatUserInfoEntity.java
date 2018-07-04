@@ -9,18 +9,18 @@ import java.util.Date;
  * @author hejinkai
  * @date 2018/6/26
  */
-public class UserInfoEntity {
+public class WechatUserInfoEntity {
 
     public static void main(String[] args){
         String data = "{\"nickName\":\"Band\",\"gender\":1,\"language\":\"zh_CN\",\"city\":\"Guangzhou\",\"province\":\"Guangdong\",\"country\":\"CN\",\"avatarUrl\":\"http:wx.qlogo.cn/mmopen/vi_32/aSKcBBPpibyKNicHNTMM0qJVh8Kjgiak2AHWr8MHM4WgMEm7GFhsf8OYrySdbvAMvTsw3mo8ibKicsnfN5pRjl1p8HQ/0\",\"unionId\":\"ocMvos6NjeKLIBqg5Mr9QjxrP1FA\",\"watermark\":{\"timestamp\":1477314187,\"appid\":\"wx4f4bc4dec97d474b\"}}";
         System.out.println(data);
-        UserInfoEntity u = JSONObject.parseObject(data, UserInfoEntity.class);
+        WechatUserInfoEntity u = JSONObject.parseObject(data, WechatUserInfoEntity.class);
         System.out.println(JSONObject.toJSONString(u));
 
     }
 
     /** 用户主键 **/
-    private String userInfoId;
+    private String wechatUserId;
     /** 用户昵称 **/
     private String nickName;
     /** gender **/
@@ -40,12 +40,12 @@ public class UserInfoEntity {
     /** 创建时间 **/
     private Date createAt;
 
-    public String getUserInfoId() {
-        return userInfoId;
+    public String getWechatUserId() {
+        return wechatUserId;
     }
 
-    public void setUserInfoId(String userInfoId) {
-        this.userInfoId = userInfoId;
+    public void setWechatUserId(String wechatUserId) {
+        this.wechatUserId = wechatUserId;
     }
 
     public String getNickName() {

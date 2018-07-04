@@ -3,7 +3,7 @@ package data.driven.business.business.wechat.impl;
 import data.driven.business.business.wechat.WechatUserService;
 import data.driven.business.dao.JDBCBaseDao;
 import data.driven.business.util.UUIDUtil;
-import data.driven.business.vo.tourism.UserInfoVO;
+import data.driven.business.vo.wechat.WechatUserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +21,11 @@ public class WechatUserServiceImpl implements WechatUserService {
     private JDBCBaseDao jdbcBaseDao;
 
     @Override
-    public UserInfoVO getUserInfoByOpenId(String openId) {
-        String sql = "select u.user_info_id,u.nick_name,u.gender,u.language,u.city,u.province,u.country,u.avatar_url,u.union_id,u.create_at,u.open_id from wechat_user_info u" +
-                " left join wechat_app_user_mapping aum on aum.user_info_id = u.user_info_id" +
+    public WechatUserInfoVO getUserInfoByOpenId(String openId) {
+        String sql = "select u.wechat_user_id,u.nick_name,u.gender,u.language,u.city,u.province,u.country,u.avatar_url,u.union_id,u.create_at,u.open_id,aum.app_info_id,aum.wechat_map_id from wechat_user_info u" +
+                " left join wechat_app_user_mapping aum on aum.wechat_user_id = u.wechat_user_id" +
                 " where aum.open_id = ?";
-        List<UserInfoVO> list = jdbcBaseDao.queryList(UserInfoVO.class, sql, openId);
+        List<WechatUserInfoVO> list = jdbcBaseDao.queryList(WechatUserInfoVO.class, sql, openId);
         if(list != null && list.size() > 0){
             return list.get(0);
         }
@@ -33,10 +33,10 @@ public class WechatUserServiceImpl implements WechatUserService {
     }
 
     @Override
-    public UserInfoVO getUserInfoByUnionId(String unionId) {
-        String sql = "select u.user_info_id,u.nick_name,u.gender,u.language,u.city,u.province,u.country,u.avatar_url,u.union_id,u.create_at from wechat_user_info u" +
+    public WechatUserInfoVO getUserInfoByUnionId(String unionId) {
+        String sql = "select u.wechat_user_id,u.nick_name,u.gender,u.language,u.city,u.province,u.country,u.avatar_url,u.union_id,u.create_at from wechat_user_info u" +
                 " where u.union_id = ?";
-        List<UserInfoVO> list = jdbcBaseDao.queryList(UserInfoVO.class, sql, unionId);
+        List<WechatUserInfoVO> list = jdbcBaseDao.queryList(WechatUserInfoVO.class, sql, unionId);
         if(list != null && list.size() > 0){
             return list.get(0);
         }
@@ -44,9 +44,9 @@ public class WechatUserServiceImpl implements WechatUserService {
     }
 
     @Override
-    public String addUserInfo(UserInfoVO userInfo) {
+    public String addUserInfo(WechatUserInfoVO userInfo) {
         String userInfoId = UUIDUtil.getUUID();
-        userInfo.setUserInfoId(userInfoId);
+        userInfo.setWechatUserId(userInfoId);
         userInfo.setCreateAt(new Date());
         jdbcBaseDao.insert(userInfo, "wechat_user_info");
         return userInfoId;
@@ -55,8 +55,20 @@ public class WechatUserServiceImpl implements WechatUserService {
     @Override
     public String addUserAndAppMap(String appInfoId, String userInfoId, String openId) {
         String id = UUIDUtil.getUUID();
-        String sql = "inser into (wechat_map_id,app_info_id,user_info_id,open_id,create_at) values(?,?,?,?,?)";
+        String sql = "inser into (wechat_map_id,app_info_id,wechat_user_id,open_id,create_at) values(?,?,?,?,?)";
         jdbcBaseDao.executeUpdate(sql, id,appInfoId, userInfoId, openId, new Date());
         return id;
+    }
+
+    @Override
+    public WechatUserInfoVO getUserInfoByUserIdAndAppInfoId(String userInfoId, String appInfoId) {
+        String sql = "select u.wechat_user_id,u.nick_name,u.gender,u.language,u.city,u.province,u.country,u.avatar_url,u.union_id,u.create_at,u.open_id,aum.app_info_id,aum.wechat_map_id from wechat_user_info u" +
+                " left join wechat_app_user_mapping aum on aum.wechat_user_id = u.wechat_user_id" +
+                " where u.wechat_user_id = ? and aum.app_info_id = ?";
+        List<WechatUserInfoVO> list = jdbcBaseDao.queryList(WechatUserInfoVO.class, sql, userInfoId, appInfoId);
+        if(list != null && list.size() > 0){
+            return list.get(0);
+        }
+        return null;
     }
 }

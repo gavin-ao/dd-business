@@ -1,6 +1,6 @@
 package data.driven.business.common;
 
-import data.driven.business.vo.tourism.UserInfoVO;
+import data.driven.business.vo.wechat.WechatUserInfoVO;
 
 /**
  * redis缓存的session实体内容
@@ -10,8 +10,8 @@ import data.driven.business.vo.tourism.UserInfoVO;
 public class WechatApiSessionBean {
     /** sessionKey **/
     private String sessionKey;
-    /** sessionKey **/
-    private UserInfoVO userInfo;
+    /** userInfo **/
+    private WechatUserInfoVO userInfo;
 
     public String getSessionKey() {
         return sessionKey;
@@ -21,11 +21,12 @@ public class WechatApiSessionBean {
         this.sessionKey = sessionKey;
     }
 
-    public UserInfoVO getUserInfo() {
+    public WechatUserInfoVO getUserInfo() {
         return userInfo;
     }
 
-    public void setUserInfo(UserInfoVO userInfo) {
+    public void setUserInfo(WechatUserInfoVO userInfo) {
         this.userInfo = userInfo;
     }
+
 }

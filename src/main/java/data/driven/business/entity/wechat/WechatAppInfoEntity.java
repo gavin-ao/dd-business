@@ -7,7 +7,7 @@ import java.util.Date;
  * @author hejinkai
  * @date 2018/6/27
  */
-public class AppInfoEntity {
+public class WechatAppInfoEntity {
     /** 主键 **/
     private String appInfoId;
     /** 小程序名称 **/

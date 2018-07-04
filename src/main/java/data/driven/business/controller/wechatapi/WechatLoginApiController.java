@@ -1,13 +1,14 @@
 package data.driven.business.controller.wechatapi;
 
 import com.alibaba.fastjson.JSONObject;
-import data.driven.business.business.wechat.AppInfoService;
+import data.driven.business.business.wechat.WechatAppInfoService;
+import data.driven.business.business.wechat.WechatLoginLogService;
 import data.driven.business.business.wechat.WechatUserService;
 import data.driven.business.common.WechatApiSession;
 import data.driven.business.common.WechatApiSessionBean;
-import data.driven.business.entity.wechat.AppInfoEntity;
+import data.driven.business.entity.wechat.WechatAppInfoEntity;
 import data.driven.business.util.JSONUtil;
-import data.driven.business.vo.tourism.UserInfoVO;
+import data.driven.business.vo.wechat.WechatUserInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,33 +27,34 @@ import static data.driven.business.util.WXUtil.getSessionKey;
  */
 
 @Controller
-public class WechatLoginController {
+@RequestMapping(path = "/wechatapi/service")
+public class WechatLoginApiController {
 
-    private static final Logger logger = LoggerFactory.getLogger(WechatLoginController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WechatLoginApiController.class);
 
     @Autowired
-    private AppInfoService appInfoService;
+    private WechatAppInfoService wechatAppInfoService;
     @Autowired
     private WechatUserService wechatUserService;
+    @Autowired
+    private WechatLoginLogService wechatLoginLogService;
 
     @ResponseBody
     @RequestMapping(path = "/login")
     public JSONObject login(String code){
         //根据code获取sessionKey
         JSONObject sessionJsonObject = getSessionKey(code);
-        String session_key = null;
-//        if(sessionJsonObject.containsKey("session_key")){
-//            session_key = sessionJsonObject.getString("session_key");
-//        }else{
-//            return JSONUtil.putMsg(false, "101", "获取不到session_key，请重新登录");
-//        }
+        String sessionKey = null;
+        if(sessionJsonObject.containsKey("session_key")){
+            sessionKey = sessionJsonObject.getString("session_key");
+        }else{
+            return JSONUtil.putMsg(false, "101", "获取不到session_key，请重新登录");
+        }
         //设置缓存
         WechatApiSessionBean wechatApiSessionBean = new WechatApiSessionBean();
-        //测试reids
-        session_key = "XFeGmty0TKKqpIbegcK7ug==";
-        wechatApiSessionBean.setSessionKey(session_key);
+        wechatApiSessionBean.setSessionKey(sessionKey);
         if(sessionJsonObject.containsKey("openid")){
-            UserInfoVO userInfo = new UserInfoVO();
+            WechatUserInfoVO userInfo = new WechatUserInfoVO();
             userInfo.setOpenId(sessionJsonObject.getString("openid"));
             wechatApiSessionBean.setUserInfo(userInfo);
         }
@@ -64,11 +66,11 @@ public class WechatLoginController {
     }
 
     @ResponseBody
-    @RequestMapping(path = "/login/syncUser")
-    public JSONObject login(String encryptedData, String iv, String sessionID){
+    @RequestMapping(path = "/syncUser")
+    public JSONObject syncUser(String encryptedData, String iv, String sessionID){
         encryptedData = encryptedData.replace(" ","+");
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
-        UserInfoVO sUser = wechatApiSessionBean.getUserInfo();
+        WechatUserInfoVO sUser = wechatApiSessionBean.getUserInfo();
         String openId = null;
         if(sUser != null){
             openId = sUser.getOpenId();
@@ -94,32 +96,35 @@ public class WechatLoginController {
             return JSONUtil.putMsg(false, "103", "获取的信息有误，请重试");
         }
 
-        AppInfoEntity appInfoEntity = appInfoService.getAppInfo(appid);
-        if(appInfoEntity == null){
+        WechatAppInfoEntity wechatAppInfoEntity = wechatAppInfoService.getAppInfo(appid);
+        if(wechatAppInfoEntity == null){
             return JSONUtil.putMsg(false, "104", "小程序不存在，非法登录");
         }
-        UserInfoVO userObj = userJson.toJavaObject(UserInfoVO.class);
+        WechatUserInfoVO userObj = userJson.toJavaObject(WechatUserInfoVO.class);
         if(openId == null){
             openId = userObj.getUnionId();
         }
         //根据openId获取数据库中的用户信息
-        UserInfoVO userInfo = wechatUserService.getUserInfoByOpenId(openId);
+        WechatUserInfoVO userInfo = wechatUserService.getUserInfoByOpenId(openId);
         if(userInfo == null){
             //如果openId获取的用户为空，就根据unionId获取用户信息
             userInfo = wechatUserService.getUserInfoByUnionId(userObj.getUnionId());
-            String userInfoId = null;
+            String wechatUserInfoId = null;
             //如果用户信息为空，就新增用户到数据库中
             if(userInfo == null){
-                userInfoId = wechatUserService.addUserInfo(userInfo);
+                wechatUserInfoId = wechatUserService.addUserInfo(userInfo);
             }else{
-                userInfoId = userInfo.getUserInfoId();
+                wechatUserInfoId = userInfo.getWechatUserId();
             }
             //根据openId获取用户为空时，就新增一条用户关联app的关系信息到数据库中
-            wechatUserService.addUserAndAppMap(appInfoEntity.getAppInfoId(), userInfoId, openId);
+            wechatUserService.addUserAndAppMap(wechatAppInfoEntity.getAppInfoId(), wechatUserInfoId, openId);
+            userInfo = wechatUserService.getUserInfoByOpenId(openId);
         }
 
         wechatApiSessionBean.setUserInfo(userInfo);
         WechatApiSession.setSessionBean(sessionID, wechatApiSessionBean);
+        //插入登录日志
+        wechatLoginLogService.insertLoginLog(userInfo.getWechatUserId(), userInfo.getAppInfoId());
         JSONObject result = JSONUtil.putMsg(true, "200", "登录成功");
         return result;
     }

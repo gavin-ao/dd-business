@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import data.driven.business.common.WechatApiSessionBean;
 import data.driven.business.common.WechatApiSession;
 import data.driven.business.util.JSONUtil;
-import data.driven.business.vo.tourism.UserInfoVO;
+import data.driven.business.vo.wechat.WechatUserInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * @author hejinkai
+ * @author hejinkai - 可删除
  * @date 2018/6/29
  */
 @Controller
 @RequestMapping(path = "/wechatapi/user")
-public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+public class WechatUserApiController {
+    private static final Logger logger = LoggerFactory.getLogger(WechatUserApiController.class);
 
     /**
      * 获取登录用户信息
@@ -28,7 +28,7 @@ public class UserController {
     @RequestMapping(path = "/getUserInfoId")
     public JSONObject getUserInfoId(String sessionID){
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
-        UserInfoVO userInfo = wechatApiSessionBean.getUserInfo();
+        WechatUserInfoVO userInfo = wechatApiSessionBean.getUserInfo();
         userInfo.clearSensitiveInfo();
         JSONObject result = JSONUtil.putMsg(true, "200", "调用成功");
         result.put("userInfo", userInfo);

@@ -1,6 +1,6 @@
 package data.driven.business.business.wechat;
 
-import data.driven.business.vo.tourism.UserInfoVO;
+import data.driven.business.vo.wechat.WechatUserInfoVO;
 
 /**
  * 微信用户信息service
@@ -14,21 +14,21 @@ public interface WechatUserService {
      * @param openId
      * @return
      */
-    public UserInfoVO getUserInfoByOpenId(String openId);
+    public WechatUserInfoVO getUserInfoByOpenId(String openId);
 
     /**
      * 根据unionId查询用户信息
      * @param unionId
      * @return
      */
-    public UserInfoVO getUserInfoByUnionId(String unionId);
+    public WechatUserInfoVO getUserInfoByUnionId(String unionId);
 
     /**
      * 新增用户- 返回userId
      * @param userInfo
      * @return
      */
-    public String addUserInfo(UserInfoVO userInfo);
+    public String addUserInfo(WechatUserInfoVO userInfo);
 
     /**
      * 新增app与用户的关联
@@ -38,4 +38,13 @@ public interface WechatUserService {
      * @return
      */
     public String addUserAndAppMap(String appInfoId, String userInfoId, String openId);
+
+    /**
+     * 根据小程序和用户查询用户详情
+     * @param userInfoId
+     * @param appInfoId
+     * @return
+     */
+    public WechatUserInfoVO getUserInfoByUserIdAndAppInfoId(String userInfoId, String appInfoId);
+
 }
