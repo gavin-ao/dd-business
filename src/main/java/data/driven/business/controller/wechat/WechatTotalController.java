@@ -30,6 +30,7 @@ public class WechatTotalController {
      */
     @RequestMapping(path = "/totalActivityNum")
     public JSONObject totalActivityNum(String appInfoId, String startDate, String endDate){
+        System.out.println("tijiaoceshidaima");
         return wechatTotalService.totalActivityNum(appInfoId, startDate, endDate);
     }
 
