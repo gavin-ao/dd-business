@@ -41,9 +41,9 @@ public class WechatLoginApiController {
 
     @ResponseBody
     @RequestMapping(path = "/login")
-    public JSONObject login(String code){
+    public JSONObject login(String appid, String secret, String code){
         //根据code获取sessionKey
-        JSONObject sessionJsonObject = getSessionKey(code);
+        JSONObject sessionJsonObject = getSessionKey(appid, secret, code);
         String sessionKey = null;
         if(sessionJsonObject.containsKey("session_key")){
             sessionKey = sessionJsonObject.getString("session_key");

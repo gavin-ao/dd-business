@@ -35,7 +35,7 @@ public class WechatApiFilter implements Filter{
             noAuthority(request);
         }
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
-        if(wechatApiSessionBean != null && wechatApiSessionBean.getUserInfo() != null && wechatApiSessionBean.getUserInfo().getUserInfoId() != null){
+        if(wechatApiSessionBean != null && wechatApiSessionBean.getUserInfo() != null && wechatApiSessionBean.getUserInfo().getWechatUserId()!= null){
             filterChain.doFilter(request, response);
         }else{
             filterChain.doFilter(request, response);
