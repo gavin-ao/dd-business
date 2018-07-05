@@ -7,7 +7,6 @@ import data.driven.business.business.wechat.WechatUserService;
 import data.driven.business.common.WechatApiSession;
 import data.driven.business.common.WechatApiSessionBean;
 import data.driven.business.entity.wechat.WechatAppInfoEntity;
-import data.driven.business.entity.wechat.WechatUserInfoEntity;
 import data.driven.business.util.JSONUtil;
 import data.driven.business.vo.wechat.WechatUserInfoVO;
 import org.slf4j.Logger;
@@ -102,7 +101,7 @@ public class WechatLoginApiController {
         if(wechatAppInfoEntity == null){
             return JSONUtil.putMsg(false, "104", "小程序不存在，非法登录");
         }
-        WechatUserInfoEntity userObj = userJson.getJSONObject("userInfo").toJavaObject(WechatUserInfoEntity.class);
+        WechatUserInfoVO userObj = userJson.getJSONObject("userInfo").toJavaObject(WechatUserInfoVO.class);
 //        WechatUserInfoEntity userObj = userJson.getJSONObject("userInfo").toJavaObject(WechatUserInfoVO.class);
         if(openId == null){
             openId = userObj.getUnionId();
