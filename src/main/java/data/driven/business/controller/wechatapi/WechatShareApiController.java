@@ -49,7 +49,7 @@ public class WechatShareApiController {
         try{
             String shareId = wechatShareInfoService.insertShare(wechatApiSessionBean.getUserInfo().getWechatUserId(), content, wechatApiSessionBean.getUserInfo().getAppInfoId());
             JSONObject result = JSONUtil.putMsg(true, "200", "分享成功");
-//            result.put("shareId", shareId);
+            result.put("shareId", shareId);
             return result;
         }catch (Exception e){
             logger.error(e.getMessage(), e);
