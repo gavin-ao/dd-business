@@ -170,7 +170,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
 
         String format = getMysqlDateFormat(start, end);
         String sql = "select count(wsd.to_id) as count_num,DATE_FORMAT(wsd.share_at,'" + format + "') as group_time from wechat_share_detail wsd left join wechat_app_user_mapping waum on waum.wechat_map_id = wsd.to_id where wsd.app_info_id = ? and wsd.share_at between ? and ? and waum.create_at between ? and ? group by DATE_FORMAT(wsd.share_at,'" + format + "')";
-        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end);
+        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end, start, end);
         result.put("data", list);
         result.put("success", true);
         return result;

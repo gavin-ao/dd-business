@@ -1,137 +1,107 @@
-<link rel="stylesheet"
-      href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
-<div style="margin: 0;">
-    <div id="page-wrapper" class="person-edit-form">
-        <div class="main-page" style="height: auto; overflow: auto;display: flex;">
-            #parse("../decorators/frame/left.vm")
-            <div id="user_manage">
-                <div class="contain_head" style="">
-                    <div class="contain_head_left" style="">
-                        <div class="dropdown" style="">
-                            <button class="btn btn-default dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <span class="selectIndex"> 请选择</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li><a href="#">Separated link</a></li>
-                            </ul>
-                        </div>
+<div id="user_manage">
+    <div class="contain_head" style="">
+        <div class="contain_head_left" style="">
+            <div class="dropdown" style="">
+                <button class="btn btn-default dropdown-toggle" type="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="selectIndex"> 请选择</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li><a href="#">Separated link</a></li>
+                </ul>
+            </div>
 
-                    </div>
-                    <div class="contain_head_right">
-                        <div class="dropdown" style=" float: left;margin-right: 20px;">
-                            <button class="btn btn-default dropdown-toggle" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <span class="selectIndex"> 请选择</span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li><a href="#">Separated link</a></li>
-                            </ul>
-                        </div>
-                        <div style="float: left; margin-right: 20px;">
-                            <a href="">帮助</a>
-                        </div>
-                        <div style=" display: table-cell;vertical-align:middle;height: 80px;">
-                            <img src="/static/service/images/login/info.png" alt=""
-                                 style="vertical-align: middle;margin-top: -5px;margin-right: 20px;">
-                        </div>
-##                        <iframe src="/index.vm" width="200" height="200"></iframe>
-                    </div>
+        </div>
+        <div class="contain_head_right">
+            <div class="dropdown" style=" float: left;margin-right: 20px;">
+                <button class="btn btn-default dropdown-toggle" type="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="selectIndex"> 请选择</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li><a href="#">Separated link</a></li>
+                </ul>
+            </div>
+            <div style="float: left; margin-right: 20px;">
+                <a href="">帮助</a>
+            </div>
+            <div style=" display: table-cell;vertical-align:middle;height: 80px;">
+                <img src="/static/service/images/login/info.png" alt=""
+                     style="vertical-align: middle;margin-top: -5px;margin-right: 20px;">
+            </div>
+        ##                        <iframe src="/index.vm" width="200" height="200"></iframe>
+        </div>
 
+    </div>
+    <div class="contain_main" style="">
+        <div class="contain_main_head" style="" id="contain_main_head">
+            <div class="dateSelect">
+                <input type="radio" name="chose" class="todayTime" checked="true"> 今日
+            </div>
+            <div class="dateSelect">
+                <input type="radio" name="chose"  class="yesterdayTime"> 昨日
+            </div>
+            <div class="dateSelect">
+                <input type="radio" name="chose" class="Nearly7days"> 近7日
+            </div>
+            <div class="dateSelect">
+                <input type="radio" name="chose" class="userdefined"> 自定义
+            </div>
+        </div>
+        <div class="datePicker">
+            <input type="text" class="demo-input" placeholder="开始时间" id="startTime">至 <input type="text"
+                                                                                             class="demo-input"
+                                                                                             placeholder="结束时间"
+                                                                                             id="endTime">
+        </div>
+        <div class="contain_main_content">
+            <div class="contain_main_title">
+                <span class="title">核心数据</span><span><span  class="time1">2018-07-02</span>至<span class="time2">2017-07-02</span>数据</span>
+            </div>
+            <div class="contain_main_data" id="contain_main_data">
+                <div class="selectData" data-iden="activitySum">
+                    <p>活跃度(点击次数)</p>
+                    <p class="activitySum">3345</p>
                 </div>
-                <div class="contain_main" style="">
-                    <div class="contain_main_head" style="" id="contain_main_head">
-                        <div class="dateSelect">
-                            <input type="radio" name="chose" class="todayTime" checked="true"> 今日
-                        </div>
-                        <div class="dateSelect">
-                            <input type="radio" name="chose"  class="yesterdayTime"> 昨日
-                        </div>
-                        <div class="dateSelect">
-                            <input type="radio" name="chose" class="Nearly7days"> 近7日
-                        </div>
-                        <div class="dateSelect">
-                            <input type="radio" name="chose" class="userdefined"> 自定义
-                        </div>
-                    </div>
-                    <div class="datePicker">
-                        <input type="text" class="demo-input" placeholder="开始时间" id="startTime">至 <input type="text"
-                                                                                                         class="demo-input"
-                                                                                                         placeholder="结束时间"
-                                                                                                         id="endTime">
-                    </div>
-                    <div class="contain_main_content">
-                        <div class="contain_main_title">
-                            <span class="title">核心数据</span><span><span  class="time1">2018-07-02</span>至<span class="time2">2017-07-02</span>数据</span>
-                        </div>
-                        <div class="contain_main_data" id="contain_main_data">
-                            <div class="selectData" data-iden="activitySum">
-                                <p>活跃度(点击次数)</p>
-                                <p class="activitySum">3345</p>
-                            </div>
-                            <div data-iden="arealLimitsSum">
-                                <p>传播范围(点击人数)</p>
-                                <p class="activitySum">1234</p>
-                            </div>
-                            <div data-iden="newNumPeo">
-                                <p>裂变效果(新增人数)</p>
-                                <p class="activitySum">213</p>
-                            </div>
-                            <div data-iden="shareNum">
-                                <p>分享次数</p>
-                                <p class="activitySum">542</p>
-                            </div>
-                            <div data-iden="shareNumPeo">
-                                <p>分享人数</p>
-                                <p class="activitySum">431</p>
-                            </div>
-                        </div>
-                        <div class="contain_main_chart">
-                            <div class="contain_main_line">
-                                <span>数据走势</span>
-                                <div id="main_line"></div>
-                            </div>
-                            <div class="contain_main_pie">
-                                <span>新老用户占比</span>
-                                <div id="main_pie"></div>
-                            </div>
-                        </div>
-                        <div class="contain_main_graph">
-                            <span>传播轨迹</span>
-                            <div id="main_graph"></div>
-                        </div>
-                    </div>
+                <div data-iden="arealLimitsSum">
+                    <p>传播范围(点击人数)</p>
+                    <p class="activitySum">1234</p>
                 </div>
+                <div data-iden="newNumPeo">
+                    <p>裂变效果(新增人数)</p>
+                    <p class="activitySum">213</p>
+                </div>
+                <div data-iden="shareNum">
+                    <p>分享次数</p>
+                    <p class="activitySum">542</p>
+                </div>
+                <div data-iden="shareNumPeo">
+                    <p>分享人数</p>
+                    <p class="activitySum">431</p>
+                </div>
+            </div>
+            <div class="contain_main_chart">
+                <div class="contain_main_line">
+                    <span>数据走势</span>
+                    <div id="main_line"></div>
+                </div>
+                <div class="contain_main_pie">
+                    <span>新老用户占比</span>
+                    <div id="main_pie"></div>
+                </div>
+            </div>
+            <div class="contain_main_graph">
+                <span>传播轨迹</span>
+                <div id="main_graph"></div>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/static/plugins/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/plugins/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="/static/plugins/messages_zh.js"></script>
-    <script type="text/javascript" src="/static/plugins/md5.js"></script>
-    <script type="text/javascript" src="/static/plugins/jquery.cookie.js"></script>
-    <script type="text/javascript" src="/static/plugins/jquery-confirm.js"></script>
-    <script type="text/javascript" src="/static/plugins/jquery-ui.min.js"></script>
-##<script type="text/javascript" src="/static/plugins/baidu-statistics.js"></script>
-##<script type="text/javascript" src="/static/common/js/application-common.js?v=20170703154841"></script>
-##<script type="text/javascript" src="/static/plugins/common.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-##<script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="/static/plugins/laydate/laydate.js"></script>
-    <script src="https://cdn.bootcss.com/echarts/4.1.0/echarts.min.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="/static/plugins/common/data-statistics.js"></script>
-##<script src="/static/plugins/pqgrid.min.js"></script>
-##<script src="/static/plugins/My97DatePicker/WdatePicker.js"></script>
-    <script>
-
-    </script>
-
+</div>

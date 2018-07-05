@@ -67,19 +67,6 @@ public class ApplicationSessionFactory {
         getSession(request, response).set(SESSION_KEY_USER, user);
 
     }
-    /**
-     * 获取缓存的验证码
-     */
-    public static String getValidateCode(HttpServletRequest request, HttpServletResponse response){
-        return getSession(request,response).getString(SESSION_KEY_VALIDATE_CODE_PREFIX);
-    }
-
-    /**
-     * 缓存验证码
-     */
-    public static void setValidateCode(HttpServletRequest request, HttpServletResponse response, String code){
-        getSession(request, response).set(SESSION_KEY_VALIDATE_CODE_PREFIX, code);
-    }
 
     public static void init(HttpServletRequest request, HttpServletResponse response){
         getSession(request, response);
