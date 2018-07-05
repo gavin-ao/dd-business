@@ -6,6 +6,7 @@ import data.driven.business.common.Constant;
 import data.driven.business.dao.JDBCBaseDao;
 import data.driven.business.util.DateFormatUtil;
 import data.driven.business.util.JSONUtil;
+import data.driven.business.vo.wechat.WechatTotalVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,48 +41,19 @@ public class WechatTotalServiceImpl implements WechatTotalService {
     }
 
     /**
-     * 用于统计的po，最终转化json输出
-     */
-    private class WechatTotal{
-        /** 合计 **/
-        private Integer countNum;
-        /** 时间 **/
-        private String groupTime;
-
-        public WechatTotal(Integer countNum, String groupTime) {
-            this.countNum = countNum;
-            this.groupTime = groupTime;
-        }
-        public WechatTotal() {
-        }
-        public Integer getCountNum() {
-            return countNum;
-        }
-        public void setCountNum(Integer countNum) {
-            this.countNum = countNum;
-        }
-        public String getGroupTime() {
-            return groupTime;
-        }
-        public void setGroupTime(String groupTime) {
-            this.groupTime = groupTime;
-        }
-    }
-
-    /**
      * 根据grouptime分组统计，统计之后返回有序的数据
      * @param list
      */
-    private void coventWechatTotalList(List<WechatTotal> list) {
+    private void coventWechatTotalList(List<WechatTotalVO> list) {
         //按照grouptime分组统计
-        Map<String, Integer> map = list.stream().collect(Collectors.groupingBy(WechatTotal::getGroupTime, Collectors.summingInt(WechatTotal::getCountNum)));
-        TreeMap<String, Integer> treeMap = new TreeMap<String, Integer>(map);
+        Map<String, Long> map = list.stream().collect(Collectors.groupingBy(WechatTotalVO::getGroupTime, Collectors.summingLong(WechatTotalVO::getCountNum)));
+        TreeMap<String, Long> treeMap = new TreeMap<String, Long>(map);
         List<String> keyList = new ArrayList<String>(treeMap.keySet());
         //为前台展示根据grouptime做排序
         Collections.sort(keyList);
         list.clear();
         for(String key : keyList){
-            list.add(new WechatTotal(treeMap.get(key), key));
+            list.add(new WechatTotalVO(treeMap.get(key), key));
         }
     }
 
@@ -119,7 +91,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         }
         String format = getMysqlDateFormat(start, end);
         String sql = "select count(log_id) as count_num,DATE_FORMAT(login_at,'" + format + "') as group_time from wechat_login_log where app_info_id = ? and login_at between ? and ? group by DATE_FORMAT(login_at,'" + format + "')";
-        List<WechatTotal> list = jdbcBaseDao.queryList(WechatTotal.class, sql, appInfoId, start, end);
+        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end);
         result.put("data", list);
         result.put("success", true);
         return result;
@@ -157,7 +129,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
 
         String format = getMysqlDateFormat(start, end);
         String sql = "select 1 as count_num,DATE_FORMAT(login_at,'" + format + "') as group_time from wechat_login_log where app_info_id = ? and login_at between ? and ? group by wechat_user_id";
-        List<WechatTotal> list = jdbcBaseDao.queryList(WechatTotal.class, sql, appInfoId, start, end);
+        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end);
 
         coventWechatTotalList(list);
 
@@ -198,7 +170,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
 
         String format = getMysqlDateFormat(start, end);
         String sql = "select count(wsd.to_id) as count_num,DATE_FORMAT(wsd.share_at,'" + format + "') as group_time from wechat_share_detail wsd left join wechat_app_user_mapping waum on waum.wechat_map_id = wsd.to_id where wsd.app_info_id = ? and wsd.share_at between ? and ? and waum.create_at between ? and ? group by DATE_FORMAT(wsd.share_at,'" + format + "')";
-        List<WechatTotal> list = jdbcBaseDao.queryList(WechatTotal.class, sql, appInfoId, start, end);
+        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end);
         result.put("data", list);
         result.put("success", true);
         return result;
@@ -236,7 +208,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
 
         String format = getMysqlDateFormat(start, end);
         String sql = "select count(share_id) as count_num,DATE_FORMAT(create_at,'" + format + "') as group_time from wechat_share_info where app_info_id = ? and create_at between ? and ? group by DATE_FORMAT(create_at,'" + format + "')";
-        List<WechatTotal> list = jdbcBaseDao.queryList(WechatTotal.class, sql, appInfoId, start, end);
+        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end);
         result.put("data", list);
         result.put("success", true);
         return result;
@@ -274,7 +246,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
 
         String format = getMysqlDateFormat(start, end);
         String sql = "select 1 as count_num,DATE_FORMAT(create_at,'" + format + "') as group_time from wechat_share_info where app_info_id = ? and create_at between ? and ? group by wechat_user_id";
-        List<WechatTotal> list = jdbcBaseDao.queryList(WechatTotal.class, sql, appInfoId, start, end);
+        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end);
         coventWechatTotalList(list);
         result.put("data", list);
         result.put("success", true);

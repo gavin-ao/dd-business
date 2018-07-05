@@ -2,15 +2,11 @@ package data.driven.business.common;
 
 import com.alibaba.fastjson.JSONObject;
 import data.driven.business.util.CookieUtil;
-import data.driven.business.util.DateFormatUtil;
 import data.driven.business.util.SessionUtil;
 import data.driven.business.util.UUIDUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 /**
@@ -80,8 +76,8 @@ public class ApplicationSession {
             Object value = this.sessionBean.getSessionMap().get(key);
             if(value != null){
                 if(value instanceof JSONObject){
-                    JSONObject accountJson = (JSONObject) value;
-                    return accountJson.toJavaObject(tClass);
+                    JSONObject userJson = (JSONObject) value;
+                    return userJson.toJavaObject(tClass);
                 }else {
                     return (T)value;
                 }

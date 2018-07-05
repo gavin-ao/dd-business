@@ -1,5 +1,4 @@
 package data.driven.business.util;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -332,14 +331,4 @@ public class HttpUtil {
         return sslsf;
     }
 
-    public static void main(String[] args) {
-//        String string = doGet("http://localhost:8080/Mongodb-Conversion?tableName=temp_test&fields=name,age&start=0&end=10");
-//        System.out.println(string);
-        String account = "{\"account\":{\"accountid\":\"59c5e827aa6ac8373e748646\",\"createtime\":1506142248000,\"email\":\"553108455@qq.com\",\"industry\":\"政客\",\"nickname\":\"wangcc\",\"password\":\"74c98e359edb5bcd171314df5b2bbb17\",\"position\":\"主席\",\"sex\":\"-1\"},\"authorisedMenuList\":[],\"authorisedResourceList\":[],\"roleList\":[],\"unauthorizedMenuList\":[]}";
-        String accountShare = "{\"account\":{\"accountid\":\"59c5e827aa6ac8373e748646\",\"createtime\":1506142248000,\"email\":\"553108455@qq.com\",\"industry\":\"政客\",\"nickname\":\"wangcc\",\"password\":\"74c98e359edb5bcd171314df5b2bbb17\",\"position\":\"主席\",\"sex\":\"-1\"},\"authorisedMenuList\":[],\"authorisedResourceList\":[],\"roleList\":[],\"unauthorizedMenuList\":[]}";
-
-
-        JSONObject aa = JSONObject.parseObject(account);
-        System.out.println(aa);
-    }
 }

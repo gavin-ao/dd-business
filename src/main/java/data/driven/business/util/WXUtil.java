@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.alibaba.fastjson.JSON.parseObject;
+import static com.alibaba.fastjson.JSON.toJSONString;
 
 /**
  * 微信接口调用工具类
@@ -39,7 +40,9 @@ public class WXUtil {
         paramMap.put("secret", secret);
         paramMap.put("grant_type", AUTHORIZATION_CODE);
         paramMap.put("js_code", code);
+        System.out.println("getSessionKey:"+toJSONString(paramMap));
         String resultStr = HttpUtil.doPostSSL(jscode2session_url, paramMap);
+        System.out.println("getSessionKey的result："+resultStr);
         if(resultStr == null){
             return new JSONObject();
         }

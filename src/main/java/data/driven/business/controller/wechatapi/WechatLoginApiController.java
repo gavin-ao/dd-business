@@ -42,6 +42,7 @@ public class WechatLoginApiController {
     @ResponseBody
     @RequestMapping(path = "/login")
     public JSONObject login(String appid, String secret, String code){
+        System.out.println("login---方法appid:" + appid + "--secret:"+secret+"--code:"+code);
         //根据code获取sessionKey
         JSONObject sessionJsonObject = getSessionKey(appid, secret, code);
         String sessionKey = null;
@@ -84,7 +85,7 @@ public class WechatLoginApiController {
             appid = watermark.getString("appid");
             Long timestamp = watermark.getLong("timestamp");
             long now = System.currentTimeMillis();
-            long interval = now - timestamp;
+            long interval = (now - timestamp) / 1000;
             if(interval < 0 || interval > USER_INFO_MAX_INTERVAL){
                 return JSONUtil.putMsg(false, "102", "处理超时，请重新登录");
             }

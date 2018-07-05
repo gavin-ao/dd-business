@@ -59,7 +59,7 @@
 
     <filter-mapping>
         <filter-name>wechat-api-filter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/wechatapi/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
