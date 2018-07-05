@@ -49,7 +49,7 @@ public class WechatApiFilter implements Filter{
             }else{
 
                 WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
-                if(wechatApiSessionBean == null || wechatApiSessionBean.getUserInfo() == null || wechatApiSessionBean.getUserInfo().getWechatUserId()!= null){
+                if(wechatApiSessionBean == null || wechatApiSessionBean.getUserInfo() == null || wechatApiSessionBean.getUserInfo().getWechatUserId()== null){
                     noAuthority(request);
                     return;
                 }

@@ -38,7 +38,7 @@ public class WechatShareApiController {
 
     @ResponseBody
     @RequestMapping(path = "/getShareId")
-    public JSONObject getShareId(){
+    public JSONObject getShareId(String sessionID){
         JSONObject result = JSONUtil.putMsg(true, "200", "获取成功");
         String shareId = UUIDUtil.getUUID();
         result.put("shareId", shareId);
