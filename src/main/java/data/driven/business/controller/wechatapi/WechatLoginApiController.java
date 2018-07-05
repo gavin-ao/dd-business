@@ -113,7 +113,7 @@ public class WechatLoginApiController {
             String wechatUserInfoId = null;
             //如果用户信息为空，就新增用户到数据库中
             if(userInfo == null){
-                wechatUserInfoId = wechatUserService.addUserInfo(userInfo);
+                wechatUserInfoId = wechatUserService.addUserInfo(userObj);
             }else{
                 wechatUserInfoId = userInfo.getWechatUserId();
             }

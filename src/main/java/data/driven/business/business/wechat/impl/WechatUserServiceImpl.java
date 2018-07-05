@@ -2,8 +2,10 @@ package data.driven.business.business.wechat.impl;
 
 import data.driven.business.business.wechat.WechatUserService;
 import data.driven.business.dao.JDBCBaseDao;
+import data.driven.business.entity.wechat.WechatUserInfoEntity;
 import data.driven.business.util.UUIDUtil;
 import data.driven.business.vo.wechat.WechatUserInfoVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,9 +48,11 @@ public class WechatUserServiceImpl implements WechatUserService {
     @Override
     public String addUserInfo(WechatUserInfoVO userInfo) {
         String userInfoId = UUIDUtil.getUUID();
-        userInfo.setWechatUserId(userInfoId);
-        userInfo.setCreateAt(new Date());
-        jdbcBaseDao.insert(userInfo, "wechat_user_info");
+        WechatUserInfoEntity newUserInfo = new WechatUserInfoEntity();
+        BeanUtils.copyProperties(userInfo, newUserInfo);
+        newUserInfo.setWechatUserId(userInfoId);
+        newUserInfo.setCreateAt(new Date());
+        jdbcBaseDao.insert(newUserInfo, "wechat_user_info");
         return userInfoId;
     }
 
@@ -62,7 +66,7 @@ public class WechatUserServiceImpl implements WechatUserService {
 
     @Override
     public WechatUserInfoVO getUserInfoByUserIdAndAppInfoId(String userInfoId, String appInfoId) {
-        String sql = "select u.wechat_user_id,u.nick_name,u.gender,u.language,u.city,u.province,u.country,u.avatar_url,u.union_id,u.create_at,aum.open_id,aum.app_info_id,aum.wechat_map_id from wechat_user_info u" +
+        String sql = "select u.wechat_user_id,u.nick_name,u.gender,u.language,u.city,u.province,u.country,u.avatar_url,u.union_id,u.create_at,u.open_id,aum.app_info_id,aum.wechat_map_id from wechat_user_info u" +
                 " left join wechat_app_user_mapping aum on aum.wechat_user_id = u.wechat_user_id" +
                 " where u.wechat_user_id = ? and aum.app_info_id = ?";
         List<WechatUserInfoVO> list = jdbcBaseDao.queryList(WechatUserInfoVO.class, sql, userInfoId, appInfoId);
