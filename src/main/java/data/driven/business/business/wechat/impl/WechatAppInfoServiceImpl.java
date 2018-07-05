@@ -27,4 +27,11 @@ public class WechatAppInfoServiceImpl implements WechatAppInfoService {
         }
         return null;
     }
+
+    @Override
+    public List<WechatAppInfoEntity> findAppInfoListByUser(String userInfoId) {
+        String sql = "select app_info_id,app_name,appid,secret,create_at,creator from wechat_app_info where appid = ?";
+        List<WechatAppInfoEntity> list = jdbcBaseDao.queryList(WechatAppInfoEntity.class, sql, userInfoId);
+        return list;
+    }
 }

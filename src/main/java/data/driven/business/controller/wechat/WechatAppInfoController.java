@@ -15,4 +15,6 @@ public class WechatAppInfoController {
 
     private static final Logger logger = LoggerFactory.getLogger(WechatTotalController.class);
 
+
+
 }
