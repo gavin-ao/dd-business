@@ -8,6 +8,7 @@ import data.driven.business.common.WechatApiSession;
 import data.driven.business.common.WechatApiSessionBean;
 import data.driven.business.entity.wechat.WechatShareInfoEntity;
 import data.driven.business.util.JSONUtil;
+import data.driven.business.util.UUIDUtil;
 import data.driven.business.vo.wechat.WechatUserInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,21 +36,28 @@ public class WechatShareApiController {
     @Autowired
     private WechatUserService wechatUserService;
 
+    @ResponseBody
+    @RequestMapping(path = "/getShareId")
+    public JSONObject getShareId(){
+        JSONObject result = JSONUtil.putMsg(true, "200", "获取成功");
+        String shareId = UUIDUtil.getUUID();
+        result.put("shareId", shareId);
+        return result;
+    }
 
     /**
-     * 进行分享动作，记录分享后返回分享id
+     * 进行分享动作，记录分享
      * @param sessionID
      * @param content
      * @return
      */
     @ResponseBody
     @RequestMapping(path = "/execuShare")
-    public JSONObject execuShare(String sessionID, String content){
+    public JSONObject execuShare(String sessionID, String shareId, String content){
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         try{
-            String shareId = wechatShareInfoService.insertShare(wechatApiSessionBean.getUserInfo().getWechatUserId(), content, wechatApiSessionBean.getUserInfo().getAppInfoId());
+            wechatShareInfoService.insertShare(shareId, wechatApiSessionBean.getUserInfo().getWechatUserId(), content, wechatApiSessionBean.getUserInfo().getAppInfoId());
             JSONObject result = JSONUtil.putMsg(true, "200", "分享成功");
-            result.put("shareId", shareId);
             return result;
         }catch (Exception e){
             logger.error(e.getMessage(), e);

@@ -3,7 +3,6 @@ package data.driven.business.business.wechat.impl;
 import data.driven.business.business.wechat.WechatShareInfoService;
 import data.driven.business.dao.JDBCBaseDao;
 import data.driven.business.entity.wechat.WechatShareInfoEntity;
-import data.driven.business.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +20,11 @@ public class WechatShareInfoServiceImpl implements WechatShareInfoService {
     private JDBCBaseDao jdbcBaseDao;
 
     @Override
-    public String insertShare(String wechatUserId, String content, String appInfoId) {
-        String id = UUIDUtil.getUUID();
+    public String insertShare(String shareId, String wechatUserId, String content, String appInfoId) {
         Date createAt = new Date();
         String sql = "insert into wechat_share_info(share_id,wechat_user_id,content,app_info_id,create_at) values(?,?,?,?,?)";
-        jdbcBaseDao.executeUpdate(sql, id, wechatUserId, content, appInfoId, createAt);
-        return id;
+        jdbcBaseDao.executeUpdate(sql, shareId, wechatUserId, content, appInfoId, createAt);
+        return shareId;
     }
 
     @Override

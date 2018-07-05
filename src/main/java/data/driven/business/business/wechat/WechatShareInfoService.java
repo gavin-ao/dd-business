@@ -11,11 +11,12 @@ public interface WechatShareInfoService {
 
     /**
      * 新增分享内容
+     * @param shareId
      * @param wechatUserId
      * @param content
      * @param appInfoId
      */
-    public String insertShare(String wechatUserId, String content, String appInfoId);
+    public String insertShare(String shareId, String wechatUserId, String content, String appInfoId);
 
     /**
      * 根据分享id获取分享信息
