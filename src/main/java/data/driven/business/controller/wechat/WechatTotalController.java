@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author hejinkai
@@ -20,6 +21,14 @@ public class WechatTotalController {
 
     @Autowired
     private WechatTotalService wechatTotalService;
+
+
+    @RequestMapping(value = "/manage")
+    public ModelAndView productManage(){
+        ModelAndView mv = new ModelAndView("/authoritymanage/index");
+        return mv;
+    }
+
 
     /**
      * 根据时间范围统计活跃度
