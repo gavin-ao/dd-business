@@ -101,7 +101,7 @@ public class WechatLoginApiController {
         if(wechatAppInfoEntity == null){
             return JSONUtil.putMsg(false, "104", "小程序不存在，非法登录");
         }
-        WechatUserInfoVO userObj = userJson.toJavaObject(WechatUserInfoVO.class);
+        WechatUserInfoVO userObj = userJson.getJSONObject("userInfo").toJavaObject(WechatUserInfoVO.class);
         if(openId == null){
             openId = userObj.getUnionId();
         }
