@@ -1,12 +1,10 @@
 package data.driven.business.business.wechat.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import data.driven.business.business.wechat.WechatUserService;
 import data.driven.business.dao.JDBCBaseDao;
 import data.driven.business.entity.wechat.WechatUserInfoEntity;
 import data.driven.business.util.UUIDUtil;
 import data.driven.business.vo.wechat.WechatUserInfoVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,15 +45,11 @@ public class WechatUserServiceImpl implements WechatUserService {
     }
 
     @Override
-    public String addUserInfo(WechatUserInfoVO userInfo) {
+    public String addUserInfo(WechatUserInfoEntity userInfo) {
         String userInfoId = UUIDUtil.getUUID();
-        WechatUserInfoEntity newUserInfo = new WechatUserInfoEntity();
-        BeanUtils.copyProperties(newUserInfo, userInfo);
-        System.out.println("userInfo:"+JSONObject.toJSONString(userInfo));
-        System.out.println("newUserInfo:"+JSONObject.toJSONString(newUserInfo));
-        newUserInfo.setWechatUserId(userInfoId);
-        newUserInfo.setCreateAt(new Date());
-        jdbcBaseDao.insert(newUserInfo, "wechat_user_info");
+        userInfo.setWechatUserId(userInfoId);
+        userInfo.setCreateAt(new Date());
+        jdbcBaseDao.insert(userInfo, "wechat_user_info");
         return userInfoId;
     }
 

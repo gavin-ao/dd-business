@@ -1,5 +1,6 @@
 package data.driven.business.business.wechat;
 
+import data.driven.business.entity.wechat.WechatUserInfoEntity;
 import data.driven.business.vo.wechat.WechatUserInfoVO;
 
 /**
@@ -28,7 +29,7 @@ public interface WechatUserService {
      * @param userInfo
      * @return
      */
-    public String addUserInfo(WechatUserInfoVO userInfo);
+    public String addUserInfo(WechatUserInfoEntity userInfo);
 
     /**
      * 新增app与用户的关联
