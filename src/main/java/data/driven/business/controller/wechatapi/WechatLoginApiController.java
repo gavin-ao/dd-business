@@ -85,7 +85,7 @@ public class WechatLoginApiController {
             appid = watermark.getString("appid");
             Long timestamp = watermark.getLong("timestamp");
             long now = System.currentTimeMillis();
-            long interval = (now - timestamp) / 1000;
+            long interval = now / 1000 - timestamp;
             if(interval < 0 || interval > USER_INFO_MAX_INTERVAL){
                 return JSONUtil.putMsg(false, "102", "处理超时，请重新登录");
             }
