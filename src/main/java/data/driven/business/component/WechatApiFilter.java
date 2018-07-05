@@ -1,5 +1,7 @@
 package data.driven.business.component;
 
+import data.driven.business.common.WechatApiSession;
+import data.driven.business.common.WechatApiSessionBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,20 +41,20 @@ public class WechatApiFilter implements Filter{
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String uri = request.getRequestURI();
-//        if(canFilter(uri)){
-//            String sessionID = request.getParameter("sessionID");
-//            if(sessionID == null){
-//                noAuthority(request);
-//                return;
-//            }else{
-//
-//                WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
-//                if(wechatApiSessionBean == null || wechatApiSessionBean.getUserInfo() == null || wechatApiSessionBean.getUserInfo().getWechatUserId()!= null){
-//                    noAuthority(request);
-//                    return;
-//                }
-//            }
-//        }
+        if(canFilter(uri)){
+            String sessionID = request.getParameter("sessionID");
+            if(sessionID == null){
+                noAuthority(request);
+                return;
+            }else{
+
+                WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+                if(wechatApiSessionBean == null || wechatApiSessionBean.getUserInfo() == null || wechatApiSessionBean.getUserInfo().getWechatUserId()!= null){
+                    noAuthority(request);
+                    return;
+                }
+            }
+        }
         System.out.println("------WechatApiFilter过滤器通过成功-------");
         filterChain.doFilter(request, response);
 

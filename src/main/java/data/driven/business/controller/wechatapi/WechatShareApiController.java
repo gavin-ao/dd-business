@@ -45,9 +45,9 @@ public class WechatShareApiController {
     @ResponseBody
     @RequestMapping(path = "/execuShare")
     public JSONObject execuShare(String sessionID, String content){
-//        WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+        WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         try{
-//            String shareId = wechatShareInfoService.insertShare(wechatApiSessionBean.getUserInfo().getWechatUserId(), content, wechatApiSessionBean.getUserInfo().getAppInfoId());
+            String shareId = wechatShareInfoService.insertShare(wechatApiSessionBean.getUserInfo().getWechatUserId(), content, wechatApiSessionBean.getUserInfo().getAppInfoId());
             JSONObject result = JSONUtil.putMsg(true, "200", "分享成功");
 //            result.put("shareId", shareId);
             return result;
