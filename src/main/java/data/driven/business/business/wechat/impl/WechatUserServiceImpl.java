@@ -49,7 +49,7 @@ public class WechatUserServiceImpl implements WechatUserService {
     public String addUserInfo(WechatUserInfoVO userInfo) {
         String userInfoId = UUIDUtil.getUUID();
         WechatUserInfoEntity newUserInfo = new WechatUserInfoEntity();
-        BeanUtils.copyProperties(userInfo, newUserInfo);
+        BeanUtils.copyProperties(newUserInfo, userInfo);
         newUserInfo.setWechatUserId(userInfoId);
         newUserInfo.setCreateAt(new Date());
         jdbcBaseDao.insert(newUserInfo, "wechat_user_info");
