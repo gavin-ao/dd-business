@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import static data.driven.business.util.JSONUtil.putMsg;
 
@@ -41,13 +42,14 @@ public class WechatShareApiController {
      * @param content
      * @return
      */
+    @ResponseBody
     @RequestMapping(path = "/execuShare")
     public JSONObject execuShare(String sessionID, String content){
-        WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+//        WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         try{
-            String shareId = wechatShareInfoService.insertShare(wechatApiSessionBean.getUserInfo().getWechatUserId(), content, wechatApiSessionBean.getUserInfo().getAppInfoId());
+//            String shareId = wechatShareInfoService.insertShare(wechatApiSessionBean.getUserInfo().getWechatUserId(), content, wechatApiSessionBean.getUserInfo().getAppInfoId());
             JSONObject result = JSONUtil.putMsg(true, "200", "分享成功");
-            result.put("shareId", shareId);
+//            result.put("shareId", shareId);
             return result;
         }catch (Exception e){
             logger.error(e.getMessage(), e);
@@ -55,6 +57,7 @@ public class WechatShareApiController {
         }
     }
 
+    @ResponseBody
     @RequestMapping(path = "/clickShareUrl")
     public JSONObject clickShareUrl(String sessionID, String shareId){
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
