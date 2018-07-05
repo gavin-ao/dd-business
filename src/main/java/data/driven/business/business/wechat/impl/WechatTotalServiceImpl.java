@@ -128,7 +128,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         }
 
         String format = getMysqlDateFormat(start, end);
-        String sql = "select 1 as count_num,DATE_FORMAT(login_at,'" + format + "') as group_time from wechat_login_log where app_info_id = ? and login_at between ? and ? group by wechat_user_id";
+        String sql = "select 1 as count_num,DATE_FORMAT(login_at,'" + format + "') as group_time from wechat_login_log where app_info_id = ? and login_at between ? and ? group by wechat_user_id,group_time";
         List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end);
 
         coventWechatTotalList(list);
@@ -245,7 +245,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         }
 
         String format = getMysqlDateFormat(start, end);
-        String sql = "select 1 as count_num,DATE_FORMAT(create_at,'" + format + "') as group_time from wechat_share_info where app_info_id = ? and create_at between ? and ? group by wechat_user_id";
+        String sql = "select 1 as count_num,DATE_FORMAT(create_at,'" + format + "') as group_time from wechat_share_info where app_info_id = ? and create_at between ? and ? group by wechat_user_id,group_time";
         List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end);
         coventWechatTotalList(list);
         result.put("data", list);

@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.alibaba.fastjson.JSON.parseObject;
-import static com.alibaba.fastjson.JSON.toJSONString;
 
 /**
  * 微信接口调用工具类
@@ -40,9 +39,7 @@ public class WXUtil {
         paramMap.put("secret", secret);
         paramMap.put("grant_type", AUTHORIZATION_CODE);
         paramMap.put("js_code", code);
-        System.out.println("getSessionKey:"+toJSONString(paramMap));
         String resultStr = HttpUtil.doPostSSL(jscode2session_url, paramMap);
-        System.out.println("getSessionKey的result："+resultStr);
         if(resultStr == null){
             return new JSONObject();
         }
@@ -113,9 +110,9 @@ public class WXUtil {
 
     public static void main(String[] args){
 
-        String encryptedData = "teIbD8HVfkePUGKX9rzraaUkHQm0MoORc37GeoBtla/aho0E4ZqKD2HVqfSYG4lAeoYYuar9RNoNBfMiIPMKpnSNAmjtvz4xzieLAjoiBg/l0inzuAbzVsCHPqcyMdZE8R9AvwI1O9bGb3RQWcY87kIvO7tyXUY5YOsCmV4y6TIlyII5Cgf+/2qIvfjzedSJrreOaF5UjMsscYyfXQhWKx0EZf/n0pZzGjoUGZx/xCURP2GUr2kh5JQ2OIfvasIp9EBFxOhlN+phYjgG2JP2z/cbSz4qm+Tl8WHsPQMrCGPHerBSk4TSUS8hLI4Vkhds";
-        String iv = "g8HxUw0mAHadR8iqwHPIwg==";
-        String sessionKey = "XFeGmty0TKKqpIbegcK7ug==";
+        String encryptedData = "hqZuO3yN7xpjh660AgzL0iQwIUrqnDqgclRGaxm7RatzkuH25bpxaTcolvSYQXqbbjZjgSbqRvbmi/ypycmnVRi69LGKy+SwGVDQC6Eoic6cFYJdoC3no5cu4bAfjtwTTW0x1M3gDnc/KNOBAFN/iqgcZbk6wPDA7vJU8wf0WwvC2+0x9z5AZLjnGQrN7cp6oc0e1RCjAQo2RJNp93fO0v5GRrD7HC4+oL/ioaddqSv5t72skesFGjUPI2exP3G/3DUGg5bvz515nxrYV+ocRCmk38bR8PYwhKmn9YiDo1ChQ+kwwKyzlIU7K4cWm91UxWka3UWv9irLNmWNNi/UUFmjutjOP0OH0BQblp4g54USgsjFR1Gylcjz4reyDrQPQxb74NmFuSDaquuyLdT4k1qtFrcZahogCVTbIU97NPimT8k08OR50DRMQYwzSoCnviOSBIvhbiAWg6klclX4w7HMkWgM6pujTuTs6VYTgE4=";
+        String iv = "tP5c7E8+xkZoxGu6eT1HAQ==";
+        String sessionKey = "YowUQR+UWuSTMzZmWmnv5g==";
 //        String appId = "wx4f4bc4dec97d474b";
 //        String sessionKey = "tiihtNczf5v6AKRyjwEUhQ==";
 //        String encryptedData =

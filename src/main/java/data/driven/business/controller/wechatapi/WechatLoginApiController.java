@@ -42,7 +42,6 @@ public class WechatLoginApiController {
     @ResponseBody
     @RequestMapping(path = "/login")
     public JSONObject login(String appid, String secret, String code){
-        System.out.println("login---方法appid:" + appid + "--secret:"+secret+"--code:"+code);
         //根据code获取sessionKey
         JSONObject sessionJsonObject = getSessionKey(appid, secret, code);
         String sessionKey = null;
@@ -70,6 +69,7 @@ public class WechatLoginApiController {
     @RequestMapping(path = "/syncUser")
     public JSONObject syncUser(String encryptedData, String iv, String sessionID){
         encryptedData = encryptedData.replace(" ","+");
+        iv = iv.replace(" ","+");
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         WechatUserInfoVO sUser = wechatApiSessionBean.getUserInfo();
         String openId = null;
