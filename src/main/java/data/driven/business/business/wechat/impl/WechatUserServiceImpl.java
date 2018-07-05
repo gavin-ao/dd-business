@@ -59,7 +59,7 @@ public class WechatUserServiceImpl implements WechatUserService {
     @Override
     public String addUserAndAppMap(String appInfoId, String userInfoId, String openId) {
         String id = UUIDUtil.getUUID();
-        String sql = "inser into (wechat_map_id,app_info_id,wechat_user_id,open_id,create_at) values(?,?,?,?,?)";
+        String sql = "inser into wechat_user_info(wechat_map_id,app_info_id,wechat_user_id,open_id,create_at) values(?,?,?,?,?)";
         jdbcBaseDao.executeUpdate(sql, id,appInfoId, userInfoId, openId, new Date());
         return id;
     }
