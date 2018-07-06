@@ -39,8 +39,18 @@
 
 .contain_head .dropdown {
     height: 36px;
-    margin-top: 22px;
     margin-left: 20px;
+}
+
+.dropdown .dropdown-menu {
+    min-width: 50px;
+    top: 56px;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
 }
 
 .contain_head_right {
@@ -108,20 +118,25 @@
     font-size: 16px;
     cursor: pointer;
 }
-.contain_main_data > div .activitySum{
+
+.contain_main_data > div .activitySum {
     color: #333;
 }
-.contain_main_data > div.selectData{
+
+.contain_main_data > div.selectData {
     background-color: rgba(33, 157, 239, 1);
     color: #fff;
     border: 0;
 }
-.contain_main_data > div.selectData .activitySum{
+
+.contain_main_data > div.selectData .activitySum {
     color: #fff;
 }
-.contain_main_chart{
+
+.contain_main_chart {
     height: 350px;
 }
+
 .contain_main_chart > div {
     /*float: left;*/
     display: inline-block;
@@ -129,7 +144,8 @@
     font-size: 16px;
     /*width: 100%;*/
 }
-.contain_main_chart > div div{
+
+.contain_main_chart > div div {
     height: 100%;
     width: 100%;
 }
@@ -138,16 +154,18 @@
     width: 64%;
 }
 
-.contain_main_chart  .contain_main_pie {
+.contain_main_chart .contain_main_pie {
     width: 35%;
     float: right;
 }
-.datePicker{
+
+.datePicker {
     position: absolute;
     top: 92px;
     left: 600px;
     display: none;
 }
+
 .demo-input {
     padding-left: 10px;
     height: 38px;
@@ -157,11 +175,14 @@
     background-color: #fff;
     border-radius: 2px;
 }
-.contain_main_graph{
+
+.contain_main_graph {
     width: 100%;
     height: 600px;
 }
-.contain_main_graph > div{
+
+.contain_main_graph > div {
     width: 100%;
     height: 100%;
 }
+

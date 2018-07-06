@@ -1,15 +1,13 @@
 /**
  * Created by 12045 on 2018/7/4.
  */
+var wholeAppInfoId,wholeStartTime,wholeEndTime;
 (function () {
+
+// 获取用户所有小程序
+    allSmallProgram();
     // 自定义时间选择
     laydateTime();
-
-    // chartShow("main_line","line");
-    // chartShow("main_pie","pie");
-    chartLineShow()
-    // chartPieShow()
-    // chartGraphShow()
 
     selecyCondition()
 
@@ -18,11 +16,32 @@
     coreDataSel()
 
 
-
-    $("#navbarH").height($("#page-wrapper").height()-80)
+    // coreDataShow()
+    $("#navbarH").height($("#page-wrapper").height() - 80)
 
 }())
 
+// 获取用户所有小程序
+function allSmallProgram() {
+    $.ajax({
+        url: "/wechat/appinfo/findAppInfoListByUser",
+        dataType: "json",
+        success: function (data) {
+            console.log(data)
+            if(data.success){
+                var arrData = data.wechatAppInfoEntityList;
+                var html='';
+                for(var i=0;i<arrData.length;i++){
+                    console.log(arrData[i])
+                    html += '<li data-appInfoId="'+ arrData[i].appInfoId+'" data-appid="'+ arrData[i].appid +'" data-secret="'+ arrData[i].secret +'"><a href="javascript:void(0)">'+arrData[i].appName+ '</a></li>';
+                }
+                $("#contain_head_left_ul").html(html);
+
+                $($($("#user_manage .dropdown-menu")[0]).find("li")[0]).trigger("click");
+            }
+        }
+    })
+}
 function laydateTime() {
     lay('#version').html('-v' + laydate.v);
     var myDate = new Date();
@@ -33,7 +52,9 @@ function laydateTime() {
         elem: '#startTime' //指定元素
         , value: time
         , done: function (value, date) {
-            alert('你选择的日期是：' + value + '\n获得的对象是' + JSON.stringify(date));
+            $(".contain_main_title .time1").html(value)
+            wholeStartTime = value;
+            changeTimeAfterDataChange()
         }
 
     });
@@ -43,16 +64,20 @@ function laydateTime() {
         elem: '#endTime' //指定元素
         , value: time
         , done: function (value, date) {
-            alert('你选择的日期是：' + value + '\n获得的对象是' + JSON.stringify(date));
+
+            $(".contain_main_title .time2").html(value)
+
+            wholeEndTime = value
+            changeTimeAfterDataChange()
         }
     });
 }
-function chartShow(id,type) {
-    $('#'+id).removeAttr('_echarts_instance_');
-    $("#"+id).parent().prev(".gridster-box").attr("type",type);
+function chartShow(id, type) {
+    $('#' + id).removeAttr('_echarts_instance_');
+    $("#" + id).parent().prev(".gridster-box").attr("type", type);
 // 基于准备好的dom，初始化echarts实例
     var myChartLine = echarts.init(document.getElementById(id));
-    if(type=="line"){
+    if (type == "line") {
         var option = {
             xAxis: {
                 type: 'category',
@@ -66,7 +91,7 @@ function chartShow(id,type) {
                 type: 'line'
             }]
         };
-    }else if(type == "pie"){
+    } else if (type == "pie") {
         var option = {
             title: {
                 text: '80%',
@@ -135,7 +160,7 @@ function chartShow(id,type) {
 
 // 使用刚指定的配置项和数据显示图表。
     myChartLine.setOption(option);
-    window.onresize =  function(){
+    window.onresize = function () {
         myChartLine.resize();
     }
     // $('#'+id).resize(function () {
@@ -146,20 +171,25 @@ function chartShow(id,type) {
     // });
 }
 // 折线图展示
-function chartLineShow() {
+function chartLineShow(data) {
+    var  xAxisData = [],datas=[];
+    for(var i =0;i<data.length;i++){
+        xAxisData.push(data[i].groupTime)
+        datas.push(data[i].countNum)
+    }
 
 // 基于准备好的dom，初始化echarts实例
     var myChartLine = echarts.init(document.getElementById('main_line'));
     var option = {
         xAxis: {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data: xAxisData
         },
         yAxis: {
             type: 'value'
         },
         series: [{
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            data: datas,
             type: 'line'
         }]
     };
@@ -167,11 +197,18 @@ function chartLineShow() {
 // 使用刚指定的配置项和数据显示图表。
     myChartLine.setOption(option);
 
+    window.onresize = function () {
+        myChartLine.resize();
+    }
+}
 
+// 饼图展示
+function chartPieShow(data) {
+    var ratio = data.newUserNum/(data.newUserNum+data.oldUserNum) *100 +"%";
     var myChartPie = echarts.init(document.getElementById('main_pie'));
     var options = {
         title: {
-            text: '80%',
+            text:ratio,
             x: 'center',
             y: 'center',
             textStyle: {
@@ -184,7 +221,7 @@ function chartLineShow() {
         legend: {
             show: true,
             itemGap: 12,
-            data: ['男', '女'],
+            data: ['新用户', '老用户'],
             bottom: 20
         },
 
@@ -205,8 +242,8 @@ function chartLineShow() {
             },
             hoverAnimation: false,
             data: [{
-                value: 80,
-                name: '男',
+               value: data.newUserNum,
+                name: '新用户',
                 itemStyle: {
                     normal: {
                         color: { // 完成的圆环的颜色
@@ -227,13 +264,19 @@ function chartLineShow() {
                     }
                 }
             }, {
-                name: '女',
-                value: 20
+                name: '老用户',
+                value: data.oldUserNum
             }]
         }]
     }
     myChartPie.setOption(options);
+    window.onresize = function () {
+        myChartPie.resize();
+    }
+}
 
+// 关系图展示
+function echartsGraph() {
 
     var myChartGraph = echarts.init(document.getElementById('main_graph'));
     //    传播轨迹图
@@ -338,14 +381,14 @@ function chartLineShow() {
     dataObj.links = links;
     dataObj.nodes = ceshi;
     console.log(dataObj)
-    var opt  = {
+    var opt = {
         title: {
             text: 'Graph 简单示例'
         },
         tooltip: {},
         animationDurationUpdate: 1500,
         animationEasingUpdate: 'quinticInOut',
-        series : [
+        series: [
             {
                 type: 'graph',
                 layout: 'force',
@@ -365,11 +408,11 @@ function chartLineShow() {
                         }
                     }
                 },
-                force : {
-                    repulsion :240,
-                    gravity : 0.03,
-                    edgeLength :80,
-                    layoutAnimation : false
+                force: {
+                    repulsion: 240,
+                    gravity: 0.03,
+                    edgeLength: 80,
+                    layoutAnimation: false
                 },
                 // categories: [],
                 data: dataObj.nodes,
@@ -386,19 +429,10 @@ function chartLineShow() {
         ]
     };
     myChartGraph.setOption(opt);
-    window.onresize =  function(){
-        myChartLine.resize();
-        myChartPie.resize();
+    window.onresize = function () {
         myChartGraph.resize();
     }
 }
-
-// 饼图展示
-function chartPieShow() {
-
-}
-
-// 关系图展示
 function chartGraphShow() {
 
 //    传播轨迹图
@@ -934,15 +968,19 @@ function chartGraphShow() {
 
 // 筛选条件的选择
 function selecyCondition() {
-    $("#user_manage .dropdown-menu").unbind('click');
+    $("#user_manage .dropdown-menu").off('click',"li");
     $("#user_manage .dropdown-menu").on('click', 'li', function () {
-        console.log($(this).text())
+        console.log($(this))
+        var that = this;
         var content = $.trim($(this).text());
         var dropMenu;
         var target = $(this).parents(".dropdown").find("button .selectIndex");
         switch ($(this.parentNode).attr("aria-labelledby")) {
             case "dropdownMenu1":
                 $(target).html(content)
+                var appInfoId = $(that).attr("data-appInfoId");
+                wholeAppInfoId = appInfoId;
+                changeTimeAfterDataChange();
                 break;
             case "dropdownMenu2":
                 $(target).html(content)
@@ -951,20 +989,26 @@ function selecyCondition() {
     });
 }
 
+// 改变时间，数据及图表相继改变
+function changeTimeAfterDataChange() {
+    coreDataShow(wholeAppInfoId);
+    newAndOldUsers(wholeAppInfoId)
+}
+
 // 时间选择
 function dateSelecteTime() {
 
     var startTime, endTime;
-    $("#contain_main_head").off('click',"div");
-    $("#contain_main_head").on('click',"div", function () {
+    $("#contain_main_head").off('click', "div");
+    $("#contain_main_head").on('click', "div", function () {
         var inputs = $(this).siblings().find("input");
-        for(var i=0;i<inputs.length;i++){
+        for (var i = 0; i < inputs.length; i++) {
             inputs[i].removeAttribute("checked");
         }
-        console.log( $(this).siblings().find("input"))
+        console.log($(this).siblings().find("input"))
         $(this).find("input").attr("checked", true)
         className = $(this).find("input").attr("class");
-        $(".datePicker").css("display","none");
+        $(".datePicker").css("display", "none");
         var dateTimes;
         switch (className) {
             case "todayTime":
@@ -984,7 +1028,7 @@ function dateSelecteTime() {
                 endTime = curdateTimes
                 break;
             case "userdefined":
-                $(".datePicker").css("display","block");
+                $(".datePicker").css("display", "block");
                 dateTimes = currentTime(new Date());
                 startTime = dateTimes
                 endTime = dateTimes
@@ -995,6 +1039,10 @@ function dateSelecteTime() {
         $("#endTime").val(endTime);
         $(".contain_main_title .time1").html(startTime)
         $(".contain_main_title .time2").html(endTime)
+        wholeStartTime = startTime;
+        wholeEndTime = endTime
+        changeTimeAfterDataChange()
+
     })
 }
 
@@ -1008,17 +1056,68 @@ function currentTime(myDate) {
 
 // 核心数据选择
 function coreDataSel() {
-console.log($("#contain_main_data"))
-    $("#contain_main_data").off('click',"div");
-    $("#contain_main_data").on('click',"div", function () {
-        console.log(this)
-        $(this).siblings().attr("class","")
-        $(this).attr("class","selectData")
+    console.log($("#contain_main_data"))
+    $("#contain_main_data").off('click', "div");
+    $("#contain_main_data").on('click', "div", function () {
+        console.log($(this).attr("data-iden"))
+        $(this).siblings().attr("class", "")
+        $(this).attr("class", "selectData")
+        var urlName = $(this).attr("data-iden");
+        dataTrendDiagram(urlName);
+
     })
 
 }
 
 
+// 核心数据展示
+function coreDataShow(appInfoId) {
+    console.log(appInfoId)
+    $.ajax({
+        url: "/wechat/total/coreData",
+        type: "post",
+        data: {appInfoId: "5b3e12ffa7a117508c149383", startDate: wholeStartTime, endDate: wholeEndTime},
+        dataType: "html",
+        success: function (data) {
+            $("#contain_main_data").html(data);
+            $($("#contain_main_data div")[0]).trigger("click");
+        }
+    })
+}
+
+// 数据走势图 数据请求
+function dataTrendDiagram(urlName) {
+    $.ajax({
+        url: "/wechat/total/"+urlName,
+        dataType: "json",
+        type:"post",
+        data: {appInfoId: "5b3e12ffa7a117508c149383", startDate: wholeStartTime, endDate: wholeEndTime},
+        success: function (data) {
+            console.log(data)
+            if(data.success){
+                chartLineShow(data.data)
+
+            }
+        }
+    })
+}
+
+// 根据时间范围统计新老用户占比
+function newAndOldUsers(appInfoId) {
+    $.ajax({
+        url: "/wechat/total/totalOldAndNewUser",
+        dataType: "json",
+        type:"post",
+        data: {appInfoId: "5b3e12ffa7a117508c149383", startDate: wholeStartTime, endDate: wholeEndTime},
+        success: function (data) {
+            console.log(data)
+            if(data.success){
+
+                chartPieShow(data)
+            }
+        }
+    })
+}
 
 
 
