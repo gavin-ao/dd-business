@@ -40,56 +40,26 @@ public class WechatTotalController {
     @RequestMapping(path = "/coreData")
     public ModelAndView test(String appInfoId, String startDate, String endDate){
         ModelAndView mv = new ModelAndView("/data-statistics/core-data");
-        //TODO 这里要查询点击数
-
-        //TODO 这里要查询传播范围
-
-        //TODO 这里要查询裂变新增用户
-
-        //TODO 这里要查询分享次数
-
-        //TODO 这里要查询分享人数
-
+        dealTotalAll("activityNum", mv, wechatTotalService.totalActivityNum(appInfoId, startDate, endDate));
+        dealTotalAll("spreadRangeNum", mv, wechatTotalService.totalSpreadRangeNum(appInfoId, startDate, endDate));
+        dealTotalAll("fissionEffectNewPeopleNum", mv, wechatTotalService.totalFissionEffectNewPeopleNum(appInfoId, startDate, endDate));
+        dealTotalAll("shareNum", mv, wechatTotalService.totalShareNum(appInfoId, startDate, endDate));
+        dealTotalAll("sharePeopleNum", mv, wechatTotalService.totalSharePeopleNum(appInfoId, startDate, endDate));
         return mv;
-    }
-    @ResponseBody
-    @RequestMapping(path = "/totalAll")
-    public JSONObject totalAll(String appInfoId, String startDate, String endDate){
-        JSONObject result = new JSONObject();
-        dealTotalAll("activityNum", result, wechatTotalService.totalActivityNum(appInfoId, startDate, endDate));
-        dealTotalAll("spreadRangeNum", result, wechatTotalService.totalSpreadRangeNum(appInfoId, startDate, endDate));
-        dealTotalAll("fissionEffectNewPeopleNum", result, wechatTotalService.totalFissionEffectNewPeopleNum(appInfoId, startDate, endDate));
-        dealTotalAll("shareNum", result, wechatTotalService.totalShareNum(appInfoId, startDate, endDate));
-        dealTotalAll("sharePeopleNum", result, wechatTotalService.totalSharePeopleNum(appInfoId, startDate, endDate));
-        result.put("success", true);
-        return result;
     }
 
     /**
      * 处理json - totalAll
      * @param key
-     * @param result
+     * @param mv
      * @param temp
      */
-    private void dealTotalAll(String key, JSONObject result, JSONObject temp){
+    private void dealTotalAll(String key,  ModelAndView mv, JSONObject temp){
         if(temp.getBoolean("success")){
-            result.put(key, temp.getInteger("countNum"));
+            mv.addObject(key, temp.getInteger("countNum"));
         }else{
-            result.put(key, 0);
+            mv.addObject(key, 0);
         }
-    }
-
-    /**
-     * 根据时间范围统计活跃度
-     * @param appInfoId
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(path = "/totalActivityNum")
-    public JSONObject totalActivityNum(String appInfoId, String startDate, String endDate){
-        return wechatTotalService.totalActivityNum(appInfoId, startDate, endDate);
     }
 
     /**
@@ -103,19 +73,6 @@ public class WechatTotalController {
     @RequestMapping(path = "/totalActivityNumView")
     public JSONObject totalActivityNumView(String appInfoId, String startDate, String endDate){
         return wechatTotalService.totalActivityNumView(appInfoId, startDate, endDate);
-    }
-
-    /**
-     * 根据时间范围统计传播范围
-     * @param appInfoId
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(path = "/totalSpreadRangeNum")
-    public JSONObject totalSpreadRangeNum(String appInfoId, String startDate, String endDate){
-        return wechatTotalService.totalSpreadRangeNum(appInfoId, startDate, endDate);
     }
     /**
      * 根据时间范围统计传播范围，返回数据走势图
@@ -131,19 +88,6 @@ public class WechatTotalController {
     }
 
     /**
-     * 根据时间范围统计裂变效果新增人数
-     * @param appInfoId
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(path = "/totalFissionEffectNewPeopleNum")
-    public JSONObject totalFissionEffectNewPeopleNum(String appInfoId, String startDate, String endDate){
-        return wechatTotalService.totalFissionEffectNewPeopleNum(appInfoId, startDate, endDate);
-    }
-
-    /**
      * 根据时间范围统计裂变效果新增人数，返回数据走势图
      * @param appInfoId
      * @param startDate
@@ -156,18 +100,6 @@ public class WechatTotalController {
         return wechatTotalService.totalFissionEffectNewPeopleNumView(appInfoId, startDate, endDate);
     }
 
-    /**
-     * 根据时间范围统计分享次数
-     * @param appInfoId
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(path = "/totalShareNum")
-    public JSONObject totalShareNum(String appInfoId, String startDate, String endDate){
-        return wechatTotalService.totalShareNum(appInfoId, startDate, endDate);
-    }
 
     /**
      * 根据时间范围统计分享次数，返回数据走势图
@@ -182,18 +114,6 @@ public class WechatTotalController {
         return wechatTotalService.totalShareNumView(appInfoId, startDate, endDate);
     }
 
-    /**
-     * 根据时间范围统计分享人数
-     * @param appInfoId
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping(path = "/totalSharePeopleNum")
-    public JSONObject totalSharePeopleNum(String appInfoId, String startDate, String endDate){
-        return wechatTotalService.totalSharePeopleNum(appInfoId, startDate, endDate);
-    }
 
     /**
      * 根据时间范围统计分享人数，返回数据走势图

@@ -30,6 +30,12 @@ public class WechatAppInfoController {
     @Autowired
     private WechatAppInfoService wechatAppInfoService;
 
+    /**
+     * 根据用户id查询小程序
+     * @param request
+     * @param response
+     * @return
+     */
     @ResponseBody
     @RequestMapping(path = "/findAppInfoListByUser")
     public JSONObject findAppInfoListByUser(HttpServletRequest request, HttpServletResponse response){
