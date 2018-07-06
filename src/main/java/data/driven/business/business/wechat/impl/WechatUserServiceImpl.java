@@ -69,7 +69,7 @@ public class WechatUserServiceImpl implements WechatUserService {
 
     @Override
     public WechatUserInfoVO getUserInfoByUserIdAndAppInfoId(String userInfoId, String appInfoId) {
-        String sql = "select u.wechat_user_id,u.nick_name,u.gender,u.language,u.city,u.province,u.country,u.avatar_url,u.union_id,u.create_at,u.open_id,aum.app_info_id,aum.wechat_map_id from wechat_user_info u" +
+        String sql = "select u.wechat_user_id,u.nick_name,u.gender,u.language,u.city,u.province,u.country,u.avatar_url,u.union_id,u.create_at,aum.open_id,aum.app_info_id,aum.wechat_map_id from wechat_user_info u" +
                 " left join wechat_app_user_mapping aum on aum.wechat_user_id = u.wechat_user_id" +
                 " where u.wechat_user_id = ? and aum.app_info_id = ?";
         List<WechatUserInfoVO> list = jdbcBaseDao.queryList(WechatUserInfoVO.class, sql, userInfoId, appInfoId);
