@@ -1,5 +1,7 @@
 package data.driven.business.entity.wechat;
 
+import java.util.Date;
+
 /**
  * 微信分享信息表
  * @author hejinkai
@@ -15,7 +17,7 @@ public class WechatShareInfoEntity {
     /** 小程序id **/
     private String appInfoId;
     /** 分享创建时间 **/
-    private String createAt;
+    private Date createAt;
 
     public String getShareId() {
         return shareId;
@@ -49,11 +51,11 @@ public class WechatShareInfoEntity {
         this.appInfoId = appInfoId;
     }
 
-    public String getCreateAt() {
+    public Date getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(String createAt) {
+    public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
 }
