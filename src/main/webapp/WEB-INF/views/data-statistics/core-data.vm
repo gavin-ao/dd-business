@@ -1,0 +1,20 @@
+<div class="selectData" data-iden="activitySum">
+    <p>活跃度(点击次数)</p>
+    <p class="activitySum">3345</p>
+</div>
+<div data-iden="arealLimitsSum">
+    <p>传播范围(点击人数)</p>
+    <p class="activitySum">1234</p>
+</div>
+<div data-iden="newNumPeo">
+    <p>裂变效果(新增人数)</p>
+    <p class="activitySum">213</p>
+</div>
+<div data-iden="shareNum">
+    <p>分享次数</p>
+    <p class="activitySum">542</p>
+</div>
+<div data-iden="shareNumPeo">
+    <p>分享人数</p>
+    <p class="activitySum">431</p>
+</div>

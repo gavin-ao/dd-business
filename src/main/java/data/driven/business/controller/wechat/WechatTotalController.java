@@ -37,6 +37,21 @@ public class WechatTotalController {
      * @param endDate
      * @return
      */
+    @RequestMapping(path = "/coreData")
+    public ModelAndView test(String appInfoId, String startDate, String endDate){
+        ModelAndView mv = new ModelAndView("/data-statistics/core-data");
+        //TODO 这里要查询点击数
+
+        //TODO 这里要查询传播范围
+
+        //TODO 这里要查询裂变新增用户
+
+        //TODO 这里要查询分享次数
+
+        //TODO 这里要查询分享人数
+
+        return mv;
+    }
     @ResponseBody
     @RequestMapping(path = "/totalAll")
     public JSONObject totalAll(String appInfoId, String startDate, String endDate){
