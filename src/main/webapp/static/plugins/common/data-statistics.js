@@ -54,6 +54,9 @@ function laydateTime() {
         , done: function (value, date) {
             $(".contain_main_title .time1").html(value)
             wholeStartTime = value;
+            if(!wholeEndTime){
+                wholeEndTime = value;
+            }
             changeTimeAfterDataChange()
         }
 
@@ -64,9 +67,10 @@ function laydateTime() {
         elem: '#endTime' //指定元素
         , value: time
         , done: function (value, date) {
-
             $(".contain_main_title .time2").html(value)
-
+            if(!wholeStartTime){
+                wholeStartTime = value;
+            }
             wholeEndTime = value
             changeTimeAfterDataChange()
         }
@@ -980,7 +984,8 @@ function selecyCondition() {
                 $(target).html(content)
                 var appInfoId = $(that).attr("data-appInfoId");
                 wholeAppInfoId = appInfoId;
-                changeTimeAfterDataChange();
+                // changeTimeAfterDataChange();
+                $($("#contain_main_head > div")[0]).trigger("click");
                 break;
             case "dropdownMenu2":
                 $(target).html(content)
@@ -997,7 +1002,6 @@ function changeTimeAfterDataChange() {
 
 // 时间选择
 function dateSelecteTime() {
-
     var startTime, endTime;
     $("#contain_main_head").off('click', "div");
     $("#contain_main_head").on('click', "div", function () {

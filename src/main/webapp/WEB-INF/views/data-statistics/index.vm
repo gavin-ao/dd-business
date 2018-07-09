@@ -41,7 +41,7 @@
     <div class="contain_main" style="">
         <div class="contain_main_head" style="" id="contain_main_head">
             <div class="dateSelect">
-                <input type="radio" name="chose" class="todayTime" checked="true"> 今日
+                <input type="radio" name="chose" class="todayTime"> 今日
             </div>
             <div class="dateSelect">
                 <input type="radio" name="chose"  class="yesterdayTime"> 昨日
