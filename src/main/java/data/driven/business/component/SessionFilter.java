@@ -44,12 +44,13 @@ public class SessionFilter implements Filter{
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String uri = request.getRequestURI();
+        String serverName = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         if(canFilter(uri)){
             ApplicationSessionFactory.init(request, response);
             if(!uri.startsWith(SERVICE_URL)){
                 UserInfoEntity user = ApplicationSessionFactory.getUser(request, response);
                 if(user == null){
-                    response.sendRedirect(SERVICE_URL + "/login");
+                    response.sendRedirect(serverName + SERVICE_URL + "/login");
                     return ;
                 }else{
                     System.out.println(uri);
