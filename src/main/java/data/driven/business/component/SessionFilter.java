@@ -52,10 +52,9 @@ public class SessionFilter implements Filter{
                 if(user == null){
                     response.sendRedirect(serverName + SERVICE_URL + "/login");
                     return ;
-                }else{
-                    System.out.println(uri);
-                    System.out.println(JSONObject.toJSONString(user));
                 }
+                logger.info("filter-uri:{}", uri);
+                logger.info("user:{}", JSONObject.toJSONString(user));
             }
         }
         filterChain.doFilter(request, response);
