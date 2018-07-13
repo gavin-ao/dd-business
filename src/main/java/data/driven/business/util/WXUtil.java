@@ -1,6 +1,7 @@
 package data.driven.business.util;
 
 import com.alibaba.fastjson.JSONObject;
+import data.driven.business.common.Constant;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.UnsupportedEncodingException;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.alibaba.fastjson.JSON.parseObject;
+import static data.driven.business.util.JSONUtil.putMsg;
 
 /**
  * 微信接口调用工具类
@@ -20,11 +22,18 @@ public class WXUtil {
     private static final String APPID = "wx6f8fab67827259b0";
     /** 小程序签名 **/
     private static final String SECRET = "ed71f12d39b999ee6c47d0b77a6f2c8c";
-    /** 许可类型 **/
-    private static final String AUTHORIZATION_CODE = "authorization_code";
+    /** 许可类型-授权code **/
+    private static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
+    /** 许可类型-获取access_token **/
+    private static final String GRANT_TYPE_CLIENT_CREDENTIAL = "client_credential";
     /** 根据登录code获取session_key的url **/
     private static final String jscode2session_url = "https://api.weixin.qq.com/sns/jscode2session";
-//    js_code=JSCODE&
+    /** 用于获取小程序access_token的url **/
+    private static final String token_url = "https://api.weixin.qq.com/cgi-bin/token";
+    /** 用于获取二维码-接口A方式-无数量限制 **/
+    private static final String typea_qrcode_url = "https://api.weixin.qq.com/wxa/getwxacode";
+    /** 用于获取二维码-接口B方式-无数量限制 **/
+    private static final String typeb_qrcode_url = "https://api.weixin.qq.com/wxa/getwxacodeunlimit";
 
     /**
      * 根据appid,secret,code获取sessionKey
@@ -37,9 +46,73 @@ public class WXUtil {
         Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put("appid", appid);
         paramMap.put("secret", secret);
-        paramMap.put("grant_type", AUTHORIZATION_CODE);
+        paramMap.put("grant_type", GRANT_TYPE_AUTHORIZATION_CODE);
         paramMap.put("js_code", code);
         String resultStr = HttpUtil.doPostSSL(jscode2session_url, paramMap);
+        if(resultStr == null){
+            return new JSONObject();
+        }
+        return parseObject(resultStr);
+    }
+
+    public static JSONObject createWXQrcodeA(String path, String accessToken){
+        JSONObject paramJson = new JSONObject();
+        paramJson.put("path", path);
+        //默认配置
+//        paramJson.put("width", 430);//二维码的宽度
+//        paramJson.put("auto_color", false);//自动配置线条颜色，如果颜色依然是黑色，则说明不建议配置主色调
+//        paramJson.put("line_color", JSONObject.parseObject("{\"r\":\"0\",\"g\":\"0\",\"b\":\"0\"}"));//auto_color 为 false 时生效，使用 rgb 设置颜色 例如 {"r":"xxx","g":"xxx","b":"xxx"} 十进制表示
+//        paramJson.put("is_hyaline", false);//	是否需要透明底色， is_hyaline 为true时，生成透明底色的小程序码
+        String tempFileName = Constant.WXQRCODE_TEMP_FILE_FOLDER + UUIDUtil.getUUID() + ".jpg";
+        String fileName = Constant.FILE_UPLOAD_PATH + tempFileName;
+        JSONObject success = HttpUtil.doPostSSLAttachment(typea_qrcode_url + "?access_token="+accessToken, paramJson, fileName);
+        if(success.getBoolean("success")){
+            JSONObject result = JSONUtil.putMsg(true, "200", "二维码生成成功");
+            result.put("qrcodeUrl", tempFileName);
+            return result;
+        }else{
+            return success;
+        }
+    }
+
+    /**
+     * 根据页面生成二维码-可带参数
+     * @param scene 自定义参数，最大32个可见字符，只支持数字，大小写英文以及部分特殊字符：!#$&'()*+,/:;=?@-._~，其它字符请自行编码为合法字符（因不支持%，中文无法使用 urlencode 处理，请使用其他编码方式
+     * @param page 必须是已经发布的小程序存在的页面（否则报错），例如 "pages/index/index" ,根路径前不要填加'/',不能携带参数（参数请放在scene字段里），如果不填写这个字段，默认跳主页面
+     * @return
+     */
+    public static JSONObject createWXQrcodeB(String scene, String page, String accessToken){
+        JSONObject paramJson = new JSONObject();
+        paramJson.put("scene", scene);
+        if(page != null){
+            paramJson.put("page", page);
+        }
+        //默认配置
+//        paramJson.put("width", 430);//二维码的宽度
+//        paramJson.put("auto_color", false);//自动配置线条颜色，如果颜色依然是黑色，则说明不建议配置主色调
+//        paramJson.put("line_color", JSONObject.parseObject("{\"r\":\"0\",\"g\":\"0\",\"b\":\"0\"}"));//auto_color 为 false 时生效，使用 rgb 设置颜色 例如 {"r":"xxx","g":"xxx","b":"xxx"} 十进制表示
+//        paramJson.put("is_hyaline", false);//	是否需要透明底色， is_hyaline 为true时，生成透明底色的小程序码
+        String tempFileName = Constant.WXQRCODE_TEMP_FILE_FOLDER + UUIDUtil.getUUID() + ".jpg";
+        String fileName = Constant.FILE_UPLOAD_PATH + tempFileName;
+        JSONObject success = HttpUtil.doPostSSLAttachment(typeb_qrcode_url + "?access_token="+accessToken, paramJson, fileName);
+        if(success.getBoolean("success")){
+            JSONObject result = JSONUtil.putMsg(true, "200", "二维码生成成功");
+            result.put("qrcodeUrl", tempFileName);
+            return result;
+        }else{
+            return success;
+        }
+    }
+
+    /**
+     * 根据appid,secret获取access_token
+     * @param appid
+     * @param secret
+     * @return
+     */
+    public static JSONObject getAccessToken(String appid, String secret){
+        String url = token_url+"?grant_type="+GRANT_TYPE_CLIENT_CREDENTIAL+"&appid="+appid+"&secret="+secret;
+        String resultStr = HttpUtil.doGetSSL(url);
         if(resultStr == null){
             return new JSONObject();
         }
@@ -63,14 +136,14 @@ public class WXUtil {
      */
     public static JSONObject decodeUserInfo(String encryptedData, String iv, String code){
         if(encryptedData == null || iv == null || code == null){
-            return JSONUtil.putMsg(false, "101", "参数为空");
+            return putMsg(false, "101", "参数为空");
         }
         String session_key = null;
         JSONObject sessionJsonObject = getSessionKey(code);
         if(sessionJsonObject.containsKey("session_key")){
             session_key = sessionJsonObject.getString("session_key");
         }else{
-            return JSONUtil.putMsg(false, "102", "获取不到session_key，请重新登录");
+            return putMsg(false, "102", "获取不到session_key，请重新登录");
         }
 
         JSONObject result = executeDecodeUserInfo(encryptedData, iv, session_key);
@@ -86,19 +159,15 @@ public class WXUtil {
      * @return
      */
     public static JSONObject executeDecodeUserInfo(String encryptedData, String iv, String session_key) {
-        System.out.println("开始解密：-------");
-        System.out.println("encryptedData:"+encryptedData);
-        System.out.println("iv:"+iv);
-        System.out.println("session_key:"+session_key);
         JSONObject result = null;
         try {
             byte[] resultByte  = AESUtil.decrypt(Base64.decodeBase64(encryptedData), Base64.decodeBase64(session_key), Base64.decodeBase64(iv));
             if(null != resultByte && resultByte.length > 0){
                 String userInfo = new String(resultByte, "UTF-8");
-                result = JSONUtil.putMsg(true, "200", "解密成功");
+                result = putMsg(true, "200", "解密成功");
                 result.put("userInfo", JSONObject.parseObject(userInfo));
             }else{
-                result = JSONUtil.putMsg(true, "109", "解密失败");
+                result = putMsg(true, "109", "解密失败");
             }
         }catch (InvalidAlgorithmParameterException e) {
             e.printStackTrace();
@@ -110,9 +179,15 @@ public class WXUtil {
 
     public static void main(String[] args){
 
-        String encryptedData = "hqZuO3yN7xpjh660AgzL0iQwIUrqnDqgclRGaxm7RatzkuH25bpxaTcolvSYQXqbbjZjgSbqRvbmi/ypycmnVRi69LGKy+SwGVDQC6Eoic6cFYJdoC3no5cu4bAfjtwTTW0x1M3gDnc/KNOBAFN/iqgcZbk6wPDA7vJU8wf0WwvC2+0x9z5AZLjnGQrN7cp6oc0e1RCjAQo2RJNp93fO0v5GRrD7HC4+oL/ioaddqSv5t72skesFGjUPI2exP3G/3DUGg5bvz515nxrYV+ocRCmk38bR8PYwhKmn9YiDo1ChQ+kwwKyzlIU7K4cWm91UxWka3UWv9irLNmWNNi/UUFmjutjOP0OH0BQblp4g54USgsjFR1Gylcjz4reyDrQPQxb74NmFuSDaquuyLdT4k1qtFrcZahogCVTbIU97NPimT8k08OR50DRMQYwzSoCnviOSBIvhbiAWg6klclX4w7HMkWgM6pujTuTs6VYTgE4=";
-        String iv = "tP5c7E8+xkZoxGu6eT1HAQ==";
-        String sessionKey = "YowUQR+UWuSTMzZmWmnv5g==";
+        JSONObject jsonObject = getAccessToken(APPID, SECRET);
+        System.out.println(jsonObject.toJSONString());
+        String accessToken = jsonObject.getString("access_token");
+        JSONObject r = createWXQrcodeB(null, "pages/showPages/main", accessToken);
+        System.out.println(r.toJSONString());
+
+//        String encryptedData = "hqZuO3yN7xpjh660AgzL0iQwIUrqnDqgclRGaxm7RatzkuH25bpxaTcolvSYQXqbbjZjgSbqRvbmi/ypycmnVRi69LGKy+SwGVDQC6Eoic6cFYJdoC3no5cu4bAfjtwTTW0x1M3gDnc/KNOBAFN/iqgcZbk6wPDA7vJU8wf0WwvC2+0x9z5AZLjnGQrN7cp6oc0e1RCjAQo2RJNp93fO0v5GRrD7HC4+oL/ioaddqSv5t72skesFGjUPI2exP3G/3DUGg5bvz515nxrYV+ocRCmk38bR8PYwhKmn9YiDo1ChQ+kwwKyzlIU7K4cWm91UxWka3UWv9irLNmWNNi/UUFmjutjOP0OH0BQblp4g54USgsjFR1Gylcjz4reyDrQPQxb74NmFuSDaquuyLdT4k1qtFrcZahogCVTbIU97NPimT8k08OR50DRMQYwzSoCnviOSBIvhbiAWg6klclX4w7HMkWgM6pujTuTs6VYTgE4=";
+//        String iv = "tP5c7E8+xkZoxGu6eT1HAQ==";
+//        String sessionKey = "YowUQR+UWuSTMzZmWmnv5g==";
 //        String appId = "wx4f4bc4dec97d474b";
 //        String sessionKey = "tiihtNczf5v6AKRyjwEUhQ==";
 //        String encryptedData =
@@ -134,10 +209,10 @@ public class WXUtil {
 //                        "20f0a04COwfneQAGGwd5oa+T8yO5hzuy"+
 //                        "Db/XcxxmK01EpqOyuxINew==";
 //        String iv = "r7BXXKkLb8qrSNn05n0qiA==";
-        JSONObject j = executeDecodeUserInfo(encryptedData, iv, sessionKey);
+//        JSONObject j = executeDecodeUserInfo(encryptedData, iv, sessionKey);
 //        System.out.println(getSessionKey("sss"));
 //        System.out.println(getSessionKey("a","b","2"));
-        System.out.println(j);
+//        System.out.println(j);
     }
 
 }

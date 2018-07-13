@@ -91,7 +91,7 @@ public class WechatLoginApiController {
             }
 
         }catch (Exception e){
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
         if(appid == null){
             return JSONUtil.putMsg(false, "103", "获取的信息有误，请重试");

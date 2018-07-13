@@ -27,8 +27,8 @@ public class WechatShareDetailServiceImpl implements WechatShareDetailService {
         Date nowDate = new Date();
         String shareDetailId = exitsShareDetailId(fromUserInfo.getWechatMapId(), toUserInfo.getWechatMapId(), shareInfo.getShareId());
         if(shareDetailId != null){
-            String sql = "update wechat_share_detail set frequency = frequency + 1,share_at = ? and last_share_at = ? where share_detail_id = ?";
-            jdbcBaseDao.executeUpdate(sql, nowDate, nowDate, shareDetailId);
+            String sql = "update wechat_share_detail set frequency = frequency + 1, last_share_at = ? where share_detail_id = ?";
+            jdbcBaseDao.executeUpdate(sql, nowDate, shareDetailId);
         }else{
             shareDetailId = UUIDUtil.getUUID();
             WechatShareDetailEntity shareDetailEntity = new WechatShareDetailEntity();

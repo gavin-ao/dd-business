@@ -69,15 +69,11 @@ public class WechatShareApiController {
     @RequestMapping(path = "/clickShareUrl")
     public JSONObject clickShareUrl(String sessionID, String shareId){
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
-        System.out.println("wechatApiSessionBean_"+JSONObject.toJSONString(wechatApiSessionBean));
         try{
             WechatShareInfoEntity shareInfoEntity = wechatShareInfoService.getEntityById(shareId);
-            System.out.println("shareInfoEntity_"+JSONObject.toJSONString(shareInfoEntity));
             if(shareInfoEntity != null){
                 WechatUserInfoVO fromUserInfo = wechatUserService.getUserInfoByUserIdAndAppInfoId(shareInfoEntity.getWechatUserId(), shareInfoEntity.getAppInfoId());
-                System.out.println("fromUserInfo_"+JSONObject.toJSONString(fromUserInfo));
                 WechatUserInfoVO toUserInfo = wechatApiSessionBean.getUserInfo();
-                System.out.println("toUserInfo_"+JSONObject.toJSONString(toUserInfo));
                 wechatShareDetailService.insertShareDetail(fromUserInfo, toUserInfo, shareInfoEntity);
                 JSONObject result = JSONUtil.putMsg(true, "200", "分享点击记录成功");
                 return result;
@@ -86,7 +82,6 @@ public class WechatShareApiController {
             }
         }catch (Exception e){
             logger.error("clickShareUrl报错_"+e.getMessage(), e);
-            e.printStackTrace();
             return putMsg(false, "102", "分享点击记录失败");
         }
     }

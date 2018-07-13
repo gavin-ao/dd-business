@@ -29,6 +29,11 @@ public class WechatApiFilter implements Filter{
         EXCLUDE_URL_SET.add("/static");
         //微信登录和同步接口不需要过滤
         EXCLUDE_URL_SET.add("/wechatapi/service/");
+
+        //TODO 为了方便测试所以去除了这些拦截
+        EXCLUDE_URL_SET.add("/wechatapi/travels-template");
+        EXCLUDE_URL_SET.add("/wechatapi/qrcode");
+        EXCLUDE_URL_SET.add("/wechatapi/help");
     }
 
     @Override

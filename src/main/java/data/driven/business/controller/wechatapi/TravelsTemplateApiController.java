@@ -3,6 +3,7 @@ package data.driven.business.controller.wechatapi;
 import com.alibaba.fastjson.JSONObject;
 import data.driven.business.business.tourism.TravelsPictureTemplateService;
 import data.driven.business.business.tourism.TravelsTextTemplateService;
+import data.driven.business.common.Constant;
 import data.driven.business.util.RequestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +52,11 @@ public class TravelsTemplateApiController {
             List<JSONObject> boards = new ArrayList<JSONObject>(pictureTemplateList.size());
             for(String picturePath : pictureTemplateList){
                 JSONObject pictJson = new JSONObject();
-                String imgUrl = pathHead;
+//                String imgUrl = pathHead;
 //                if(!picturePath.startsWith("/")){
 //                    imgUrl += "/";
 //                }
-                picturePath = imgUrl + picturePath;
+                picturePath = Constant.STATIC_FILE_PATH + picturePath;
                 pictJson.put("key", picturePath);
                 boards.add(pictJson);
             }

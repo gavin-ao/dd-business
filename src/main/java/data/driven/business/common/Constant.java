@@ -11,6 +11,8 @@ public class Constant {
     public final static int USER_INFO_MAX_INTERVAL = 3 * 60;
     /** 文件上传路径 **/
     public static String FILE_UPLOAD_PATH;
+    /** 微信二维码生成临时目录 **/
+    public static String WXQRCODE_TEMP_FILE_FOLDER = "tempwxqrcode/";
     /** 静态资源访问路径 **/
     public static String STATIC_FILE_PATH = "/static/file/";
     public static final String SESSIONID_COOKIE_NAME = "SESSIONID";

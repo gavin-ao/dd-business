@@ -1,4 +1,5 @@
 package data.driven.business.util;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,6 +38,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static data.driven.business.util.JSONUtil.putMsg;
 
 /**
  * HTTP工具类
@@ -211,6 +214,42 @@ public class HttpUtil {
     }
 
     /**
+     * 发送 SSL GET 请求（HTTPS）
+     * @param apiUrl API接口URL
+     */
+    public static String doGetSSL(String apiUrl) {
+        CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory()).setConnectionManager(connMgr).setDefaultRequestConfig(requestConfig).build();
+        HttpGet httpGet = new HttpGet(apiUrl);
+        CloseableHttpResponse response = null;
+        String httpStr = null;
+
+        try {
+            httpGet.setConfig(requestConfig);
+            response = httpClient.execute(httpGet);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_OK) {
+                return null;
+            }
+            HttpEntity entity = response.getEntity();
+            if (entity == null) {
+                return null;
+            }
+            httpStr = EntityUtils.toString(entity, CONDING);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            if (response != null) {
+                try {
+                    EntityUtils.consume(response.getEntity());
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        }
+        return httpStr;
+    }
+
+    /**
      * 发送 SSL POST 请求（HTTPS），K-V形式
      *
      * @param apiUrl API接口URL
@@ -294,6 +333,55 @@ public class HttpUtil {
             }
         }
         return httpStr;
+    }
+
+    /**
+     * 发送 SSL POST 请求（HTTPS），JSON形式 - 返回附件
+     * @param apiUrl API接口URL
+     * @param json   JSON对象
+     */
+    public static JSONObject doPostSSLAttachment(String apiUrl, Object json, String fileName) {
+        CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory()).setConnectionManager(connMgr).setDefaultRequestConfig(requestConfig).build();
+        HttpPost httpPost = new HttpPost(apiUrl);
+        CloseableHttpResponse response = null;
+        try {
+            httpPost.setConfig(requestConfig);
+            StringEntity stringEntity = new StringEntity(json.toString(), CONDING);
+            stringEntity.setContentEncoding(CONDING);
+            stringEntity.setContentType("application/json");
+            httpPost.setEntity(stringEntity);
+            response = httpClient.execute(httpPost);
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_OK) {
+                return putMsg(false, "101", "调用失败");
+            }
+            HttpEntity httpEntity = response.getEntity();
+            if (httpEntity == null) {
+                return putMsg(false, "102", "返回实体为空");
+            }
+            byte[] bytes = FileUtil.readInputStream(httpEntity.getContent());
+            String str = new String(bytes);
+            if(str.indexOf("errcode") > 0){
+                JSONObject result = JSONUtil.putMsg(false, "103", "调用失败");
+                result.putAll(JSONObject.parseObject(str));
+                return result;
+            }else{
+                FileUtil.createFile(fileName, bytes);
+            }
+
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            JSONUtil.putMsg(false, "104", "调用失败");
+        } finally {
+            if (response != null) {
+                try {
+                    EntityUtils.consume(response.getEntity());
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        }
+        return putMsg(true, "200", "调用成功");
     }
 
     /**
