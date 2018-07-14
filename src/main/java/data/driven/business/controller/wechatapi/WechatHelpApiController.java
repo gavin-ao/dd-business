@@ -41,32 +41,42 @@ public class WechatHelpApiController {
 
     @ResponseBody
     @RequestMapping(path = "/getHelpId")
-    public JSONObject getHelpId(String sessionID){
-        JSONObject result = putMsg(true, "200", "获取成功");
-        String helpId = UUIDUtil.getUUID();
-        result.put("helpId", helpId);
-        return result;
+    public JSONObject getHelpId(String sessionID, String actId){
+        WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+        String wechatUserId = wechatApiSessionBean.getUserInfo().getWechatUserId();
+        WechatHelpInfoEntity wechatHelpInfoEntity = wechatHelpInfoService.getHelpInfoByActId(actId, wechatUserId);
+        String helpId = null;
+        if(wechatHelpInfoEntity != null){
+            helpId = wechatHelpInfoEntity.getHelpId();
+            JSONObject result = putMsg(true, "200", "获取成功");
+            result.put("helpId", helpId);
+            return result;
+        }else{
+            return putMsg(false, "101", "获取失败");
+        }
     }
 
     /**
      * 进行邀请好友助力，生成助力信息
      * @param sessionID
-     * @param helpId
      * @param actId 活动id
      * @return
      */
     @ResponseBody
     @RequestMapping(path = "/execuHelp")
-    public JSONObject execuHelp(String sessionID, String helpId, String actId){
+    public JSONObject execuHelp(String sessionID, String actId){
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         String wechatUserId = wechatApiSessionBean.getUserInfo().getWechatUserId();
         try{
+            String helpId = UUIDUtil.getUUID();
             WechatHelpInfoEntity wechatHelpInfoEntity = wechatHelpInfoService.getHelpInfoByActId(actId, wechatUserId);
             if(wechatHelpInfoEntity != null){
-                return putMsg(false, "101", "邀请助力失败，已经邀请过了");
+                helpId = wechatHelpInfoEntity.getHelpId();
+            }else{
+                wechatHelpInfoService.insertHelp(helpId, actId, wechatUserId, wechatApiSessionBean.getUserInfo().getAppInfoId());
             }
-            wechatHelpInfoService.insertHelp(helpId, actId, wechatUserId, wechatApiSessionBean.getUserInfo().getAppInfoId());
             JSONObject result = putMsg(true, "200", "邀请助力成功");
+            result.put("helpId", helpId);
             return result;
         }catch (Exception e){
             logger.error(e.getMessage(), e);
