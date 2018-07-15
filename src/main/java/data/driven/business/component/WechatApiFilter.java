@@ -34,6 +34,7 @@ public class WechatApiFilter implements Filter{
         EXCLUDE_URL_SET.add("/wechatapi/travels-template");
         EXCLUDE_URL_SET.add("/wechatapi/qrcode");
         EXCLUDE_URL_SET.add("/wechatapi/help");
+        EXCLUDE_URL_SET.add("/wechatapi/activity");
     }
 
     @Override

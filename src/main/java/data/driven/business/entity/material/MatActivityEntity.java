@@ -1,0 +1,121 @@
+package data.driven.business.entity.material;
+
+import java.util.Date;
+
+/**
+ * 素材-活动
+ * @author hejinkai
+ * @date 2018/7/15
+ */
+public class MatActivityEntity {
+    /** 活动id **/
+    private String actId;
+    /** 活动用户id **/
+    private String userId;
+    /** 微信小程序id **/
+    private String appInfoId;
+    /** 活动名称 **/
+    private String actName;
+    /** 活动介绍 **/
+    private String actIntroduce;
+    /** 图片id **/
+    private String pictureId;
+    /** 活动地址 **/
+    private String actUrl;
+    /** 活动开始日期 **/
+    private Date startAt;
+    /** 活动结束日期 **/
+    private Date endAt;
+    /** 活动状态 0 - 未开始； 1 进行中 ； 2 - 已结束 **/
+    private Integer status;
+    /** 创建日期 **/
+    private Date createAt;
+
+    public String getActId() {
+        return actId;
+    }
+
+    public void setActId(String actId) {
+        this.actId = actId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getAppInfoId() {
+        return appInfoId;
+    }
+
+    public void setAppInfoId(String appInfoId) {
+        this.appInfoId = appInfoId;
+    }
+
+    public String getActName() {
+        return actName;
+    }
+
+    public void setActName(String actName) {
+        this.actName = actName;
+    }
+
+    public String getActIntroduce() {
+        return actIntroduce;
+    }
+
+    public void setActIntroduce(String actIntroduce) {
+        this.actIntroduce = actIntroduce;
+    }
+
+    public String getPictureId() {
+        return pictureId;
+    }
+
+    public void setPictureId(String pictureId) {
+        this.pictureId = pictureId;
+    }
+
+    public String getActUrl() {
+        return actUrl;
+    }
+
+    public void setActUrl(String actUrl) {
+        this.actUrl = actUrl;
+    }
+
+    public Date getStartAt() {
+        return startAt;
+    }
+
+    public void setStartAt(Date startAt) {
+        this.startAt = startAt;
+    }
+
+    public Date getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(Date endAt) {
+        this.endAt = endAt;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+}

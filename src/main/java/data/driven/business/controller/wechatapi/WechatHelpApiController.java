@@ -92,6 +92,36 @@ public class WechatHelpApiController {
     }
 
     /**
+     * 判断当前用户是否助力过
+     * @param sessionID
+     * @param helpId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "/existDoHelp")
+    public JSONObject existDoHelp(String sessionID, String helpId){
+        WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+        try{
+            WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
+            if(helpInfoEntity != null){
+                WechatUserInfoVO fromUserInfo = wechatUserService.getUserInfoByUserIdAndAppInfoId(helpInfoEntity.getWechatUserId(), helpInfoEntity.getAppInfoId());
+                WechatUserInfoVO toUserInfo = wechatApiSessionBean.getUserInfo();
+                String helpDetailId = wechatHelpDetailService.getHelpDetailId(fromUserInfo.getWechatMapId(), toUserInfo.getWechatMapId(), helpId);
+                if(helpDetailId != null){
+                    return putMsg(true, "200", "已助力");
+                }else{
+                    return putMsg(true, "101", "未助力");
+                }
+            }else{
+                return putMsg(false, "102", "助力记录不存在，请确认助力id是否正确");
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return putMsg(false, "103", "查询失败");
+        }
+    }
+
+    /**
      * 记录助力动作
      * @param sessionID
      * @param helpId
