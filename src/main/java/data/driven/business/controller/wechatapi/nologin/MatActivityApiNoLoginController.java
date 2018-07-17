@@ -1,8 +1,9 @@
-package data.driven.business.controller.wechatapi;
+package data.driven.business.controller.wechatapi.nologin;
 
 import com.alibaba.fastjson.JSONObject;
 import data.driven.business.business.material.MatActivityService;
 import data.driven.business.common.Constant;
+import data.driven.business.controller.wechatapi.WechatShareApiController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ import static data.driven.business.util.JSONUtil.putMsg;
  * @date 2018/7/15
  */
 @Controller
-@RequestMapping(path = "/wechatapi/activity")
-public class MatActivityController {
+@RequestMapping(path = "/wechatapi/nologin/activity")
+public class MatActivityApiNoLoginController {
     private static final Logger logger = LoggerFactory.getLogger(WechatShareApiController.class);
 
     @Autowired
