@@ -108,7 +108,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         if(start == null || end == null){
             return JSONUtil.putMsg(false, "102", "时间获取失败，请检查时间格式");
         }
-        String sql = "select count(wechat_user_id) from wechat_login_log where app_info_id = ? and login_at between ? and ? group by wechat_user_id";
+        String sql = "select ifnull(count(1),0) from (select wechat_user_id from wechat_login_log where app_info_id = ? and login_at between ? and ? group by wechat_user_id) as t";
         Integer countNum = jdbcBaseDao.getCount(sql, appInfoId, start, end);
         result.put("success", true);
         result.put("countNum", countNum);
@@ -149,10 +149,20 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         if(start == null || end == null){
             return JSONUtil.putMsg(false, "102", "时间获取失败，请检查时间格式");
         }
-        String sql = "select count(wsd.to_id) from wechat_share_detail wsd left join wechat_app_user_mapping waum on waum.wechat_map_id = wsd.to_id where wsd.app_info_id = ? and wsd.share_at between ? and ? and waum.create_at between ? and ?";
-        Integer countNum = jdbcBaseDao.getCount(sql, appInfoId, start, end, start, end);
+        //统计分享数据
+        String shareSql = "select count(wsd.to_id) from wechat_share_detail wsd left join wechat_app_user_mapping waum on waum.wechat_map_id = wsd.to_id where wsd.app_info_id = ? and wsd.share_at between ? and ? and waum.create_at between ? and ?";
+        Integer countShareNum = jdbcBaseDao.getCount(shareSql, appInfoId, start, end, start, end);
+        if(countShareNum == null){
+            countShareNum = 0;
+        }
+        //统计助力数据
+        String helpSql = "select count(whd.to_id) from wechat_help_detail whd left join wechat_app_user_mapping waum on waum.wechat_map_id = whd.to_id where whd.app_info_id = ? and whd.help_at between ? and ? and waum.create_at between ? and ?";
+        Integer countHelpNum = jdbcBaseDao.getCount(helpSql, appInfoId, start, end, start, end);
+        if(countHelpNum == null){
+            countHelpNum = 0;
+        }
         result.put("success", true);
-        result.put("countNum", countNum);
+        result.put("countNum", countShareNum + countHelpNum);
         return result;
     }
 
@@ -169,8 +179,10 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         }
 
         String format = getMysqlDateFormat(start, end);
-        String sql = "select count(wsd.to_id) as count_num,DATE_FORMAT(wsd.share_at,'" + format + "') as group_time from wechat_share_detail wsd left join wechat_app_user_mapping waum on waum.wechat_map_id = wsd.to_id where wsd.app_info_id = ? and wsd.share_at between ? and ? and waum.create_at between ? and ? group by DATE_FORMAT(wsd.share_at,'" + format + "')";
-        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end, start, end);
+        String sql = "select count(wsd.to_id) as count_num,DATE_FORMAT(wsd.share_at,'" + format + "') as group_time from wechat_share_detail wsd left join wechat_app_user_mapping waum on waum.wechat_map_id = wsd.to_id where wsd.app_info_id = ? and wsd.share_at between ? and ? and waum.create_at between ? and ? group by group_time" +
+                "   union all " +
+                " select count(whd.to_id) as count_num,DATE_FORMAT(whd.help_at,'" + format + "') as group_time from wechat_help_detail whd left join wechat_app_user_mapping waum on waum.wechat_map_id = whd.to_id where whd.app_info_id = ? and whd.help_at between ? and ? and waum.create_at between ? and ? group by group_time";
+        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end, start, end, appInfoId, start, end, start, end);
         result.put("data", list);
         result.put("success", true);
         return result;
@@ -189,8 +201,18 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         }
         String sql = "select count(share_id) from wechat_share_info where app_info_id = ? and create_at between ? and ?";
         Integer countNum = jdbcBaseDao.getCount(sql, appInfoId, start, end);
+        if(countNum == null){
+            countNum = 0;
+        }
+
+        String helpSql = "select count(help_id) from wechat_help_info where app_info_id = ? and create_at between ? and ?";
+        Integer countHelpNum = jdbcBaseDao.getCount(helpSql, appInfoId, start, end);
+        if(countHelpNum == null){
+            countHelpNum = 0;
+        }
+
         result.put("success", true);
-        result.put("countNum", countNum);
+        result.put("countNum", countNum + countHelpNum);
         return result;
     }
 
@@ -207,8 +229,10 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         }
 
         String format = getMysqlDateFormat(start, end);
-        String sql = "select count(share_id) as count_num,DATE_FORMAT(create_at,'" + format + "') as group_time from wechat_share_info where app_info_id = ? and create_at between ? and ? group by DATE_FORMAT(create_at,'" + format + "')";
-        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end);
+        String sql = "select count(share_id) as count_num,DATE_FORMAT(create_at,'" + format + "') as group_time from wechat_share_info where app_info_id = ? and create_at between ? and ? group by DATE_FORMAT(create_at,'" + format + "')" +
+                " union all " +
+                " select count(help_id) as count_num,DATE_FORMAT(create_at,'" + format + "') as group_time from wechat_help_info where app_info_id = ? and create_at between ? and ? group by DATE_FORMAT(create_at,'" + format + "')";
+        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end, appInfoId, start, end);
         result.put("data", list);
         result.put("success", true);
         return result;
@@ -225,8 +249,15 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         if(start == null || end == null){
             return JSONUtil.putMsg(false, "102", "时间获取失败，请检查时间格式");
         }
-        String sql = "select count(wechat_user_id) from wechat_share_info where app_info_id = ? and create_at between ? and ? group by wechat_user_id";
-        Integer countNum = jdbcBaseDao.getCount(sql, appInfoId, start, end);
+        //利用union的特性，相同的只取一个，保证分享和助力数据统计人数时不重复
+        String sql = "select wechat_user_id from wechat_share_info where app_info_id = ? and create_at between ? and ? group by wechat_user_id" +
+                " union " +
+                " select wechat_user_id from wechat_help_info where app_info_id = ? and create_at between ? and ? group by wechat_user_id ";
+        List<String> userIdList = jdbcBaseDao.getColumns(String.class, sql, appInfoId, start, end, appInfoId, start, end);
+        Integer countNum = 0;
+        if(userIdList != null){
+            countNum = userIdList.size();
+        }
         result.put("success", true);
         result.put("countNum", countNum);
         return result;
@@ -243,10 +274,12 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         if(start == null || end == null){
             return JSONUtil.putMsg(false, "102", "时间获取失败，请检查时间格式");
         }
-
+        //利用union的特性，相同的只取一个，保证分享和助力数据统计人数时不重复
         String format = getMysqlDateFormat(start, end);
-        String sql = "select 1 as count_num,DATE_FORMAT(create_at,'" + format + "') as group_time from wechat_share_info where app_info_id = ? and create_at between ? and ? group by wechat_user_id,group_time";
-        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end);
+        String sql = "select 1 as count_num,DATE_FORMAT(create_at,'" + format + "') as group_time,wechat_user_id from wechat_share_info where app_info_id = ? and create_at between ? and ? group by wechat_user_id,group_time" +
+                " union " +
+                " select 1 as count_num,DATE_FORMAT(create_at,'" + format + "') as group_time,wechat_user_id from wechat_help_info where app_info_id = ? and create_at between ? and ? group by wechat_user_id,group_time";
+        List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end, appInfoId, start, end);
         coventWechatTotalList(list);
         result.put("data", list);
         result.put("success", true);

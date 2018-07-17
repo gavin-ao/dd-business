@@ -1080,7 +1080,7 @@ function coreDataShow(appInfoId) {
     $.ajax({
         url: "/wechat/total/coreData",
         type: "post",
-        data: {appInfoId: "5b3e12ffa7a117508c149383", startDate: wholeStartTime, endDate: wholeEndTime},
+        data: {appInfoId: "5b3dd7c91d76102dd8a2d0d4", startDate: wholeStartTime, endDate: wholeEndTime},
         dataType: "html",
         success: function (data) {
             $("#contain_main_data").html(data);
