@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="/static/plugins/css/jquery-ui.min.css" type="text/css" />
 <style>
     #main-menu{
-        padding-top: 55px;
         width: 100%;
     }
     #main-menu li{
@@ -33,7 +32,7 @@
             <span>易分享管理后台</span>
         </div>
     </div>
-    <nav class="navbar-default navbar-side" id="navbarH" role="navigation" style="background-color: #4E546C; width: 100%;height: 100%;float: left;font-size: 16px;">
+    <nav class="navbar-default navbar-side" id="navbarH" role="navigation" style="background-color: #4E546C; width: 100%;height:calc(100% - 80px) ;float: left;font-size: 16px;">
         <div class="sidebar-collapse">
             <ul class="nav" id="main-menu">
                 <li name="companyManage" style="background-color: #EEF4F9;color: #219DEF;">数据统计</li>

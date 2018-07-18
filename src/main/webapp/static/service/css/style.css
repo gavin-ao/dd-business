@@ -1,9 +1,16 @@
+#page-wrapper{
+    max-width: 1366px;
+    margin: 0 auto;
+}
+
+
 .header-left {
     width: 100%;
     background-color: #555C78;
     height: 80px;
     line-height: 80px;
     padding: 0 10px;
+    /*height: 100%;*/
 }
 
 .header-left > div {
@@ -30,6 +37,7 @@
     height: 80px;
     width: 100%;
     line-height: 80px;
+    background-color: #fff;
 }
 
 .contain_head_left {
@@ -107,7 +115,7 @@
 }
 
 .contain_main_data > div {
-    width: 220px;
+    width: 19%;
     height: 120px;
     border: 1px solid #ccc;
     display: inline-block;
@@ -146,8 +154,9 @@
 }
 
 .contain_main_chart > div div {
-    height: 100%;
+    height:calc( 100% - 50px);
     width: 100%;
+    border: 1px solid #ccc;
 }
 
 .contain_main_chart .contain_main_line {
@@ -160,9 +169,9 @@
 }
 
 .datePicker {
-    position: absolute;
-    top: 92px;
-    left: 600px;
+    margin-top: -50px;
+    margin-left: 360px;
+    padding-bottom: 15px;
     display: none;
 }
 
@@ -179,6 +188,11 @@
 .contain_main_graph {
     width: 100%;
     height: 600px;
+    font-size: 16px;
+}
+#main_graph{
+    height: calc(100% - 40px);
+    border: 1px solid #ccc;
 }
 
 .contain_main_graph > div {
