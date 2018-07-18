@@ -462,7 +462,7 @@ function chartGraphShow(list) {
         var number = num;
         for (var i = 0; i < list.length; i++) {
             nodes.push( {
-                id:list[i].id,
+                id:list[i].toUserId,
                 name: list[i].toUser,
                 rela: list[i].rela,
                 class: ORDNUME + number

@@ -154,8 +154,9 @@
 }
 
 .contain_main_chart > div div {
-    height: 100%;
+    height:calc( 100% - 50px);
     width: 100%;
+    border: 1px solid #ccc;
 }
 
 .contain_main_chart .contain_main_line {
@@ -187,6 +188,11 @@
 .contain_main_graph {
     width: 100%;
     height: 600px;
+    font-size: 16px;
+}
+#main_graph{
+    height: calc(100% - 40px);
+    border: 1px solid #ccc;
 }
 
 .contain_main_graph > div {
