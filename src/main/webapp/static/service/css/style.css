@@ -1,9 +1,16 @@
+#page-wrapper{
+    max-width: 1366px;
+    margin: 0 auto;
+}
+
+
 .header-left {
     width: 100%;
     background-color: #555C78;
     height: 80px;
     line-height: 80px;
     padding: 0 10px;
+    /*height: 100%;*/
 }
 
 .header-left > div {
@@ -30,6 +37,7 @@
     height: 80px;
     width: 100%;
     line-height: 80px;
+    background-color: #fff;
 }
 
 .contain_head_left {
@@ -107,7 +115,7 @@
 }
 
 .contain_main_data > div {
-    width: 220px;
+    width: 19%;
     height: 120px;
     border: 1px solid #ccc;
     display: inline-block;

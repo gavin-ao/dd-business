@@ -17,7 +17,8 @@ var wholeAppInfoId,wholeStartTime,wholeEndTime;
 
 
     // coreDataShow()
-    $("#navbarH").height($("#page-wrapper").height() - 80)
+    // $("#navbarH").height($("#page-wrapper").height() - 80)
+
 
 }())
 
@@ -208,7 +209,7 @@ function chartLineShow(data) {
 
 // 饼图展示
 function chartPieShow(data) {
-    var ratio = data.newUserNum/(data.newUserNum+data.oldUserNum) *100 +"%";
+    var ratio = (data.newUserNum/(data.newUserNum+data.oldUserNum) *100).toFixed(2) +"%";
     var myChartPie = echarts.init(document.getElementById('main_pie'));
     var options = {
         title: {
@@ -437,70 +438,49 @@ function echartsGraph() {
         myChartGraph.resize();
     }
 }
-function chartGraphShow() {
+function chartGraphShow(list) {
 
 //    传播轨迹图
     var links = [];
-    var nodes = {};
-    var list = [
-        {
-            name: "虚张声势丶", child: [
-            {
-                name: "淡抹丶悲伤", child: [
-                {
-                    name: "_倾月轩萱_",
-                    child: [
-                        {
-                            name: "丶猫猫er",
-                            child: [
-                                {name: "从未消失的孤独"},
-                                {name: "丶七炫灬"},
-                                {name: "◆残留德花瓣"},
-                                {name: "哼唱 小情歌"},
-                                {name: "冷落了♂自己·"}
-                            ]
-                        },
-                        {name: "沵算what°"}
-                    ]
-                }
-            ]
-            },
-            {name: "雪花ミ飞舞"},
-            {name: "夏日、微凉"},
-            {name: "厭棄"},
-            {name: "谎心久"},
-            {name: "unreal_虚幻"},
-            {name: "若水流年あ"},
-            {name: "继续沦落"},
-            {name: "人走茶会凉"},
-            {name: "青丝绕"},
-        ]
-        }
-
-    ]
+    var nodes = [];
     const ORDNUME = "order"
+    var childArr = [];
+    var num = 0;
+    function xunhuans(list) {
 
+        for (var i = 0; i < list.length; i++) {
+            list[i]["id"] = num;
+            num++;
+            if (list[i].childList && list[i].childList.length) {
+                xunhuans(list[i].childList);
+            }
+
+        }
+    }
+    xunhuans(list);
     function xunhuan(list, num) {
         var number = num;
         for (var i = 0; i < list.length; i++) {
-            nodes[list[i].name] || (nodes[list[i].name] = {
-                name: list[i].name,
+            nodes.push( {
+                id:list[i].id,
+                name: list[i].toUser,
                 rela: list[i].rela,
                 class: ORDNUME + number
             });
             num++;
-            if (list[i].child && list[i].child.length) {
-                for (var j = 0; j < list[i].child.length; j++) {
-                    links.push({source: list[i].name, target: list[i].child[j].name});
-                    nodes[list[i].child[j].name] || (nodes[list[i].child[j].name] = {
-                        name: list[i].child[j].name,
-                        rela: list[i].child[j].rela,
-                        class: ORDNUME + num
-                    });
+            if (list[i].childList && list[i].childList.length) {
+                for (var j = 0; j < list[i].childList.length; j++) {
+                    links.push({source: list[i].id, target: list[i].childList[j].id});
+                    // nodes.push({
+                    //     id:list[i].childList[j].id,
+                    //     name: list[i].childList[j].toUser,
+                    //     rela: list[i].childList[j].rela,
+                    //     class: ORDNUME + num
+                    // });
                 }
             }
-            if (list[i].child && list[i].child.length) {
-                xunhuan(list[i].child, num);
+            if (list[i].childList && list[i].childList.length) {
+                xunhuan(list[i].childList, num);
                 num--;
             } else {
                 num--;
@@ -514,14 +494,19 @@ function chartGraphShow() {
 
     var markerArr = []
     links.forEach(function (link) {
-        if (!contains(markerArr, nodes[link.source].class)) {
-            markerArr.push(nodes[link.source].class)
+        for(var i=0;i<nodes.length;i++){
+            if (!contains(markerArr, nodes[i].class)) {
+                markerArr.push(nodes[i].class)
+            }
+            if(nodes[i].id == link.source){
+                link.source = nodes[i].id;
+            }
+            if(nodes[i].id == link.target){
+                link.target = nodes[i].id ;
+            }
+
         }
-        if (!contains(markerArr, nodes[link.target].class)) {
-            markerArr.push(nodes[link.target].class)
-        }
-        link.source = nodes[link.source];
-        link.target = nodes[link.target];
+
 
     });
 
@@ -984,6 +969,7 @@ function selecyCondition() {
                 $(target).html(content)
                 var appInfoId = $(that).attr("data-appInfoId");
                 wholeAppInfoId = appInfoId;
+                wholeAppInfoId = "5b3dd7c91d76102dd8a2d0d4"
                 // changeTimeAfterDataChange();
                 $($("#contain_main_head > div")[0]).trigger("click");
                 break;
@@ -998,6 +984,7 @@ function selecyCondition() {
 function changeTimeAfterDataChange() {
     coreDataShow(wholeAppInfoId);
     newAndOldUsers(wholeAppInfoId)
+    graphData(wholeAppInfoId)
 }
 
 // 时间选择
@@ -1080,7 +1067,7 @@ function coreDataShow(appInfoId) {
     $.ajax({
         url: "/wechat/total/coreData",
         type: "post",
-        data: {appInfoId: "5b3dd7c91d76102dd8a2d0d4", startDate: wholeStartTime, endDate: wholeEndTime},
+        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
         dataType: "html",
         success: function (data) {
             $("#contain_main_data").html(data);
@@ -1095,7 +1082,7 @@ function dataTrendDiagram(urlName) {
         url: "/wechat/total/"+urlName,
         dataType: "json",
         type:"post",
-        data: {appInfoId: "5b3e12ffa7a117508c149383", startDate: wholeStartTime, endDate: wholeEndTime},
+        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
         success: function (data) {
             console.log(data)
             if(data.success){
@@ -1112,7 +1099,7 @@ function newAndOldUsers(appInfoId) {
         url: "/wechat/total/totalOldAndNewUser",
         dataType: "json",
         type:"post",
-        data: {appInfoId: "5b3e12ffa7a117508c149383", startDate: wholeStartTime, endDate: wholeEndTime},
+        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
         success: function (data) {
             console.log(data)
             if(data.success){
@@ -1123,5 +1110,22 @@ function newAndOldUsers(appInfoId) {
     })
 }
 
+// 传播轨迹 统计
+function graphData() {
+    $.ajax({
+        url: "/wechat/total/totalSpreadTrajectory",
+        type: "post",
+        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
+        dataType: "json",
+        success: function (data) {
+            console.log(data)
+            if(data.data.length){
+                chartGraphShow(data.data)
+            }
+
+        }
+    })
+
+}
 
 
