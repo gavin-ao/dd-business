@@ -44,7 +44,4 @@ public class WechatTotalTrajectoryVO {
     public void setFrequency(Integer frequency) {
         this.frequency = frequency;
     }
-    public void setFrequency(Long frequency) {
-        this.frequency = frequency.intValue();
-    }
 }
