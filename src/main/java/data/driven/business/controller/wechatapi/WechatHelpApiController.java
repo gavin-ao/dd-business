@@ -35,6 +35,12 @@ public class WechatHelpApiController {
     @Autowired
     private WechatUserService wechatUserService;
 
+    /**
+     * 根据actId和当前登录微信用户判断是否发起过助力，如果id为空则没有发起过
+     * @param sessionID
+     * @param actId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(path = "/getHelpId")
     public JSONObject getHelpId(String sessionID, String actId){

@@ -6,6 +6,7 @@ import data.driven.business.common.Constant;
 import data.driven.business.dao.JDBCBaseDao;
 import data.driven.business.util.DateFormatUtil;
 import data.driven.business.util.JSONUtil;
+import data.driven.business.vo.wechat.WechatTotalTrajectoryVO;
 import data.driven.business.vo.wechat.WechatTotalVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -156,7 +157,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             countShareNum = 0;
         }
         //统计助力数据
-        String helpSql = "select count(whd.to_id) from wechat_help_detail whd left join wechat_app_user_mapping waum on waum.wechat_map_id = whd.to_id where whd.app_info_id = ? and whd.help_at between ? and ? and waum.create_at between ? and ?";
+        String helpSql = "select count(whd.to_id) from wechat_help_detail whd left join wechat_app_user_mapping waum on waum.wechat_map_id = whd.to_id where whd.app_info_id = ? and whd.help_at between ? and ? and waum.create_at between ? and ? and mhd.status = 1";
         Integer countHelpNum = jdbcBaseDao.getCount(helpSql, appInfoId, start, end, start, end);
         if(countHelpNum == null){
             countHelpNum = 0;
@@ -181,7 +182,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         String format = getMysqlDateFormat(start, end);
         String sql = "select count(wsd.to_id) as count_num,DATE_FORMAT(wsd.share_at,'" + format + "') as group_time from wechat_share_detail wsd left join wechat_app_user_mapping waum on waum.wechat_map_id = wsd.to_id where wsd.app_info_id = ? and wsd.share_at between ? and ? and waum.create_at between ? and ? group by group_time" +
                 "   union all " +
-                " select count(whd.to_id) as count_num,DATE_FORMAT(whd.help_at,'" + format + "') as group_time from wechat_help_detail whd left join wechat_app_user_mapping waum on waum.wechat_map_id = whd.to_id where whd.app_info_id = ? and whd.help_at between ? and ? and waum.create_at between ? and ? group by group_time";
+                " select count(whd.to_id) as count_num,DATE_FORMAT(whd.help_at,'" + format + "') as group_time from wechat_help_detail whd left join wechat_app_user_mapping waum on waum.wechat_map_id = whd.to_id where whd.app_info_id = ? and whd.help_at between ? and ? and waum.create_at between ? and ? and mhd.status = 1 group by group_time";
         List<WechatTotalVO> list = jdbcBaseDao.queryList(WechatTotalVO.class, sql, appInfoId, start, end, start, end, appInfoId, start, end, start, end);
         result.put("data", list);
         result.put("success", true);
@@ -312,6 +313,37 @@ public class WechatTotalServiceImpl implements WechatTotalService {
 
     @Override
     public JSONObject totalSpreadTrajectory(String appInfoId, String startDate, String endDate) {
-        return null;
+        JSONObject result = new JSONObject();
+        if(appInfoId == null){
+            return JSONUtil.putMsg(false, "101", "参数appInfoId为空");
+        }
+        Date start = DateFormatUtil.getTime(startDate);
+        Date end = DateFormatUtil.toEndDate(endDate);
+        if(start == null || end == null){
+            return JSONUtil.putMsg(false, "102", "时间获取失败，请检查时间格式");
+        }
+        String shareSql = "select fu.nick_name as from_user,tu.nick_name as to_user,t.frequency,t.share_at as total_date from wechat_share_detail t" +
+                " left join wechat_user_info fu on t.form_wechat_user_id = fu.wechat_user_id" +
+                " left join wechat_user_info tu on t.to_wechat_user_id = tu.wechat_user_id" +
+                " where t.app_info_id = ? and t.share_at between ? and ?";
+        List<WechatTotalTrajectoryVO> shareList = jdbcBaseDao.queryList(WechatTotalTrajectoryVO.class, shareSql, appInfoId, start, end);
+
+        String helpSql = "select fu.nick_name as from_user,tu.nick_name as to_user,CAST('1' as SIGNED) as frequency,t.help_at as total_date from wechat_help_detail t" +
+                " left join wechat_user_info fu on t.form_wechat_user_id = fu.wechat_user_id" +
+                " left join wechat_user_info tu on t.to_wechat_user_id = tu.wechat_user_id" +
+                " where t.app_info_id = ? and t.help_at between ? and ? and t.status = 1";
+        List<WechatTotalTrajectoryVO> helpList = jdbcBaseDao.queryList(WechatTotalTrajectoryVO.class, helpSql, appInfoId, start, end);
+        List<WechatTotalTrajectoryVO> dataList = new ArrayList<WechatTotalTrajectoryVO>();
+
+        if(shareList != null && shareList.size() > 0){
+            dataList.addAll(shareList);
+        }
+
+        if(helpList != null && helpList.size() > 0){
+            dataList.addAll(helpList);
+        }
+
+        result.put("data", dataList);
+        return result;
     }
 }
