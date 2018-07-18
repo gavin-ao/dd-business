@@ -325,13 +325,13 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         String shareSql = "select fu.nick_name as from_user,tu.nick_name as to_user,t.frequency,t.share_at as total_date from wechat_share_detail t" +
                 " left join wechat_user_info fu on t.form_wechat_user_id = fu.wechat_user_id" +
                 " left join wechat_user_info tu on t.to_wechat_user_id = tu.wechat_user_id" +
-                " where t.app_info_id = ? and t.share_at between ? and ?";
+                " where t.app_info_id = ? and t.share_at between ? and ? order by t.share_at";
         List<WechatTotalTrajectoryVO> shareList = jdbcBaseDao.queryList(WechatTotalTrajectoryVO.class, shareSql, appInfoId, start, end);
 
         String helpSql = "select fu.nick_name as from_user,tu.nick_name as to_user,CAST('1' as SIGNED) as frequency,t.help_at as total_date from wechat_help_detail t" +
                 " left join wechat_user_info fu on t.form_wechat_user_id = fu.wechat_user_id" +
                 " left join wechat_user_info tu on t.to_wechat_user_id = tu.wechat_user_id" +
-                " where t.app_info_id = ? and t.help_at between ? and ? and t.status = 1";
+                " where t.app_info_id = ? and t.help_at between ? and ? and t.status = 1 order by t.help_at";
         List<WechatTotalTrajectoryVO> helpList = jdbcBaseDao.queryList(WechatTotalTrajectoryVO.class, helpSql, appInfoId, start, end);
         List<WechatTotalTrajectoryVO> dataList = new ArrayList<WechatTotalTrajectoryVO>();
 
