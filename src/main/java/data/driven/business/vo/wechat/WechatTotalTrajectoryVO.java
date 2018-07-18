@@ -9,11 +9,21 @@ import java.util.List;
  * @date 2018/7/18
  */
 public class WechatTotalTrajectoryVO {
+    private String fromUserId;
     private String fromUser;
+    private String toUserId;
     private String toUser;
     private Date totalDate;
     private Integer frequency;
     List<WechatTotalTrajectoryVO> childList;
+
+    public String getFromUserId() {
+        return fromUserId;
+    }
+
+    public void setFromUserId(String fromUserId) {
+        this.fromUserId = fromUserId;
+    }
 
     public String getFromUser() {
         return fromUser;
@@ -21,6 +31,14 @@ public class WechatTotalTrajectoryVO {
 
     public void setFromUser(String fromUser) {
         this.fromUser = fromUser;
+    }
+
+    public String getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(String toUserId) {
+        this.toUserId = toUserId;
     }
 
     public String getToUser() {
