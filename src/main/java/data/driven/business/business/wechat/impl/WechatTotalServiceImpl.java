@@ -343,7 +343,80 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             dataList.addAll(helpList);
         }
 
-        result.put("data", dataList);
+        if(dataList.size() > 0){
+            List<WechatTotalTrajectoryVO> firstTrajectoryList = getFirstTrajectory(dataList);
+            List<String> existList = new ArrayList<String>();
+            List<WechatTotalTrajectoryVO> resultList = new ArrayList<WechatTotalTrajectoryVO>();
+            for(WechatTotalTrajectoryVO first : firstTrajectoryList){
+                if(existList.contains(first.getToUser())){
+                    continue;
+                }
+                dealLevelTrajectory(dataList, first, 1, 10, existList);
+                resultList.add(first);
+            }
+            result.put("data", resultList);
+        }
         return result;
     }
+
+    /**
+     * 判断是否是第一个根节点，判断依据，往前推没有人是我的from，并且之前也没统计过from为我的，就认定为第一个根节点。
+     * @param result
+     * @return
+     */
+    private List<WechatTotalTrajectoryVO> getFirstTrajectory(List<WechatTotalTrajectoryVO> result){
+        List<String> existList = new ArrayList<String>();
+        List<WechatTotalTrajectoryVO> list = new ArrayList<WechatTotalTrajectoryVO>();
+        for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : result){
+            if(existList.contains(wechatTotalTrajectoryVO.getFromUser())){
+                continue;
+            }
+            existList.add(wechatTotalTrajectoryVO.getFromUser());
+            existList.add(wechatTotalTrajectoryVO.getToUser());
+            WechatTotalTrajectoryVO fVo = new WechatTotalTrajectoryVO();
+            fVo.setFromUser("0");
+            fVo.setToUser(wechatTotalTrajectoryVO.getFromUser());
+            list.add(fVo);
+        }
+        return list;
+    }
+
+    /**
+     * 处理传播轨迹图，如果这个人被统计过，不管出于什么节点，都不统计
+     * @param result
+     * @param parent
+     * @param currentLevel
+     * @param maxLevel
+     * @param existList
+     */
+    private void dealLevelTrajectory(List<WechatTotalTrajectoryVO> result, WechatTotalTrajectoryVO parent, int currentLevel, int maxLevel, List<String> existList){
+
+        List<WechatTotalTrajectoryVO> childList = parent.getChildList();
+        if(childList == null){
+            childList = new ArrayList<WechatTotalTrajectoryVO>();
+            parent.setChildList(childList);
+        }
+
+        for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : result){
+            if(existList.contains(wechatTotalTrajectoryVO.getToUser())){
+                continue;
+            }
+            existList.add(wechatTotalTrajectoryVO.getToUser());
+            if(parent.getToUser().equals(wechatTotalTrajectoryVO.getFromUser())){
+                childList.add(wechatTotalTrajectoryVO);
+            }
+        }
+
+        if(childList.size() < 1){
+            return;
+        }
+        if(currentLevel >= maxLevel){
+            return;
+        }
+        for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : childList){
+            dealLevelTrajectory(result, wechatTotalTrajectoryVO, ++currentLevel, maxLevel, existList);
+        }
+
+    }
+
 }

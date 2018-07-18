@@ -1,6 +1,7 @@
 package data.driven.business.vo.wechat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用于微信统计 - 轨迹图
@@ -12,6 +13,7 @@ public class WechatTotalTrajectoryVO {
     private String toUser;
     private Date totalDate;
     private Integer frequency;
+    List<WechatTotalTrajectoryVO> childList;
 
     public String getFromUser() {
         return fromUser;
@@ -43,5 +45,13 @@ public class WechatTotalTrajectoryVO {
 
     public void setFrequency(Integer frequency) {
         this.frequency = frequency;
+    }
+
+    public List<WechatTotalTrajectoryVO> getChildList() {
+        return childList;
+    }
+
+    public void setChildList(List<WechatTotalTrajectoryVO> childList) {
+        this.childList = childList;
     }
 }
