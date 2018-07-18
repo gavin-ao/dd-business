@@ -351,6 +351,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
                 if(existList.contains(first.getToUserId())){
                     continue;
                 }
+                existList.add(first.getToUserId());
                 dealLevelTrajectory(dataList, first, 1, 10, existList);
                 resultList.add(first);
             }
