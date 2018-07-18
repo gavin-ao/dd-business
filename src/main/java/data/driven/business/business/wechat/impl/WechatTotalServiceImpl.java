@@ -322,13 +322,13 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         if(start == null || end == null){
             return JSONUtil.putMsg(false, "102", "时间获取失败，请检查时间格式");
         }
-        String shareSql = "select fu.nick_name as from_user,tu.nick_name as to_user,t.frequency,t.share_at as total_date from wechat_share_detail t" +
+        String shareSql = "select fu.wechat_user_id as from_user_id,fu.nick_name as from_user,tu.wechat_user_id as to_user_id,tu.nick_name as to_user,t.frequency,t.share_at as total_date from wechat_share_detail t" +
                 " left join wechat_user_info fu on t.form_wechat_user_id = fu.wechat_user_id" +
                 " left join wechat_user_info tu on t.to_wechat_user_id = tu.wechat_user_id" +
                 " where t.app_info_id = ? and t.share_at between ? and ? order by t.share_at";
         List<WechatTotalTrajectoryVO> shareList = jdbcBaseDao.queryList(WechatTotalTrajectoryVO.class, shareSql, appInfoId, start, end);
 
-        String helpSql = "select fu.nick_name as from_user,tu.nick_name as to_user,t.help_at as total_date from wechat_help_detail t" +
+        String helpSql = "select fu.wechat_user_id as from_user_id,fu.nick_name as from_user,tu.wechat_user_id as to_user_id,tu.nick_name as to_user,t.help_at as total_date from wechat_help_detail t" +
                 " left join wechat_user_info fu on t.form_wechat_user_id = fu.wechat_user_id" +
                 " left join wechat_user_info tu on t.to_wechat_user_id = tu.wechat_user_id" +
                 " where t.app_info_id = ? and t.help_at between ? and ? and t.status = 1 order by t.help_at";
@@ -348,7 +348,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             List<String> existList = new ArrayList<String>();
             List<WechatTotalTrajectoryVO> resultList = new ArrayList<WechatTotalTrajectoryVO>();
             for(WechatTotalTrajectoryVO first : firstTrajectoryList){
-                if(existList.contains(first.getToUser())){
+                if(existList.contains(first.getToUserId())){
                     continue;
                 }
                 dealLevelTrajectory(dataList, first, 1, 10, existList);
@@ -368,14 +368,16 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         List<String> existList = new ArrayList<String>();
         List<WechatTotalTrajectoryVO> list = new ArrayList<WechatTotalTrajectoryVO>();
         for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : result){
-            if(existList.contains(wechatTotalTrajectoryVO.getFromUser())){
+            if(existList.contains(wechatTotalTrajectoryVO.getFromUserId())){
                 continue;
             }
-            existList.add(wechatTotalTrajectoryVO.getFromUser());
-            existList.add(wechatTotalTrajectoryVO.getToUser());
+            existList.add(wechatTotalTrajectoryVO.getFromUserId());
+            existList.add(wechatTotalTrajectoryVO.getToUserId());
             WechatTotalTrajectoryVO fVo = new WechatTotalTrajectoryVO();
             fVo.setFromUser("0");
+            fVo.setToUserId(wechatTotalTrajectoryVO.getFromUserId());
             fVo.setToUser(wechatTotalTrajectoryVO.getFromUser());
+            fVo.setTotalDate(wechatTotalTrajectoryVO.getTotalDate());
             list.add(fVo);
         }
         return list;
@@ -398,12 +400,12 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         }
 
         for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : result){
-            if(existList.contains(wechatTotalTrajectoryVO.getToUser())){
+            if(existList.contains(wechatTotalTrajectoryVO.getToUserId())){
                 continue;
             }
-            existList.add(wechatTotalTrajectoryVO.getToUser());
-            if(parent.getToUser().equals(wechatTotalTrajectoryVO.getFromUser())){
+            if(parent.getToUserId().equals(wechatTotalTrajectoryVO.getFromUserId())){
                 childList.add(wechatTotalTrajectoryVO);
+                existList.add(wechatTotalTrajectoryVO.getToUserId());
             }
         }
 
