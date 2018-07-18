@@ -209,57 +209,40 @@ function chartLineShow(data) {
 
 // 饼图展示
 function chartPieShow(data) {
-    var ratio = (data.newUserNum/(data.newUserNum+data.oldUserNum) *100).toFixed(2) +"%";
-    var myChartPie = echarts.init(document.getElementById('main_pie'));
-    var options = {
-        title: {
-            text:ratio,
-            x: 'center',
-            y: 'center',
-            textStyle: {
-                fontWeight: 'normal',
-                color: '#0580f2',
-                fontSize: '40'
-            }
-        },
-        color: ['rgba(176, 212, 251, 1)'],
-        legend: {
-            show: true,
-            itemGap: 12,
-            data: ['新用户', '老用户'],
-            bottom: 20
-        },
+    if((data.newUserNum+data.oldUserNum)==0){
+        var ratio = "0.00%";
+        // $("#main_pie").html("无用户信息")
+    }else {
+        var ratio = (data.newUserNum / (data.newUserNum + data.oldUserNum) * 100).toFixed(2) + "%";
 
-        series: [{
-            name: 'Line 1',
-            type: 'pie',
-            clockWise: true,
-            radius: ['50%', '66%'],
-            itemStyle: {
-                normal: {
-                    label: {
-                        show: false
-                    },
-                    labelLine: {
-                        show: false
-                    }
+
+        var myChartPie = echarts.init(document.getElementById('main_pie'));
+        var options = {
+            title: {
+                text: ratio,
+                x: 'center',
+                y: 'center',
+                textStyle: {
+                    fontWeight: 'normal',
+                    color: '#0580f2',
+                    fontSize: '40'
                 }
             },
-            hoverAnimation: false,
-            data: [{
-               value: data.newUserNum,
-                name: '新用户',
+            color: ['rgba(176, 212, 251, 1)'],
+            legend: {
+                show: true,
+                itemGap: 12,
+                data: ['新用户', '老用户'],
+                bottom: 20
+            },
+
+            series: [{
+                name: 'Line 1',
+                type: 'pie',
+                clockWise: true,
+                radius: ['50%', '66%'],
                 itemStyle: {
                     normal: {
-                        color: { // 完成的圆环的颜色
-                            colorStops: [{
-                                offset: 0,
-                                color: '#00cefc' // 0% 处的颜色
-                            }, {
-                                offset: 1,
-                                color: '#367bec' // 100% 处的颜色
-                            }]
-                        },
                         label: {
                             show: false
                         },
@@ -267,17 +250,42 @@ function chartPieShow(data) {
                             show: false
                         }
                     }
-                }
-            }, {
-                name: '老用户',
-                value: data.oldUserNum
+                },
+                hoverAnimation: false,
+                data: [{
+                    value: data.newUserNum,
+                    name: '新用户',
+                    itemStyle: {
+                        normal: {
+                            color: { // 完成的圆环的颜色
+                                colorStops: [{
+                                    offset: 0,
+                                    color: '#00cefc' // 0% 处的颜色
+                                }, {
+                                    offset: 1,
+                                    color: '#367bec' // 100% 处的颜色
+                                }]
+                            },
+                            label: {
+                                show: false
+                            },
+                            labelLine: {
+                                show: false
+                            }
+                        }
+                    }
+                }, {
+                    name: '老用户',
+                    value: data.oldUserNum
+                }]
             }]
-        }]
+        }
+        myChartPie.setOption(options);
+        window.onresize = function () {
+            myChartPie.resize();
+        }
     }
-    myChartPie.setOption(options);
-    window.onresize = function () {
-        myChartPie.resize();
-    }
+
 }
 
 // 关系图展示
@@ -532,7 +540,6 @@ function chartGraphShow(list) {
     var zoom = d3.behavior.zoom()
         .scaleExtent([0, 10])
         .on("zoom", zoomed);
-
     var width = $("#main_graph").width(),
         height = $("#main_graph").height();
 // console.log(d3.values(dataObj.nodes))
@@ -968,8 +975,13 @@ function selecyCondition() {
             case "dropdownMenu1":
                 $(target).html(content)
                 var appInfoId = $(that).attr("data-appInfoId");
-                wholeAppInfoId = appInfoId;
-                wholeAppInfoId = "5b3dd7c91d76102dd8a2d0d4"
+                if(appInfoId==1){
+                    wholeAppInfoId = "5b3dd7c91d76102dd8a2d0d4"
+                }else{
+                    wholeAppInfoId = appInfoId
+                }
+
+
                 // changeTimeAfterDataChange();
                 $($("#contain_main_head > div")[0]).trigger("click");
                 break;
@@ -1103,7 +1115,6 @@ function newAndOldUsers(appInfoId) {
         success: function (data) {
             console.log(data)
             if(data.success){
-
                 chartPieShow(data)
             }
         }
@@ -1119,7 +1130,8 @@ function graphData() {
         dataType: "json",
         success: function (data) {
             console.log(data)
-            if(data.data.length){
+            $("#main_graph").html("")
+            if(data.data&&data.data.length){
                 chartGraphShow(data.data)
             }
 
