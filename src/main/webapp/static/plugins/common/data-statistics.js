@@ -28,12 +28,12 @@ function allSmallProgram() {
         url: "/wechat/appinfo/findAppInfoListByUser",
         dataType: "json",
         success: function (data) {
-            console.log(data)
+
             if(data.success){
                 var arrData = data.wechatAppInfoEntityList;
                 var html='';
                 for(var i=0;i<arrData.length;i++){
-                    console.log(arrData[i])
+
                     html += '<li data-appInfoId="'+ arrData[i].appInfoId+'" data-appid="'+ arrData[i].appid +'" data-secret="'+ arrData[i].secret +'"><a href="javascript:void(0)">'+arrData[i].appName+ '</a></li>';
                 }
                 $("#contain_head_left_ul").html(html);
@@ -289,163 +289,6 @@ function chartPieShow(data) {
 }
 
 // 关系图展示
-function echartsGraph() {
-
-    var myChartGraph = echarts.init(document.getElementById('main_graph'));
-    //    传播轨迹图
-    var links = [];
-    var nodes = {};
-    var list = [
-        {
-            name: "虚张声势丶", child: [
-            {
-                name: "淡抹丶悲伤", child: [
-                {
-                    name: "_倾月轩萱_",
-                    child: [
-                        {
-                            name: "丶猫猫er",
-                            child: [
-                                {name: "从未消失的孤独"},
-                                {name: "丶七炫灬"},
-                                {name: "◆残留德花瓣"},
-                                {name: "哼唱 小情歌"},
-                                {name: "冷落了♂自己·"}
-                            ]
-                        },
-                        {name: "沵算what°"}
-                    ]
-                }
-            ]
-            },
-            {name: "雪花ミ飞舞"},
-            {name: "夏日、微凉"},
-            {name: "厭棄"},
-            {name: "谎心久"},
-            {name: "unreal_虚幻"},
-            {name: "若水流年あ"},
-            {name: "继续沦落"},
-            {name: "人走茶会凉"},
-            {name: "青丝绕"},
-        ]
-        }
-
-    ]
-    const ORDNUME = "order"
-
-    function xunhuan(list, num) {
-        var number = num;
-        for (var i = 0; i < list.length; i++) {
-            nodes[list[i].name] || (nodes[list[i].name] = {
-                name: list[i].name
-            });
-            num++;
-            if (list[i].child && list[i].child.length) {
-                for (var j = 0; j < list[i].child.length; j++) {
-                    links.push({source: list[i].name, target: list[i].child[j].name});
-                    nodes[list[i].child[j].name] || (nodes[list[i].child[j].name] = {
-                        name: list[i].child[j].name
-                    });
-                }
-            }
-            if (list[i].child && list[i].child.length) {
-                xunhuan(list[i].child, num);
-                num--;
-            } else {
-                num--;
-            }
-
-        }
-    }
-
-    xunhuan(list, 0);
-
-
-    var markerArr = []
-    links.forEach(function (link) {
-        if (!contains(markerArr, nodes[link.source].class)) {
-            markerArr.push(nodes[link.source].class)
-        }
-        if (!contains(markerArr, nodes[link.target].class)) {
-            markerArr.push(nodes[link.target].class)
-        }
-        link.source = nodes[link.source].name;
-        link.target = nodes[link.target].name;
-
-    });
-
-    function contains(arr, obj) {
-        var i = arr.length;
-        while (i--) {
-            if (arr[i] === obj) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    var dataObj = {};
-
-    var ceshi = [];
-    for (obj in nodes) {
-        ceshi.push(nodes[obj]);
-    }
-
-    dataObj.links = links;
-    dataObj.nodes = ceshi;
-    console.log(dataObj)
-    var opt = {
-        title: {
-            text: 'Graph 简单示例'
-        },
-        tooltip: {},
-        animationDurationUpdate: 1500,
-        animationEasingUpdate: 'quinticInOut',
-        series: [
-            {
-                type: 'graph',
-                layout: 'force',
-                symbolSize: 50,
-                roam: true,
-                label: {
-                    normal: {
-                        show: true
-                    }
-                },
-                edgeSymbol: ['circle', 'arrow'],
-                edgeSymbolSize: [4, 10],
-                edgeLabel: {
-                    normal: {
-                        textStyle: {
-                            fontSize: 20
-                        }
-                    }
-                },
-                force: {
-                    repulsion: 240,
-                    gravity: 0.03,
-                    edgeLength: 80,
-                    layoutAnimation: false
-                },
-                // categories: [],
-                data: dataObj.nodes,
-                // links: [],
-                links: dataObj.links,
-                lineStyle: {
-                    normal: {
-                        opacity: 0.9,
-                        width: 2,
-                        curveness: 0
-                    }
-                }
-            }
-        ]
-    };
-    myChartGraph.setOption(opt);
-    window.onresize = function () {
-        myChartGraph.resize();
-    }
-}
 function chartGraphShow(list) {
 
 //    传播轨迹图
@@ -531,18 +374,13 @@ function chartGraphShow(list) {
     var dataObj = {};
     dataObj.links = links;
     dataObj.nodes = nodes;
-    var ceshi = [];
-    for (obj in nodes) {
-        ceshi.push(nodes[obj]);
-    }
-    console.log(ceshi)
 
     var zoom = d3.behavior.zoom()
         .scaleExtent([0, 10])
         .on("zoom", zoomed);
     var width = $("#main_graph").width(),
         height = $("#main_graph").height();
-// console.log(d3.values(dataObj.nodes))
+
     var force = d3.layout.force()//layout将json格式转化为力学图可用的格式
         .nodes(d3.values(dataObj.nodes))//设定节点数组
         .links(dataObj.links)//设定连线数组
@@ -569,14 +407,9 @@ function chartGraphShow(list) {
 //箭头
     var marker =
         svg.append("svg:defs").selectAll("marker")
-        // .data(["suit0","suit", "licensing", "resolved","resolveds"])
             .data(markerArr)
             .enter().append("svg:marker")
             .attr("id", String)
-            // .data(["suit", "demo", "resolved"])
-            // .attr("id", function(d) {console.log(d); return d.type; })
-            // .attr("id", "resolved")
-            // .attr("markerUnits","strokeWidth")//设置为strokeWidth箭头会随着线的粗细发生变化
             .attr("markerUnits", "userSpaceOnUse")
             .attr("viewBox", "0 -5 10 10")//坐标系的区域
             // .attr("refX",39)//箭头坐标
@@ -598,7 +431,7 @@ function chartGraphShow(list) {
             .attr("d", "M0,-5L10,0L0,5")//箭头的路径
             // .attr('fill','#000000');//箭头颜色
             .style("fill", function (d) {
-                // console.log(d)
+
                 return setColor(d);
             })
 
@@ -630,25 +463,6 @@ function chartGraphShow(list) {
             return "url(#" + d.source.class + ")";
         });//根据箭头标记的id号标记箭头
 
-// var edges_text = svg.append("g").selectAll(".edgelabel")
-//     .data(force.links())
-//     .enter()
-//     .append("text")
-//     .style("pointer-events", "none")edges_text
-//     //.attr("class","linetext")
-//     .attr({  'class':'edgelabel linetext',
-//         'id':function(d,i){return 'edgepath'+i;},
-//         'dx':80,
-//         'dy':0
-//     });
-//
-// //设置线条上的文字
-// edges_text.append('textPath')
-//     .attr('xlink:href',function(d,i) {return '#edgepath'+i})
-//     .style("pointer-events", "none")
-//     .text(function(d){return d.target.rela;});
-
-// console.log(force.nodes());
     var drag = force.drag()
         .on("dragstart", function (d, i) {
             d3.event.sourceEvent.stopPropagation(); //取消默认事件
@@ -679,7 +493,6 @@ function chartGraphShow(list) {
         .on("click", function (node) {
             //单击时让连接线加粗
             edges_line.style("stroke-width", function (line) {
-                // console.log(line);
                 if (line.source.name == node.name || line.target.name == node.name) {
                     return 2;
                 } else {
@@ -688,23 +501,12 @@ function chartGraphShow(list) {
             });
         })
         .on("mouseover", function (d, i) {
-            // //显示连接线上的文字
-            // edges_text.style("fill-opacity",function(edge){
-            //     if( edge.source === d || edge.target === d ){
-            //         return 1.0;
-            //     }
-            // });
+
         })
         .on("mouseout", function (d, i) {
-            //隐去连接线上的文字
-            // edges_text.style("fill-opacity",function(edge){
-            //     if( edge.source === d || edge.target === d ){
-            //         return 0.0;
-            //     }
-            // });
+
         })
         .on("dblclick", function (d, i) {
-            console.log(JSON.stringify(d));
             d.fixed = false;
         })
         .call(drag)//将当前选中的元素传到drag函数中，使顶点可以被拖动
@@ -807,31 +609,6 @@ function chartGraphShow(list) {
             return path;
         });
 
-        // edges_text.attr('transform',function(d,i){
-        //     // console.log(JSON.stringify(d));
-        //     if (d.target.x<d.source.x){
-        //         bbox = this.getBBox();
-        //         rx = bbox.x+bbox.width/2;
-        //         ry = bbox.y+bbox.height/2;
-        //         return 'rotate(180 '+ rx +' '+ ry +')';
-        //     }
-        //     else {
-        //         return 'rotate(0)';
-        //     }
-        // });
-        // edges_text.attr("dx",function (d,i) {
-        //     bbox = this.getBBox();
-        //     // console.log(d);
-        //     var y = Math.abs(d.source.y - d.target.y);
-        //     var x = Math.abs(d.source.x - d.target.x);
-        //     var cx;
-        //     if( y >= x){
-        //         cx = Math.abs( y- bbox.width/2)/2.5;
-        //     }else{
-        //         cx = Math.abs( x- bbox.width/2)/2.5;
-        //     }
-        //     return cx;
-        // })
 
     }
 
@@ -966,7 +743,7 @@ function chartGraphShow(list) {
 function selecyCondition() {
     $("#user_manage .dropdown-menu").off('click',"li");
     $("#user_manage .dropdown-menu").on('click', 'li', function () {
-        console.log($(this))
+
         var that = this;
         var content = $.trim($(this).text());
         var dropMenu;
@@ -1008,7 +785,6 @@ function dateSelecteTime() {
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].removeAttribute("checked");
         }
-        console.log($(this).siblings().find("input"))
         $(this).find("input").attr("checked", true)
         className = $(this).find("input").attr("class");
         $(".datePicker").css("display", "none");
@@ -1059,10 +835,10 @@ function currentTime(myDate) {
 
 // 核心数据选择
 function coreDataSel() {
-    console.log($("#contain_main_data"))
+
     $("#contain_main_data").off('click', "div");
     $("#contain_main_data").on('click', "div", function () {
-        console.log($(this).attr("data-iden"))
+
         $(this).siblings().attr("class", "")
         $(this).attr("class", "selectData")
         var urlName = $(this).attr("data-iden");
@@ -1075,7 +851,7 @@ function coreDataSel() {
 
 // 核心数据展示
 function coreDataShow(appInfoId) {
-    console.log(appInfoId)
+
     $.ajax({
         url: "/wechat/total/coreData",
         type: "post",
@@ -1096,7 +872,7 @@ function dataTrendDiagram(urlName) {
         type:"post",
         data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
         success: function (data) {
-            console.log(data)
+
             if(data.success){
                 chartLineShow(data.data)
 
@@ -1113,7 +889,7 @@ function newAndOldUsers(appInfoId) {
         type:"post",
         data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
         success: function (data) {
-            console.log(data)
+
             if(data.success){
                 chartPieShow(data)
             }
@@ -1129,7 +905,7 @@ function graphData() {
         data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
         dataType: "json",
         success: function (data) {
-            console.log(data)
+
             $("#main_graph").html("")
             if(data.data&&data.data.length){
                 chartGraphShow(data.data)
