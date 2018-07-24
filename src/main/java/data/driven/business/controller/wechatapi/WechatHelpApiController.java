@@ -1,11 +1,14 @@
 package data.driven.business.controller.wechatapi;
 
 import com.alibaba.fastjson.JSONObject;
+import data.driven.business.business.reward.RewardActCommandService;
 import data.driven.business.business.wechat.WechatHelpDetailService;
 import data.driven.business.business.wechat.WechatHelpInfoService;
 import data.driven.business.business.wechat.WechatUserService;
 import data.driven.business.common.WechatApiSession;
 import data.driven.business.common.WechatApiSessionBean;
+import data.driven.business.entity.reward.RewardActCommandEntity;
+import data.driven.business.entity.wechat.WechatHelpDetailEntity;
 import data.driven.business.entity.wechat.WechatHelpInfoEntity;
 import data.driven.business.util.UUIDUtil;
 import data.driven.business.vo.wechat.WechatUserInfoVO;
@@ -15,6 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static data.driven.business.util.JSONUtil.putMsg;
 
@@ -28,12 +35,16 @@ import static data.driven.business.util.JSONUtil.putMsg;
 public class WechatHelpApiController {
     private static final Logger logger = LoggerFactory.getLogger(WechatShareApiController.class);
 
+    private Lock lock = new ReentrantLock();
+
     @Autowired
     private WechatHelpInfoService wechatHelpInfoService;
     @Autowired
     private WechatHelpDetailService wechatHelpDetailService;
     @Autowired
     private WechatUserService wechatUserService;
+    @Autowired
+    private RewardActCommandService rewardActCommandService;
 
     /**
      * 根据actId和当前登录微信用户判断是否发起过助力，如果id为空则没有发起过
@@ -155,6 +166,58 @@ public class WechatHelpApiController {
         }catch (Exception e){
             logger.error(e.getMessage(), e);
             return putMsg(false, "103", "助力点击记录失败");
+        }
+    }
+
+    /**
+     * 根据助力信息获取活动奖励口令
+     * @param helpId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "/getRewardActCommand")
+    public JSONObject getRewardActCommand(String helpId){
+        WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
+        if(helpInfoEntity != null){
+            //判断是否已经达到活动领取奖励的标准
+            List<WechatHelpDetailEntity> helpDetailEntityList = wechatHelpDetailService.findHelpDetailListByHelpId(helpId);
+            //TODO 需要动态获取领取奖励的条件
+            int max = 3;
+            if(helpDetailEntityList != null && helpDetailEntityList.size() >= max){
+                //根据助力获取是否已经关联过奖励口令
+                String command = rewardActCommandService.getCommandByHelpId(helpId);
+                JSONObject result = new JSONObject();
+                if(command == null){
+                    RewardActCommandEntity rewardActCommandEntity = null;
+                    //锁住奖励口令的读写
+                    try{
+                        lock.lock();
+                        rewardActCommandEntity = rewardActCommandService.getNextRewardActCommandByActId(helpInfoEntity.getActId());
+                        if(rewardActCommandEntity != null){
+                            rewardActCommandService.updateRewardActCommandUsed(rewardActCommandEntity.getCommandId());
+                            result.put("success", true);
+                            result.put("command", rewardActCommandEntity.getCommand());
+                        }else{
+                            return putMsg(false, "101", "奖励口令获取失败,奖励领取完毕。");
+                        }
+                    }catch (Exception e){
+                        logger.error(e.getMessage(), e);
+                        return putMsg(false, "102", "奖励口令获取失败,发生未知错误。");
+                    }finally {
+                        lock.unlock();
+                    }
+                    //插入奖励口令和助力的关联关系
+                    rewardActCommandService.insertRewardActCommandHelpMapping(rewardActCommandEntity, helpInfoEntity);
+                }else{
+                    result.put("success", true);
+                    result.put("command", command);
+                }
+                return result;
+            }else{
+                return putMsg(false, "103", "奖励口令获取失败,未达到领取要求。");
+            }
+        }else{
+            return putMsg(false, "104", "奖励口令获取失败，助力信息不存在。");
         }
     }
 
