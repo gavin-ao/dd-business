@@ -176,9 +176,13 @@ public class WechatHelpApiController {
      */
     @ResponseBody
     @RequestMapping(path = "/getRewardActCommand")
-    public JSONObject getRewardActCommand(String helpId){
+    public JSONObject getRewardActCommand(String sessionID, String helpId){
         WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
         if(helpInfoEntity != null){
+            WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+            if(!wechatApiSessionBean.getUserInfo().getWechatUserId().equals(helpInfoEntity.getWechatUserId())){
+                return putMsg(false, "105", "奖励口令获取失败,领取奖励必须是本人。");
+            }
             //判断是否已经达到活动领取奖励的标准
             List<WechatHelpDetailEntity> helpDetailEntityList = wechatHelpDetailService.findHelpDetailListByHelpId(helpId);
             //TODO 需要动态获取领取奖励的条件
