@@ -56,13 +56,24 @@ public class WXUtil {
     }
 
     public static JSONObject createWXQrcodeA(String path, String accessToken){
+        return createWXQrcodeA(path, accessToken, true);
+    }
+
+    /**
+     * 根据页面生成二维码
+     * @param path 路径，参数用?xxx=xxx传递
+     * @param accessToken
+     * @param isHyaline 是否透明 ， true - 透明，
+     * @return
+     */
+    public static JSONObject createWXQrcodeA(String path, String accessToken, boolean isHyaline){
         JSONObject paramJson = new JSONObject();
         paramJson.put("path", path);
         //默认配置
 //        paramJson.put("width", 430);//二维码的宽度
 //        paramJson.put("auto_color", false);//自动配置线条颜色，如果颜色依然是黑色，则说明不建议配置主色调
 //        paramJson.put("line_color", JSONObject.parseObject("{\"r\":\"0\",\"g\":\"0\",\"b\":\"0\"}"));//auto_color 为 false 时生效，使用 rgb 设置颜色 例如 {"r":"xxx","g":"xxx","b":"xxx"} 十进制表示
-//        paramJson.put("is_hyaline", false);//	是否需要透明底色， is_hyaline 为true时，生成透明底色的小程序码
+        paramJson.put("is_hyaline", isHyaline);//	是否需要透明底色， is_hyaline 为true时，生成透明底色的小程序码
         String tempFileName = Constant.WXQRCODE_TEMP_FILE_FOLDER + UUIDUtil.getUUID() + ".jpg";
         String fileName = Constant.FILE_UPLOAD_PATH + tempFileName;
         JSONObject success = HttpUtil.doPostSSLAttachment(typea_qrcode_url + "?access_token="+accessToken, paramJson, fileName);
