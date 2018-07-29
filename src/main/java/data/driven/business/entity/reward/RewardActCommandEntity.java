@@ -13,6 +13,8 @@ public class RewardActCommandEntity {
     private String commandId;
     /** 奖励的口令 **/
     private String command;
+    /** 奖励口令类型，1 - 发起人奖励，2 - 参与人奖励 **/
+    private String commandType;
     /** 活动id **/
     private String actId;
     /** 活动用户id **/
@@ -38,6 +40,14 @@ public class RewardActCommandEntity {
 
     public void setCommand(String command) {
         this.command = command;
+    }
+
+    public String getCommandType() {
+        return commandType;
+    }
+
+    public void setCommandType(String commandType) {
+        this.commandType = commandType;
     }
 
     public String getActId() {

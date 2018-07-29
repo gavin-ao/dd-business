@@ -1,7 +1,9 @@
 package data.driven.business.component;
 
+import com.alibaba.fastjson.JSONObject;
 import data.driven.business.common.WechatApiSession;
 import data.driven.business.common.WechatApiSessionBean;
+import data.driven.business.util.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,17 +49,18 @@ public class WechatApiFilter implements Filter{
         if(canFilter(uri)){
             String sessionID = request.getParameter("sessionID");
             if(sessionID == null){
-                noAuthority(request);
+                noAuthority(request, response);
                 return;
             }else{
 
                 WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
                 if(wechatApiSessionBean == null || wechatApiSessionBean.getUserInfo() == null || wechatApiSessionBean.getUserInfo().getWechatUserId()== null){
-                    noAuthority(request);
+                    noAuthority(request, response);
                     return;
                 }
             }
         }
+        System.out.println(uri);
         System.out.println("------WechatApiFilter过滤器通过成功-------");
         filterChain.doFilter(request, response);
 
@@ -68,9 +71,15 @@ public class WechatApiFilter implements Filter{
      * 无权限请求处理
      * @param request
      */
-    private void noAuthority(HttpServletRequest request){
+    private void noAuthority(HttpServletRequest request, HttpServletResponse response){
+        JSONObject result = JSONUtil.putMsg(false, "101", "noAuthority");
         request.setAttribute("success", false);
         request.setAttribute("msg", "noAuthority");
+        try{
+            response.getOutputStream().print(result.toJSONString());
+        }catch (IOException e){
+            logger.error(e.getMessage(), e);
+        }
     }
     /**
      * 判断该次请求是否需要过滤

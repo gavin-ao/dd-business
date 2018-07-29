@@ -90,4 +90,14 @@ public class WechatHelpDetailServiceImpl implements WechatHelpDetailService {
         jdbcBaseDao.executeUpdate(sql, status, helpDetailId);
         return JSONUtil.putMsg(true, "200", "操作成功");
     }
+
+    @Override
+    public WechatHelpDetailEntity getWechatHelpDetailEntityByToUser(String actId, String toWechatUserId) {
+        String sql = "select act_id,help_id,form_id,form_wechat_user_id,to_id,to_wechat_user_id,help_effect,help_at from wechat_help_detail where act_id = ? and to_wechat_user_id = ? and status = 1";
+        List<WechatHelpDetailEntity> list = jdbcBaseDao.queryList(WechatHelpDetailEntity.class, sql, actId, toWechatUserId);
+        if(list != null){
+            return list.get(0);
+        }
+        return null;
+    }
 }

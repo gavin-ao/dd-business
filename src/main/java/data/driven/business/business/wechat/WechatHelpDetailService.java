@@ -65,4 +65,11 @@ public interface WechatHelpDetailService {
      */
     public JSONObject cancelHelp(String fromId, String toId, String helpId);
 
+    /**
+     * 根据toWechatUserId和活动id获取助力详情
+     * @param actId
+     * @param toWechatUserId
+     * @return
+     */
+    public WechatHelpDetailEntity getWechatHelpDetailEntityByToUser(String actId, String toWechatUserId);
 }

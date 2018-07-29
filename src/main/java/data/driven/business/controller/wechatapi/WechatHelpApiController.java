@@ -105,6 +105,30 @@ public class WechatHelpApiController {
     }
 
     /**
+     * 判断当前用户是否助力过 - 在整个活动中
+     * @param sessionID
+     * @param actId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "/existDoHelpByActId")
+    public JSONObject existDoHelpByActId(String sessionID, String actId){
+        WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+        WechatUserInfoVO toUserInfo = wechatApiSessionBean.getUserInfo();
+        try{
+            WechatHelpDetailEntity wechatHelpDetailEntity = wechatHelpDetailService.getWechatHelpDetailEntityByToUser(actId, toUserInfo.getWechatUserId());
+            if(wechatHelpDetailEntity != null){
+                return putMsg(true, "200", "已助力");
+            }else{
+                return putMsg(false, "101", "未助力");
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return putMsg(false, "102", "查询失败");
+        }
+    }
+
+    /**
      * 判断当前用户是否助力过
      * @param sessionID
      * @param helpId
@@ -126,6 +150,10 @@ public class WechatHelpApiController {
                 if(helpDetailId != null){
                     return putMsg(true, "200", "已助力");
                 }else{
+                    WechatHelpDetailEntity wechatHelpDetailEntity = wechatHelpDetailService.getWechatHelpDetailEntityByToUser(helpInfoEntity.getActId(), toUserInfo.getWechatUserId());
+                    if(wechatHelpDetailEntity != null){
+                        return putMsg(true, "105", "已经给别人助力过了，不能再为这个点助力了");
+                    }
                     return putMsg(false, "102", "未助力");
                 }
             }else{
@@ -170,7 +198,7 @@ public class WechatHelpApiController {
     }
 
     /**
-     * 根据助力信息获取活动奖励口令
+     * 根据助力信息获取活动奖励口令 - 发起人领取
      * @param helpId
      * @return
      */
@@ -186,17 +214,17 @@ public class WechatHelpApiController {
             //判断是否已经达到活动领取奖励的标准
             List<WechatHelpDetailEntity> helpDetailEntityList = wechatHelpDetailService.findHelpDetailListByHelpId(helpId);
             //TODO 需要动态获取领取奖励的条件
-            int max = 3;
+            int max = 5;
             if(helpDetailEntityList != null && helpDetailEntityList.size() >= max){
                 //根据助力获取是否已经关联过奖励口令
-                String command = rewardActCommandService.getCommandByHelpId(helpId);
+                String command = rewardActCommandService.getCommandByHelpId(helpId, wechatApiSessionBean.getUserInfo().getWechatUserId());
                 JSONObject result = new JSONObject();
                 if(command == null){
                     RewardActCommandEntity rewardActCommandEntity = null;
                     //锁住奖励口令的读写
                     try{
                         lock.lock();
-                        rewardActCommandEntity = rewardActCommandService.getNextRewardActCommandByActId(helpInfoEntity.getActId());
+                        rewardActCommandEntity = rewardActCommandService.getNextRewardActCommandByActId(helpInfoEntity.getActId(), 1);
                         if(rewardActCommandEntity != null){
                             rewardActCommandService.updateRewardActCommandUsed(rewardActCommandEntity.getCommandId());
                             result.put("success", true);
@@ -222,6 +250,57 @@ public class WechatHelpApiController {
             }
         }else{
             return putMsg(false, "104", "奖励口令获取失败，助力信息不存在。");
+        }
+    }
+
+    /**
+     * 根据助力信息获取活动奖励口令 - 助力人领取
+     * @param actId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "/getRewardActCommandByOther")
+    public JSONObject getRewardActCommandByOther(String sessionID, String actId){
+        WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+        String currentUserId = wechatApiSessionBean.getUserInfo().getWechatUserId();
+        WechatHelpDetailEntity wechatHelpDetailEntity = wechatHelpDetailService.getWechatHelpDetailEntityByToUser(actId, currentUserId);
+        if(wechatHelpDetailEntity != null){
+            //根据助力获取是否已经关联过奖励口令
+            String command = rewardActCommandService.getCommandByHelpId(wechatHelpDetailEntity.getHelpId(), currentUserId);
+            JSONObject result = new JSONObject();
+            if(command == null){
+                WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(wechatHelpDetailEntity.getHelpId());
+                if(helpInfoEntity==null){
+                    return putMsg(false, "103", "奖励口令获取失败，助力信息不存在。");
+                }
+                RewardActCommandEntity rewardActCommandEntity = null;
+                //锁住奖励口令的读写
+                try{
+                    lock.lock();
+                    rewardActCommandEntity = rewardActCommandService.getNextRewardActCommandByActId(actId, 2);
+                    if(rewardActCommandEntity != null){
+                        rewardActCommandService.updateRewardActCommandUsed(rewardActCommandEntity.getCommandId());
+                        result.put("success", true);
+                        result.put("command", rewardActCommandEntity.getCommand());
+                    }else{
+                        return putMsg(false, "101", "奖励口令获取失败,奖励领取完毕。");
+                    }
+                    helpInfoEntity.setWechatUserId(currentUserId);
+                    //插入奖励口令和助力的关联关系
+                    rewardActCommandService.insertRewardActCommandHelpMapping(rewardActCommandEntity, helpInfoEntity);
+                }catch (Exception e){
+                    logger.error(e.getMessage(), e);
+                    return putMsg(false, "102", "奖励口令获取失败,发生未知错误。");
+                }finally {
+                    lock.unlock();
+                }
+            }else{
+                result.put("success", true);
+                result.put("command", command);
+            }
+            return result;
+        }else{
+            return putMsg(false, "104", "奖励口令获取失败，没有进行助力，无法领取奖励。");
         }
     }
 

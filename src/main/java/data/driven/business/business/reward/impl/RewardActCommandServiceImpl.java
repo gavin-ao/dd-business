@@ -23,9 +23,9 @@ public class RewardActCommandServiceImpl implements RewardActCommandService {
     private JDBCBaseDao jdbcBaseDao;
 
     @Override
-    public RewardActCommandEntity getNextRewardActCommandByActId(String actId) {
-        String sql = "select command_id,command,act_id,user_id,app_info_id,used,create_at from reward_act_command where act_id = ? and used = 0 order by create_at,command_id";
-        List<RewardActCommandEntity> list = jdbcBaseDao.queryList(RewardActCommandEntity.class, sql, actId);
+    public RewardActCommandEntity getNextRewardActCommandByActId(String actId, Integer commandType) {
+        String sql = "select command_id,command,act_id,user_id,app_info_id,used,create_at from reward_act_command where act_id = ? and used = 0 and command_type = ? order by create_at,command_id";
+        List<RewardActCommandEntity> list = jdbcBaseDao.queryList(RewardActCommandEntity.class, sql, actId, commandType);
         if(list != null && list.size() > 0){
             return list.get(0);
         }
@@ -33,9 +33,9 @@ public class RewardActCommandServiceImpl implements RewardActCommandService {
     }
 
     @Override
-    public String getCommandByHelpId(String helpId) {
-        String sql = "select c.command from reward_act_command_help_mapping m left join reward_act_command c on c.command_id = m.command_id where m.help_id = ? limit 1";
-        Object command = jdbcBaseDao.getColumn(sql, helpId);
+    public String getCommandByHelpId(String helpId, String wechatUserId) {
+        String sql = "select c.command from reward_act_command_help_mapping m left join reward_act_command c on c.command_id = m.command_id where m.help_id = ? and m.wechat_user_id = ? limit 1";
+        Object command = jdbcBaseDao.getColumn(sql, helpId, wechatUserId);
         if(command != null){
             return command.toString();
         }

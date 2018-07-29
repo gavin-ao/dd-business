@@ -108,12 +108,22 @@ public interface WechatTotalService {
     public JSONObject totalOldAndNewUser(String appInfoId, String startDate, String endDate);
 
     /**
-     * 根据时间范围统计传播轨迹
+     * 根据时间范围统计传播轨迹 - 默认为0的方式统计
      * @param appInfoId
      * @param startDate
      * @param endDate
      * @return
      */
     public JSONObject totalSpreadTrajectory(String appInfoId, String startDate, String endDate);
+
+    /**
+     * 根据时间范围统计传播轨迹
+     * @param appInfoId
+     * @param startDate
+     * @param endDate
+     * @param type  统计方式  A-C 在 B-A之前， 为0时按照A-C和B独立出，为1时按照A-C和B-A出现
+     * @return
+     */
+    public JSONObject totalSpreadTrajectory(String appInfoId, String startDate, String endDate, Integer type);
 
 }

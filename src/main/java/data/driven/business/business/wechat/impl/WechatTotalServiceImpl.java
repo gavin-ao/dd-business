@@ -313,6 +313,11 @@ public class WechatTotalServiceImpl implements WechatTotalService {
 
     @Override
     public JSONObject totalSpreadTrajectory(String appInfoId, String startDate, String endDate) {
+        return totalSpreadTrajectory(appInfoId, startDate, endDate, 1);
+    }
+
+    @Override
+    public JSONObject totalSpreadTrajectory(String appInfoId, String startDate, String endDate, Integer type) {
         JSONObject result = new JSONObject();
         if(appInfoId == null){
             return JSONUtil.putMsg(false, "101", "参数appInfoId为空");
@@ -342,17 +347,26 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         if(helpList != null && helpList.size() > 0){
             dataList.addAll(helpList);
         }
-
+        if(type == null || (type != 0 && type != 1)){
+            type = 0;
+        }
         if(dataList.size() > 0){
             List<WechatTotalTrajectoryVO> firstTrajectoryList = getFirstTrajectory(dataList);
-            List<String> existList = new ArrayList<String>();
+            List<String> parentExistList = new ArrayList<String>();
             List<WechatTotalTrajectoryVO> resultList = new ArrayList<WechatTotalTrajectoryVO>();
+            List<String> existList = new ArrayList<String>();
             for(WechatTotalTrajectoryVO first : firstTrajectoryList){
-                if(existList.contains(first.getToUserId())){
+                if(parentExistList.contains(first.getToUserId())){
                     continue;
                 }
-                existList.add(first.getToUserId());
-                dealLevelTrajectory(dataList, first, 1, 10, existList);
+                parentExistList.add(first.getToUserId());
+                if(type == 0){
+                    existList.add(first.getToUserId());
+                }else if(type == 1){
+                    existList.clear();
+                    existList.add(first.getToUserId());
+                }
+                dealLevelTrajectory(dataList, first, 1, 10, existList, parentExistList, type);
                 resultList.add(first);
             }
             result.put("data", resultList);
@@ -392,7 +406,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
      * @param maxLevel
      * @param existList
      */
-    private void dealLevelTrajectory(List<WechatTotalTrajectoryVO> result, WechatTotalTrajectoryVO parent, int currentLevel, int maxLevel, List<String> existList){
+    private void dealLevelTrajectory(List<WechatTotalTrajectoryVO> result, WechatTotalTrajectoryVO parent, int currentLevel, int maxLevel, List<String> existList, List<String> parentExistList, Integer type){
 
         List<WechatTotalTrajectoryVO> childList = parent.getChildList();
         if(childList == null){
@@ -417,7 +431,12 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             return;
         }
         for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : childList){
-            dealLevelTrajectory(result, wechatTotalTrajectoryVO, ++currentLevel, maxLevel, existList);
+            if(type == 1){
+                if(parentExistList.contains(wechatTotalTrajectoryVO.getToUserId())){
+                    continue;
+                }
+            }
+            dealLevelTrajectory(result, wechatTotalTrajectoryVO, ++currentLevel, maxLevel, existList, parentExistList, type);
         }
 
     }

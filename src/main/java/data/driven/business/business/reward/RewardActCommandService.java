@@ -13,16 +13,18 @@ public interface RewardActCommandService {
     /**
      * 根据活动id获取未使用的奖励口令
      * @param actId
+     * @param commandType
      * @return
      */
-    public RewardActCommandEntity getNextRewardActCommandByActId(String actId);
+    public RewardActCommandEntity getNextRewardActCommandByActId(String actId, Integer commandType);
 
     /**
      * 根据helpId获取奖励口令文本
      * @param helpId
+     * @param wechatUserId
      * @return
      */
-    public String getCommandByHelpId(String helpId);
+    public String getCommandByHelpId(String helpId, String wechatUserId);
 
     /**
      * 将奖励口令状态修改为已使用
