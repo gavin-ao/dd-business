@@ -18,7 +18,7 @@ function login(){
             success : function(data){
                 var success = data.success;
                 if(success && success == true){
-                    alert(data.msg);
+                    // alert(data.msg);
                     window.location.href = "/wechat/total/dataStatistics";
                 }else{
                     alert("登录失败");
