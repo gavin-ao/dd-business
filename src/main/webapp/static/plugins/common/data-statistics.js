@@ -298,9 +298,14 @@ function chartGraphShow(list) {
     var childArr = [];
     var num = 0;
     function xunhuans(list) {
-
         for (var i = 0; i < list.length; i++) {
-            list[i]["id"] = num;
+            var indexArr = $.inArray(list[i].toUserId,childArr)
+            if(indexArr>=0){
+                list[i]["id"] = indexArr;
+            }else{
+                childArr.push(list[i].toUserId)
+                list[i]["id"] = childArr.length-1;
+            }
             num++;
             if (list[i].childList && list[i].childList.length) {
                 xunhuans(list[i].childList);
@@ -313,7 +318,7 @@ function chartGraphShow(list) {
         var number = num;
         for (var i = 0; i < list.length; i++) {
             nodes.push( {
-                id:list[i].toUserId,
+                id:list[i].id,
                 name: list[i].toUser,
                 rela: list[i].rela,
                 class: ORDNUME + number
