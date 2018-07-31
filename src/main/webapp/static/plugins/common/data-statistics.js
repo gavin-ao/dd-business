@@ -299,11 +299,12 @@ function chartGraphShow(list) {
     var num = 0;
     function xunhuans(list) {
         for (var i = 0; i < list.length; i++) {
-            var indexArr = $.inArray(list[i].toUserId,childArr)
+            var strId = list[i].totalId + list[i].toUserId;
+            var indexArr = $.inArray(strId,childArr)
             if(indexArr>=0){
                 list[i]["id"] = indexArr;
             }else{
-                childArr.push(list[i].toUserId)
+                childArr.push(strId)
                 list[i]["id"] = childArr.length-1;
             }
             num++;
