@@ -299,11 +299,12 @@ function chartGraphShow(list) {
     var num = 0;
     function xunhuans(list) {
         for (var i = 0; i < list.length; i++) {
-            var indexArr = $.inArray(list[i].toUserId,childArr)
+            var strId = list[i].totalId + list[i].toUserId;
+            var indexArr = $.inArray(strId,childArr)
             if(indexArr>=0){
                 list[i]["id"] = indexArr;
             }else{
-                childArr.push(list[i].toUserId)
+                childArr.push(strId)
                 list[i]["id"] = childArr.length-1;
             }
             num++;
@@ -763,9 +764,8 @@ function selecyCondition() {
                     wholeAppInfoId = appInfoId
                 }
 
-
                 // changeTimeAfterDataChange();
-                $($("#contain_main_head > div")[0]).trigger("click");
+                $($("#contain_main_head > div input")[0]).trigger("click");
                 break;
             case "dropdownMenu2":
                 $(target).html(content)
@@ -784,16 +784,17 @@ function changeTimeAfterDataChange() {
 // 时间选择
 function dateSelecteTime() {
     var startTime, endTime;
-    $("#contain_main_head").off('click', "div");
-    $("#contain_main_head").on('click', "div", function () {
-        var inputs = $(this).siblings().find("input");
+    $("#contain_main_head").off('click', "div>input");
+    $("#contain_main_head").on('click', "div>input", function () {
+        var inputs = $(this).parent().siblings().find("input");
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].removeAttribute("checked");
         }
-        $(this).find("input").attr("checked", true)
-        className = $(this).find("input").attr("class");
+        $(this).attr("checked", true)
+        className = $(this).attr("class");
         $(".datePicker").css("display", "none");
         var dateTimes;
+
         switch (className) {
             case "todayTime":
                 dateTimes = currentTime(new Date());
