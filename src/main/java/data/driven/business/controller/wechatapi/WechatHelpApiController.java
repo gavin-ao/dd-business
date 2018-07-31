@@ -139,7 +139,7 @@ public class WechatHelpApiController {
     public JSONObject existDoHelp(String sessionID, String helpId){
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         try{
-            WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
+            WechatHelpInfoEntity    helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
             if(helpInfoEntity != null){
                 WechatUserInfoVO fromUserInfo = wechatUserService.getUserInfoByUserIdAndAppInfoId(helpInfoEntity.getWechatUserId(), helpInfoEntity.getAppInfoId());
                 WechatUserInfoVO toUserInfo = wechatApiSessionBean.getUserInfo();

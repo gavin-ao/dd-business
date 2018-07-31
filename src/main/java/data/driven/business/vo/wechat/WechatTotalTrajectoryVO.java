@@ -9,13 +9,22 @@ import java.util.List;
  * @date 2018/7/18
  */
 public class WechatTotalTrajectoryVO {
+    private String totalId;
     private String fromUserId;
     private String fromUser;
     private String toUserId;
     private String toUser;
     private Date totalDate;
     private Integer frequency;
-    List<WechatTotalTrajectoryVO> childList;
+    private List<WechatTotalTrajectoryVO> childList;
+
+    public String getTotalId() {
+        return totalId;
+    }
+
+    public void setTotalId(String totalId) {
+        this.totalId = totalId;
+    }
 
     public String getFromUserId() {
         return fromUserId;
