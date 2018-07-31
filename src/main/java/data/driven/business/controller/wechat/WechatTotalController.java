@@ -146,6 +146,7 @@ public class WechatTotalController {
      * @param appInfoId
      * @param startDate
      * @param endDate
+     * @param type  统计方式  A-C 在 B-A之前， 为0时按照A-C和B独立出，为1时按照A-C和B-A出现
      * @return
      */
     @ResponseBody

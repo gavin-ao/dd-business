@@ -348,7 +348,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             dataList.addAll(helpList);
         }
         if(type == null || (type != 0 && type != 1)){
-            type = 0;
+            type = 1;
         }
         if(dataList.size() > 0){
             List<WechatTotalTrajectoryVO> firstTrajectoryList = getFirstTrajectory(dataList);
