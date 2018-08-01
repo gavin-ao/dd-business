@@ -765,7 +765,7 @@ function selecyCondition() {
                 }
 
                 // changeTimeAfterDataChange();
-                $($("#contain_main_head > div input")[0]).trigger("click");
+                $($("#contain_main_head > div")[2]).find('input').trigger("click");
                 break;
             case "dropdownMenu2":
                 $(target).html(content)

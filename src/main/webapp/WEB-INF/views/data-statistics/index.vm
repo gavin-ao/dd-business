@@ -14,19 +14,19 @@
 
         </div>
         <div class="contain_head_right">
-            <div class="dropdown" style=" float: left;margin-right: 20px;">
-                <button class="btn btn-default dropdown-toggle" type="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span class="selectIndex"> 请选择</span>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li><a href="#">Separated link</a></li>
-                </ul>
-            </div>
+##            <div class="dropdown" style=" float: left;margin-right: 20px;">
+##                <button class="btn btn-default dropdown-toggle" type="button"
+##                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+##                    <span class="selectIndex"> 请选择</span>
+##                    <span class="caret"></span>
+##                </button>
+##                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+##                    <li><a href="#">Action</a></li>
+##                    <li><a href="#">Another action</a></li>
+##                    <li><a href="#">Something else here</a></li>
+##                    <li><a href="#">Separated link</a></li>
+##                </ul>
+##            </div>
             <div style="float: left; margin-right: 20px;">
                 <a href="">帮助</a>
             </div>
@@ -38,7 +38,7 @@
         </div>
 
     </div>
-    <div class="contain_main" style="">
+    <div class="contain_main" style="overflow-y: scroll;height: calc(100% - 80px)">
         <div class="contain_main_head" style="" id="contain_main_head">
             <div class="dateSelect">
                 <input type="radio" name="chose" class="todayTime"> 今日
