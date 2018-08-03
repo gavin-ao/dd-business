@@ -328,15 +328,17 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             return JSONUtil.putMsg(false, "102", "时间获取失败，请检查时间格式");
         }
         String shareSql = "select t.share_id as totalId,fu.wechat_user_id as from_user_id,fu.nick_name as from_user,tu.wechat_user_id as to_user_id,tu.nick_name as to_user,t.frequency,t.share_at as total_date from wechat_share_detail t" +
+                " left join wechat_share_info p on t.share_id = p.share_id" +
                 " left join wechat_user_info fu on t.form_wechat_user_id = fu.wechat_user_id" +
                 " left join wechat_user_info tu on t.to_wechat_user_id = tu.wechat_user_id" +
-                " where t.app_info_id = ? and t.share_at between ? and ? and fu.wechat_user_id is not null and tu.wechat_user_id is not null order by t.share_at";
+                " where t.app_info_id = ? and p.create_at between ? and ? and fu.wechat_user_id is not null and tu.wechat_user_id is not null order by t.share_at";
         List<WechatTotalTrajectoryVO> shareList = jdbcBaseDao.queryList(WechatTotalTrajectoryVO.class, shareSql, appInfoId, start, end);
 
         String helpSql = "select t.help_id as totalId,fu.wechat_user_id as from_user_id,fu.nick_name as from_user,tu.wechat_user_id as to_user_id,tu.nick_name as to_user,t.help_at as total_date from wechat_help_detail t" +
+                " left join wechat_help_info p on t.help_id = p.help_id" +
                 " left join wechat_user_info fu on t.form_wechat_user_id = fu.wechat_user_id" +
                 " left join wechat_user_info tu on t.to_wechat_user_id = tu.wechat_user_id" +
-                " where t.app_info_id = ? and t.help_at between ? and ? and t.status = 1 and fu.wechat_user_id is not null and tu.wechat_user_id is not null order by t.help_at";
+                " where t.app_info_id = ? and p.create_at between ? and ? and t.status = 1 and fu.wechat_user_id is not null and tu.wechat_user_id is not null order by t.help_at";
         List<WechatTotalTrajectoryVO> helpList = jdbcBaseDao.queryList(WechatTotalTrajectoryVO.class, helpSql, appInfoId, start, end);
         List<WechatTotalTrajectoryVO> dataList = new ArrayList<WechatTotalTrajectoryVO>();
 
@@ -387,9 +389,9 @@ public class WechatTotalServiceImpl implements WechatTotalService {
                 continue;
             }
             existList.add(wechatTotalTrajectoryVO.getFromUserId());
-            existList.add(wechatTotalTrajectoryVO.getToUserId());
+//            existList.add(wechatTotalTrajectoryVO.getToUserId());
             WechatTotalTrajectoryVO fVo = new WechatTotalTrajectoryVO();
-            fVo.setTotalId("0");
+            fVo.setTotalId(wechatTotalTrajectoryVO.getTotalId());
             fVo.setFromUser("0");
             fVo.setToUserId(wechatTotalTrajectoryVO.getFromUserId());
             fVo.setToUser(wechatTotalTrajectoryVO.getFromUser());
@@ -398,6 +400,14 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         }
         return list;
     }
+
+//    private List<WechatTotalTrajectoryVO> getFirstTrajectory(String appInfoId, String startDate, String endDate){
+//        String sql = "select t.help_id as totalId,'0' as from_user_id,'0' as from_user,t.wechat_user_id as to_user_id,tu.nick_name as to_user from wechat_help_detail t"+
+//                " left join wechat_user_info to on t.form_wechat_user_id = to.wechat_user_id" +
+//                " where t.app_info_id = ? and t.create_at between ? and ? and t.status = 1 and fu.wechat_user_id is not null and tu.wechat_user_id is not null order by t.help_at";
+//
+//
+//    }
 
     /**
      * 处理传播轨迹图，如果这个人被统计过，不管出于什么节点，都不统计

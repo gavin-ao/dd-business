@@ -45,10 +45,13 @@ public class WechatHelpApiNoLoginController {
     @RequestMapping(path = "/findHelpDetailUserList")
     public JSONObject findHelpDetailUserList(String helpId){
         try{
+            long start = System.currentTimeMillis();
             List<WechatHelpDetailUserVO> wechatHelpDetailUserVOList = wechatHelpDetailService.findHelpDetailUserListByHelpId(helpId);
             if(wechatHelpDetailUserVOList != null && wechatHelpDetailUserVOList.size() > 0){
                 JSONObject result = putMsg(true, "200", "查询成功");
                 result.put("data", JSONArray.parseArray(JSONArray.toJSONString(wechatHelpDetailUserVOList)));
+                long end = System.currentTimeMillis();
+                logger.warn("耗时："+(end-start)/1000.0 + "秒");
                 return result;
             }else{
                 return putMsg(false, "101", "助力用户查询失败");

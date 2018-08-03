@@ -55,6 +55,7 @@ public class WechatHelpApiController {
     @ResponseBody
     @RequestMapping(path = "/getHelpId")
     public JSONObject getHelpId(String sessionID, String actId){
+        long start = System.currentTimeMillis();
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         String wechatUserId = wechatApiSessionBean.getUserInfo().getWechatUserId();
         WechatHelpInfoEntity wechatHelpInfoEntity = wechatHelpInfoService.getHelpInfoByActId(actId, wechatUserId);
@@ -63,8 +64,12 @@ public class WechatHelpApiController {
             helpId = wechatHelpInfoEntity.getHelpId();
             JSONObject result = putMsg(true, "200", "获取成功");
             result.put("helpId", helpId);
+            long end = System.currentTimeMillis();
+            logger.warn("耗时："+(end-start)/1000.0 + "秒");
             return result;
         }else{
+            long end = System.currentTimeMillis();
+            logger.warn("耗时："+(end-start)/1000.0 + "秒");
             return putMsg(false, "101", "获取失败");
         }
     }
@@ -78,6 +83,7 @@ public class WechatHelpApiController {
     @ResponseBody
     @RequestMapping(path = "/execuHelp")
     public JSONObject execuHelp(String sessionID, String actId){
+        long start = System.currentTimeMillis();
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         String wechatUserId = wechatApiSessionBean.getUserInfo().getWechatUserId();
         try{
@@ -90,6 +96,8 @@ public class WechatHelpApiController {
             }
             JSONObject result = putMsg(true, "200", "邀请助力成功");
             result.put("helpId", helpId);
+            long end = System.currentTimeMillis();
+            logger.warn("耗时："+(end-start)/1000.0 + "秒");
             return result;
         }catch (Exception e){
             logger.error(e.getMessage(), e);
@@ -113,16 +121,23 @@ public class WechatHelpApiController {
     @ResponseBody
     @RequestMapping(path = "/existDoHelpByActId")
     public JSONObject existDoHelpByActId(String sessionID, String actId){
+        long start = System.currentTimeMillis();
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         WechatUserInfoVO toUserInfo = wechatApiSessionBean.getUserInfo();
         try{
             WechatHelpDetailEntity wechatHelpDetailEntity = wechatHelpDetailService.getWechatHelpDetailEntityByToUser(actId, toUserInfo.getWechatUserId());
             if(wechatHelpDetailEntity != null){
+                long end = System.currentTimeMillis();
+                logger.warn("耗时："+(end-start)/1000.0 + "秒");
                 return putMsg(true, "200", "已助力");
             }else{
+                long end = System.currentTimeMillis();
+                logger.warn("耗时："+(end-start)/1000.0 + "秒");
                 return putMsg(false, "101", "未助力");
             }
         }catch (Exception e){
+            long end = System.currentTimeMillis();
+            logger.warn("耗时："+(end-start)/1000.0 + "秒");
             logger.error(e.getMessage(), e);
             return putMsg(false, "102", "查询失败");
         }
@@ -137,6 +152,7 @@ public class WechatHelpApiController {
     @ResponseBody
     @RequestMapping(path = "/existDoHelp")
     public JSONObject existDoHelp(String sessionID, String helpId){
+        long start = System.currentTimeMillis();
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         try{
             WechatHelpInfoEntity    helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
@@ -144,19 +160,29 @@ public class WechatHelpApiController {
                 WechatUserInfoVO fromUserInfo = wechatUserService.getUserInfoByUserIdAndAppInfoId(helpInfoEntity.getWechatUserId(), helpInfoEntity.getAppInfoId());
                 WechatUserInfoVO toUserInfo = wechatApiSessionBean.getUserInfo();
                 if(fromUserInfo.getWechatMapId().equals(toUserInfo.getWechatMapId())){
+                    long end = System.currentTimeMillis();
+                    logger.warn("耗时："+(end-start)/1000.0 + "秒");
                     return putMsg(false, "101", "不能给自己点助力");
                 }
                 String helpDetailId = wechatHelpDetailService.getHelpDetailId(fromUserInfo.getWechatMapId(), toUserInfo.getWechatMapId(), helpId);
                 if(helpDetailId != null){
+                    long end = System.currentTimeMillis();
+                    logger.warn("耗时："+(end-start)/1000.0 + "秒");
                     return putMsg(true, "200", "已助力");
                 }else{
                     WechatHelpDetailEntity wechatHelpDetailEntity = wechatHelpDetailService.getWechatHelpDetailEntityByToUser(helpInfoEntity.getActId(), toUserInfo.getWechatUserId());
                     if(wechatHelpDetailEntity != null){
+                        long end = System.currentTimeMillis();
+                        logger.warn("耗时："+(end-start)/1000.0 + "秒");
                         return putMsg(true, "105", "已经给别人助力过了，不能再为这个点助力了");
                     }
+                    long end = System.currentTimeMillis();
+                    logger.warn("耗时："+(end-start)/1000.0 + "秒");
                     return putMsg(false, "102", "未助力");
                 }
             }else{
+                long end = System.currentTimeMillis();
+                logger.warn("耗时："+(end-start)/1000.0 + "秒");
                 return putMsg(false, "103", "助力记录不存在，请确认助力id是否正确");
             }
         }catch (Exception e){
@@ -174,6 +200,7 @@ public class WechatHelpApiController {
     @ResponseBody
     @RequestMapping(path = "/clickHelpUrl")
     public JSONObject clickHelpUrl(String sessionID, String helpId){
+        long start = System.currentTimeMillis();
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         try{
             WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
@@ -182,16 +209,24 @@ public class WechatHelpApiController {
                 WechatUserInfoVO toUserInfo = wechatApiSessionBean.getUserInfo();
                 String helpDetailId = wechatHelpDetailService.getHelpDetailId(fromUserInfo.getWechatMapId(), toUserInfo.getWechatMapId(), helpId);
                 if(helpDetailId != null){
+                    long end = System.currentTimeMillis();
+                    logger.warn("耗时："+(end-start)/1000.0 + "秒");
                     return putMsg(false, "101", "助力点击记录失败,已经助力过了");
                 }else{
                     wechatHelpDetailService.insertHelpDetail(fromUserInfo, toUserInfo, helpInfoEntity);
                     JSONObject result = putMsg(true, "200", "助力点击记录成功");
+                    long end = System.currentTimeMillis();
+                    logger.warn("耗时："+(end-start)/1000.0 + "秒");
                     return result;
                 }
             }else{
+                long end = System.currentTimeMillis();
+                logger.warn("耗时："+(end-start)/1000.0 + "秒");
                 return putMsg(false, "102", "助力点击记录失败");
             }
         }catch (Exception e){
+            long end = System.currentTimeMillis();
+            logger.warn("耗时："+(end-start)/1000.0 + "秒");
             logger.error(e.getMessage(), e);
             return putMsg(false, "103", "助力点击记录失败");
         }
@@ -205,6 +240,7 @@ public class WechatHelpApiController {
     @ResponseBody
     @RequestMapping(path = "/getRewardActCommand")
     public JSONObject getRewardActCommand(String sessionID, String helpId){
+        long start = System.currentTimeMillis();
         WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
         if(helpInfoEntity != null){
             WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
@@ -230,9 +266,13 @@ public class WechatHelpApiController {
                             result.put("success", true);
                             result.put("command", rewardActCommandEntity.getCommand());
                         }else{
+                            long end = System.currentTimeMillis();
+                            logger.warn("耗时："+(end-start)/1000.0 + "秒");
                             return putMsg(false, "101", "奖励口令获取失败,奖励领取完毕。");
                         }
                     }catch (Exception e){
+                        long end = System.currentTimeMillis();
+                        logger.warn("耗时："+(end-start)/1000.0 + "秒");
                         logger.error(e.getMessage(), e);
                         return putMsg(false, "102", "奖励口令获取失败,发生未知错误。");
                     }finally {
@@ -244,11 +284,17 @@ public class WechatHelpApiController {
                     result.put("success", true);
                     result.put("command", command);
                 }
+                long end = System.currentTimeMillis();
+                logger.warn("耗时："+(end-start)/1000.0 + "秒");
                 return result;
             }else{
+                long end = System.currentTimeMillis();
+                logger.warn("耗时："+(end-start)/1000.0 + "秒");
                 return putMsg(false, "103", "奖励口令获取失败,未达到领取要求。");
             }
         }else{
+            long end = System.currentTimeMillis();
+            logger.warn("耗时："+(end-start)/1000.0 + "秒");
             return putMsg(false, "104", "奖励口令获取失败，助力信息不存在。");
         }
     }
@@ -261,6 +307,7 @@ public class WechatHelpApiController {
     @ResponseBody
     @RequestMapping(path = "/getRewardActCommandByOther")
     public JSONObject getRewardActCommandByOther(String sessionID, String actId){
+        long start = System.currentTimeMillis();
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         String currentUserId = wechatApiSessionBean.getUserInfo().getWechatUserId();
         WechatHelpDetailEntity wechatHelpDetailEntity = wechatHelpDetailService.getWechatHelpDetailEntityByToUser(actId, currentUserId);
@@ -271,6 +318,8 @@ public class WechatHelpApiController {
             if(command == null){
                 WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(wechatHelpDetailEntity.getHelpId());
                 if(helpInfoEntity==null){
+                    long end = System.currentTimeMillis();
+                    logger.warn("耗时："+(end-start)/1000.0 + "秒");
                     return putMsg(false, "103", "奖励口令获取失败，助力信息不存在。");
                 }
                 RewardActCommandEntity rewardActCommandEntity = null;
@@ -283,12 +332,16 @@ public class WechatHelpApiController {
                         result.put("success", true);
                         result.put("command", rewardActCommandEntity.getCommand());
                     }else{
+                        long end = System.currentTimeMillis();
+                        logger.warn("耗时："+(end-start)/1000.0 + "秒");
                         return putMsg(false, "101", "奖励口令获取失败,奖励领取完毕。");
                     }
                     helpInfoEntity.setWechatUserId(currentUserId);
                     //插入奖励口令和助力的关联关系
                     rewardActCommandService.insertRewardActCommandHelpMapping(rewardActCommandEntity, helpInfoEntity);
                 }catch (Exception e){
+                    long end = System.currentTimeMillis();
+                    logger.warn("耗时："+(end-start)/1000.0 + "秒");
                     logger.error(e.getMessage(), e);
                     return putMsg(false, "102", "奖励口令获取失败,发生未知错误。");
                 }finally {
@@ -298,8 +351,12 @@ public class WechatHelpApiController {
                 result.put("success", true);
                 result.put("command", command);
             }
+            long end = System.currentTimeMillis();
+            logger.warn("耗时："+(end-start)/1000.0 + "秒");
             return result;
         }else{
+            long end = System.currentTimeMillis();
+            logger.warn("耗时："+(end-start)/1000.0 + "秒");
             return putMsg(false, "104", "奖励口令获取失败，没有进行助力，无法领取奖励。");
         }
     }
