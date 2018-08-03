@@ -27,13 +27,13 @@
 ##                    <li><a href="#">Separated link</a></li>
 ##                </ul>
 ##            </div>
-            <div style="float: left; margin-right: 20px;">
-                <a href="">帮助</a>
-            </div>
-            <div style=" display: table-cell;vertical-align:middle;height: 80px;">
-                <img src="/static/service/images/login/info.png" alt=""
-                     style="vertical-align: middle;margin-top: -5px;margin-right: 20px;">
-            </div>
+##            <div style="float: left; margin-right: 20px;">
+##                <a href="">帮助</a>
+##            </div>
+##            <div style=" display: table-cell;vertical-align:middle;height: 80px;">
+##                <img src="/static/service/images/login/info.png" alt=""
+##                     style="vertical-align: middle;margin-top: -5px;margin-right: 20px;">
+##            </div>
         ##                        <iframe src="/index.vm" width="200" height="200"></iframe>
         </div>
 
