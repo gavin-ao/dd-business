@@ -429,7 +429,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             if(existList.contains(wechatTotalTrajectoryVO.getToUserId())){
                 continue;
             }
-            if(parent.getToUserId().equals(wechatTotalTrajectoryVO.getFromUserId())){
+            if(parent.getTotalId().equals(wechatTotalTrajectoryVO.getTotalId()) && parent.getToUserId().equals(wechatTotalTrajectoryVO.getFromUserId())){
                 childList.add(wechatTotalTrajectoryVO);
                 existList.add(wechatTotalTrajectoryVO.getToUserId());
             }
@@ -442,11 +442,11 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             return;
         }
         for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : childList){
-            if(type == 1){
-                if(parentExistList.contains(wechatTotalTrajectoryVO.getToUserId())){
-                    continue;
-                }
-            }
+//            if(type == 1){
+//                if(parentExistList.contains(wechatTotalTrajectoryVO.getToUserId())){
+//                    continue;
+//                }
+//            }
             dealLevelTrajectory(result, wechatTotalTrajectoryVO, ++currentLevel, maxLevel, existList, parentExistList, type);
         }
 

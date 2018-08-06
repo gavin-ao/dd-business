@@ -71,6 +71,10 @@ public class WechatLoginApiController {
         encryptedData = encryptedData.replace(" ","+");
         iv = iv.replace(" ","+");
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+        return syncUser(encryptedData, iv, sessionID, wechatApiSessionBean);
+    }
+
+    private JSONObject syncUser(String encryptedData, String iv, String sessionID, WechatApiSessionBean wechatApiSessionBean) {
         WechatUserInfoVO sUser = wechatApiSessionBean.getUserInfo();
         String openId = null;
         if(sUser != null){
@@ -130,6 +134,49 @@ public class WechatLoginApiController {
         return result;
     }
 
+
+    @ResponseBody
+    @RequestMapping(path = "/newLogin")
+    public JSONObject newLogin(String appid, String secret, String code, String encryptedData, String iv){
+//        JSONObject loginResult = login(appid, secret, code);
+//        if(loginResult.getBoolean("success")){
+//            JSONObject syncUser = syncUser(encryptedData, iv, loginResult.getString("sessionID"));
+//            if(!syncUser.getBoolean("success")){
+//                logger.warn("syncUser失败");
+//            }
+//        }
+//        return loginResult;
+        long start = System.currentTimeMillis();
+        //根据code获取sessionKey
+        JSONObject sessionJsonObject = getSessionKey(appid, secret, code);
+        String sessionKey = null;
+        if(sessionJsonObject.containsKey("session_key")){
+            sessionKey = sessionJsonObject.getString("session_key");
+        }else{
+            return JSONUtil.putMsg(false, "101", "获取不到session_key，请重新登录");
+        }
+        //设置缓存
+        WechatApiSessionBean wechatApiSessionBean = new WechatApiSessionBean();
+        wechatApiSessionBean.setSessionKey(sessionKey);
+        if(sessionJsonObject.containsKey("openid")){
+            WechatUserInfoVO userInfo = new WechatUserInfoVO();
+            userInfo.setOpenId(sessionJsonObject.getString("openid"));
+            wechatApiSessionBean.setUserInfo(userInfo);
+        }
+
+        String sessionID = WechatApiSession.setSessionBean(wechatApiSessionBean);
+        JSONObject result = JSONUtil.putMsg(true, "200", "调用成功");
+        result.put("sessionID", sessionID);
+
+
+        encryptedData = encryptedData.replace(" ","+");
+        iv = iv.replace(" ","+");
+        JSONObject syncUser = syncUser(encryptedData, iv, sessionID, wechatApiSessionBean);
+        result.putAll(syncUser);
+        long end = System.currentTimeMillis();
+        logger.warn("总耗时："+(end-start)/1000.0+"秒");
+        return result;
+    }
 
 
 }

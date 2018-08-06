@@ -57,6 +57,13 @@ public class WechatUserServiceImpl implements WechatUserService {
     }
 
     @Override
+    public String addUserInfo2() {
+        String sql = "update wechat_user_info set nick_name='哇哈哈吃啊\uD83E\uDD84' where wechat_user_id='5b646deaf6d608065c8c9e10'";
+        jdbcBaseDao.executeUpdate(sql);
+        return sql;
+    }
+
+    @Override
     public String addUserAndAppMap(String appInfoId, String userInfoId, String openId) {
         String id = UUIDUtil.getUUID();
         String sql = "insert into wechat_app_user_mapping(wechat_map_id,app_info_id,wechat_user_id,open_id,create_at) values(?,?,?,?,?)";

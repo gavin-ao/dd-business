@@ -24,7 +24,7 @@ public class WechatApiFilter implements Filter{
     private static Logger logger = LoggerFactory.getLogger(WechatApiFilter.class);
 
     /** 不过滤的url集合 **/
-    public static Set<String> EXCLUDE_URL_SET = new HashSet<String>();
+    private static Set<String> EXCLUDE_URL_SET = new HashSet<String>();
 
     static{
         //静态资源文件不需要过滤
@@ -43,6 +43,7 @@ public class WechatApiFilter implements Filter{
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        long start = System.currentTimeMillis();
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String uri = request.getRequestURI();
@@ -60,11 +61,9 @@ public class WechatApiFilter implements Filter{
                 }
             }
         }
-        System.out.println(uri);
-        System.out.println("------WechatApiFilter过滤器通过成功-------");
         filterChain.doFilter(request, response);
-
-
+        long end = System.currentTimeMillis();
+        logger.warn("请求地址：" + uri + "-----过滤器耗时：" + (end - start)/1000.0 + "秒");
     }
 
     /**

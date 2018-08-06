@@ -28,13 +28,10 @@ public class MatActivityApiNoLoginController {
     @ResponseBody
     @RequestMapping(path = "/getActivityPicture")
     public JSONObject getActivityPicture(String actId){
-        long start = System.currentTimeMillis();
         String filePath = matActivityService.getMatActivityPictureUrl(actId);
         if(filePath != null){
             JSONObject result = putMsg(true, "200", "获取成功");
             result.put("url", Constant.STATIC_FILE_PATH + filePath);
-            long end = System.currentTimeMillis();
-            logger.warn("耗时："+(end-start)/1000.0 + "秒");
             return result;
         }else{
             return putMsg(false, "101", "获取失败");

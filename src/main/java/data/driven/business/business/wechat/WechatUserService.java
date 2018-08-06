@@ -32,6 +32,12 @@ public interface WechatUserService {
     public String addUserInfo(WechatUserInfoEntity userInfo);
 
     /**
+     * 新增用户- 返回userId
+     * @return
+     */
+    public String addUserInfo2();
+
+    /**
      * 新增app与用户的关联
      * @param appInfoId
      * @param userInfoId
