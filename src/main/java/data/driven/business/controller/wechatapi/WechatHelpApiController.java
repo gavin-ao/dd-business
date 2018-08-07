@@ -165,10 +165,10 @@ public class WechatHelpApiController {
                 if(helpInfoEntity != null){
                     if(helpInfoEntity.getWechatUserId().equals(toUserInfo.getWechatUserId())){
                         JSONObject result =  putMsg(false, "102", "不能给自己点助力");
-                        // 判断是否够人数领取奖励
-                        JSONObject commondJson = getRewardActCommand(helpId, helpInfoEntity, wechatApiSessionBean);
-                        result.put("command", commondJson.get("command"));
-                        result.put("commandType", 1);
+//                        // 判断是否够人数领取奖励
+//                        JSONObject commondJson = getRewardActCommand(helpId, helpInfoEntity, wechatApiSessionBean);
+//                        result.put("command", commondJson.get("command"));
+//                        result.put("commandType", 1);
                         return result;
                     }
                 }
@@ -176,7 +176,7 @@ public class WechatHelpApiController {
             }
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return putMsg(false, "102", "查询失败");
+            return putMsg(false, "103", "查询失败");
         }
     }
 
