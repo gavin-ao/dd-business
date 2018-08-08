@@ -181,6 +181,40 @@ public class WechatHelpApiController {
     }
 
     /**
+     * 判断当前用户是否助力过 - 在整个活动中 ,一个人可以多次点击
+     * @param sessionID
+     * @param helpId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "/existDoHelpNoLimit")
+    public JSONObject existDoHelpNoLimit(String sessionID, String helpId){
+        logger.info("sessionID="+sessionID+"-----helpId="+helpId);
+        WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+        try{
+            WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
+            if(helpInfoEntity != null){
+                WechatUserInfoVO fromUserInfo = wechatUserService.getUserInfoByUserIdAndAppInfoId(helpInfoEntity.getWechatUserId(), helpInfoEntity.getAppInfoId());
+                WechatUserInfoVO toUserInfo = wechatApiSessionBean.getUserInfo();
+                if(fromUserInfo.getWechatMapId().equals(toUserInfo.getWechatMapId())){
+                    return putMsg(false, "101", "不能给自己点助力");
+                }
+                String helpDetailId = wechatHelpDetailService.getHelpDetailId(fromUserInfo.getWechatMapId(), toUserInfo.getWechatMapId(), helpId);
+                if(helpDetailId != null){
+                    return putMsg(true, "200", "已助力");
+                }else{
+                    return putMsg(false, "102", "未助力");
+                }
+            }else{
+                return putMsg(false, "103", "助力记录不存在，请确认助力id是否正确");
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return putMsg(false, "104", "查询失败");
+        }
+    }
+
+    /**
      * 判断当前用户是否助力过
      * @param sessionID
      * @param helpId
