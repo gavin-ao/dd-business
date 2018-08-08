@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import data.driven.business.business.material.MatActivityService;
 import data.driven.business.common.Constant;
 import data.driven.business.controller.wechatapi.WechatShareApiController;
+import data.driven.business.vo.material.MatActivityVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,22 @@ public class MatActivityApiNoLoginController {
         if(filePath != null){
             JSONObject result = putMsg(true, "200", "获取成功");
             result.put("url", Constant.STATIC_FILE_PATH + filePath);
+            return result;
+        }else{
+            return putMsg(false, "101", "获取失败");
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping(path = "/getActivityInfo")
+    public JSONObject getActivityInfo(String actId){
+        MatActivityVO matActivityInfo = matActivityService.getMatActivityInfo(actId);
+        if(matActivityInfo != null){
+            JSONObject result = putMsg(true, "200", "获取成功");
+            result.put("url", Constant.STATIC_FILE_PATH + matActivityInfo.getFilePath());
+            result.put("actRule", matActivityInfo.getActRule());
+            result.put("exchangeRule", matActivityInfo.getExchangeRule());
+            result.put("partakeNum", matActivityInfo.getPartakeNum());
             return result;
         }else{
             return putMsg(false, "101", "获取失败");

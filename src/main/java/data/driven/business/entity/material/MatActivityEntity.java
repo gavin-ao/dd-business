@@ -22,6 +22,12 @@ public class MatActivityEntity {
     private String pictureId;
     /** 活动地址 **/
     private String actUrl;
+    /** 活动规则 **/
+    private String actRule;
+    /** 兑换规则 **/
+    private String exchangeRule;
+    /** 参与人数 **/
+    private Integer partakeNum;
     /** 活动开始日期 **/
     private Date startAt;
     /** 活动结束日期 **/
@@ -85,6 +91,30 @@ public class MatActivityEntity {
 
     public void setActUrl(String actUrl) {
         this.actUrl = actUrl;
+    }
+
+    public String getActRule() {
+        return actRule;
+    }
+
+    public void setActRule(String actRule) {
+        this.actRule = actRule;
+    }
+
+    public String getExchangeRule() {
+        return exchangeRule;
+    }
+
+    public void setExchangeRule(String exchangeRule) {
+        this.exchangeRule = exchangeRule;
+    }
+
+    public Integer getPartakeNum() {
+        return partakeNum;
+    }
+
+    public void setPartakeNum(Integer partakeNum) {
+        this.partakeNum = partakeNum;
     }
 
     public Date getStartAt() {

@@ -1,5 +1,7 @@
 package data.driven.business.business.material;
 
+import data.driven.business.vo.material.MatActivityVO;
+
 /**
  * 活动-素材service
  * @author hejinkai
@@ -13,5 +15,12 @@ public interface MatActivityService {
      * @return
      */
     public String getMatActivityPictureUrl(String actId);
+
+    /**
+     * 根据活动id获取图片的url，活动规则，兑换规则
+     * @param actId
+     * @return
+     */
+    public MatActivityVO getMatActivityInfo(String actId);
 
 }
