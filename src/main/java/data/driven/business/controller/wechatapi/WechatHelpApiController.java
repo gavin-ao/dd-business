@@ -166,6 +166,7 @@ public class WechatHelpApiController {
                 // 判断助力后是否领取奖励
                 JSONObject commondJson = getRewardActCommandByOther(actId, toUserInfo.getWechatUserId(), wechatHelpDetailEntity);
                 result.put("command", commondJson.get("command"));
+                result.put("rewardActContent", commondJson.get("rewardActContent"));
                 result.put("commandType", 2);
                 return result;
             }else{
