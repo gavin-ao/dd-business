@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import data.driven.business.common.Constant;
 import data.driven.business.util.JSONUtil;
 import data.driven.business.util.QRCodeUtil;
+import data.driven.business.util.UUIDUtil;
 import data.driven.business.util.WXUtil;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -47,6 +48,26 @@ public class QRCodeApiController {
                     logger.error(e.getMessage(), e);
                 }
             }
+        }
+    }
+
+    /**
+     * 根据内容生成二维码，输出图片地址
+     * @param response
+     * @param content
+     */
+    @RequestMapping(path = "/createQrcodeFile")
+    public JSONObject createQrcodeFile(HttpServletResponse response, String content){
+        String tempFileName = Constant.WXQRCODE_TEMP_FILE_FOLDER + UUIDUtil.getUUID();
+        String fileName = Constant.FILE_UPLOAD_PATH + tempFileName;
+        try{
+            QRCodeUtil.createQRCode(content, fileName);
+            JSONObject result = JSONUtil.putMsg(true, "200", "二维码生成成功");
+            result.put("qrcodeUrl", tempFileName);
+            return result;
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+            return JSONUtil.putMsg(false, "101", "二维码生成失败");
         }
     }
 

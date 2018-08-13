@@ -31,7 +31,7 @@ public class MatActivityServiceImpl implements MatActivityService{
 
     @Override
     public MatActivityVO getMatActivityInfo(String actId) {
-        String sql = "select p.file_path,ma.act_id,ma.act_name,ma.act_rule,ma.exchange_rule,ma.partake_num from mat_activity ma left join sys_picture p on p.picture_id = ma.picture_id where ma.act_id = ?";
+        String sql = "select p.file_path,ma.act_id,ma.act_name,ma.act_share_title,ma.act_rule,ma.exchange_rule,ma.partake_num from mat_activity ma left join sys_picture p on p.picture_id = ma.picture_id where ma.act_id = ?";
         List<MatActivityVO> list = jdbcBaseDao.queryList(MatActivityVO.class, sql, actId);
         if(list != null && list.size() > 0){
             return list.get(0);

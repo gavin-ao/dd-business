@@ -49,6 +49,7 @@ public class MatActivityApiNoLoginController {
             result.put("actRule", matActivityInfo.getActRule());
             result.put("exchangeRule", matActivityInfo.getExchangeRule());
             result.put("partakeNum", matActivityInfo.getPartakeNum());
+            result.put("actShareTitle", matActivityInfo.getActShareTitle());
             return result;
         }else{
             return putMsg(false, "101", "获取失败");

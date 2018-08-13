@@ -22,6 +22,8 @@ public class MatActivityEntity {
     private String pictureId;
     /** 活动地址 **/
     private String actUrl;
+    /** 活动分享标题 **/
+    private String actShareTitle;
     /** 活动规则 **/
     private String actRule;
     /** 兑换规则 **/
@@ -91,6 +93,14 @@ public class MatActivityEntity {
 
     public void setActUrl(String actUrl) {
         this.actUrl = actUrl;
+    }
+
+    public String getActShareTitle() {
+        return actShareTitle;
+    }
+
+    public void setActShareTitle(String actShareTitle) {
+        this.actShareTitle = actShareTitle;
     }
 
     public String getActRule() {

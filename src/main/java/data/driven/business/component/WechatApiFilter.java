@@ -47,8 +47,10 @@ public class WechatApiFilter implements Filter{
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String uri = request.getRequestURI();
+        String sessionID = request.getParameter("sessionID");
+        String helpId = request.getParameter("helpId");
+        String actId = request.getParameter("actId");
         if(canFilter(uri)){
-            String sessionID = request.getParameter("sessionID");
             if(sessionID == null){
                 noAuthority(request, response);
                 return;
@@ -63,7 +65,7 @@ public class WechatApiFilter implements Filter{
         }
         filterChain.doFilter(request, response);
         long end = System.currentTimeMillis();
-        logger.warn("请求地址：" + uri + "-----过滤器耗时：" + (end - start)/1000.0 + "秒");
+        logger.info("请求地址：" + uri + "-----过滤器耗时：" + (end - start)/1000.0 + "秒" + "--------sessionID="+sessionID+"----------helpId="+helpId+"----------actId="+actId);
     }
 
     /**

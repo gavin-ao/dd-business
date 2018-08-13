@@ -105,8 +105,11 @@ public class WechatHelpApiController {
                 List<WechatHelpDetailUserVO> wechatHelpDetailUserVOList = wechatHelpDetailService.findHelpDetailUserListByHelpId(helpId);
                 if(wechatHelpDetailUserVOList != null && wechatHelpDetailUserVOList.size() > 0){
                     result.put("data", JSONArray.parseArray(JSONArray.toJSONString(wechatHelpDetailUserVOList)));
+                }else{
+                    result.put("data", new Object[0]);
                 }
             }catch (Exception e){
+                result.put("data", new Object[0]);
                 logger.error(e.getMessage(), e);
             }
         }
@@ -160,6 +163,13 @@ public class WechatHelpApiController {
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
         WechatUserInfoVO toUserInfo = wechatApiSessionBean.getUserInfo();
         try{
+            WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
+            if(helpInfoEntity == null){
+                return putMsg(false, "104", "助力信息为空");
+            }
+            if(helpInfoEntity.getWechatUserId().equals(toUserInfo.getWechatUserId())){
+                return putMsg(false, "102", "不能给自己点助力");
+            }
             WechatHelpDetailEntity wechatHelpDetailEntity = wechatHelpDetailService.getWechatHelpDetailEntityByToUser(actId, toUserInfo.getWechatUserId());
             if(wechatHelpDetailEntity != null){
                 JSONObject result = putMsg(true, "200", "已助力");
@@ -170,17 +180,6 @@ public class WechatHelpApiController {
                 result.put("commandType", 2);
                 return result;
             }else{
-                WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
-                if(helpInfoEntity != null){
-                    if(helpInfoEntity.getWechatUserId().equals(toUserInfo.getWechatUserId())){
-                        JSONObject result =  putMsg(false, "102", "不能给自己点助力");
-//                        // 判断是否够人数领取奖励
-//                        JSONObject commondJson = getRewardActCommand(helpId, helpInfoEntity, wechatApiSessionBean);
-//                        result.put("command", commondJson.get("command"));
-//                        result.put("commandType", 1);
-                        return result;
-                    }
-                }
                 return putMsg(false, "101", "未助力");
             }
         }catch (Exception e){
@@ -337,6 +336,7 @@ public class WechatHelpApiController {
                         rewardActCommandService.updateRewardActCommandUsed(rewardActCommandEntity.getCommandId());
                         result.put("success", true);
                         result.put("command", rewardActCommandEntity.getCommand());
+                        command = rewardActCommandEntity.getCommand();
                     }else{
                         return putMsg(false, "101", "奖励口令获取失败,奖励领取完毕。");
                     }
@@ -354,7 +354,7 @@ public class WechatHelpApiController {
             }
             if(result.getBoolean("success")){
                 RewardActContentEntity rewardActContent = rewardActContentService.getRewardActContentByActAndType(helpInfoEntity.getActId(), commandType);
-                if(rewardActContent != null && rewardActContent.getContentMid() != null){
+                if(rewardActContent != null && rewardActContent.getContentMid() != null && command!=null){
                     rewardActContent.setContentMid(rewardActContent.getContentMid().replace("${content}", command));
                 }
                 result.put("rewardActContent", rewardActContent);
@@ -399,6 +399,7 @@ public class WechatHelpApiController {
                         rewardActCommandService.updateRewardActCommandUsed(rewardActCommandEntity.getCommandId());
                         result.put("success", true);
                         result.put("command", rewardActCommandEntity.getCommand());
+                        command = rewardActCommandEntity.getCommand();
                     }else{
                         return putMsg(false, "101", "奖励口令获取失败,奖励领取完毕。");
                     }
@@ -417,7 +418,7 @@ public class WechatHelpApiController {
             }
             if(result.getBoolean("success")){
                 RewardActContentEntity rewardActContent = rewardActContentService.getRewardActContentByActAndType(wechatHelpDetailEntity.getActId(), commandType);
-                if(rewardActContent != null && rewardActContent.getContentMid() != null){
+                if(rewardActContent != null && rewardActContent.getContentMid() != null && command!=null){
                     rewardActContent.setContentMid(rewardActContent.getContentMid().replace("${content}", command));
                 }
                 result.put("rewardActContent", rewardActContent);

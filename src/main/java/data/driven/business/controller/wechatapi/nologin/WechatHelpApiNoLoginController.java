@@ -51,11 +51,15 @@ public class WechatHelpApiNoLoginController {
                 result.put("data", JSONArray.parseArray(JSONArray.toJSONString(wechatHelpDetailUserVOList)));
                 return result;
             }else{
-                return putMsg(false, "101", "助力用户查询失败");
+                JSONObject result = putMsg(false, "101", "助力用户查询失败");
+                result.put("data", new Object[0]);
+                return result;
             }
         }catch (Exception e){
             logger.error(e.getMessage(), e);
-            return putMsg(false, "102", "助力用户查询失败");
+            JSONObject result =  putMsg(false, "102", "助力用户查询失败");
+            result.put("data", new Object[0]);
+            return result;
         }
     }
 

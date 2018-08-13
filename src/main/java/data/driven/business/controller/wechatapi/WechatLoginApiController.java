@@ -68,6 +68,7 @@ public class WechatLoginApiController {
     @ResponseBody
     @RequestMapping(path = "/syncUser")
     public JSONObject syncUser(String encryptedData, String iv, String sessionID){
+        logger.info("-------syncUser0--------encryptedData="+encryptedData+"-----iv="+iv+"----encryptedData is null?="+(encryptedData==null));
         encryptedData = encryptedData.replace(" ","+");
         iv = iv.replace(" ","+");
         WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
@@ -107,20 +108,24 @@ public class WechatLoginApiController {
         }
         WechatUserInfoVO userObj = userJson.getJSONObject("userInfo").toJavaObject(WechatUserInfoVO.class);
         if(openId == null){
-            openId = userObj.getUnionId();
+            openId = userObj.getOpenId();
         }
         //根据openId获取数据库中的用户信息
         WechatUserInfoVO userInfo = wechatUserService.getUserInfoByOpenId(openId);
         if(userInfo == null){
-            //如果openId获取的用户为空，就根据unionId获取用户信息
-            userInfo = wechatUserService.getUserInfoByUnionId(userObj.getUnionId());
+//            //如果openId获取的用户为空，就根据unionId获取用户信息
+//            userInfo = wechatUserService.getUserInfoByUnionId(userObj.getUnionId());
+//            if(userObj.getUnionId() == null || userObj.getUnionId().trim().length() < 1){
+//                logger.error("------unionId为空，同步用户失败。登录失败");
+//                return JSONUtil.putMsg(true, "200", "登录成功");
+//            }
             String wechatUserInfoId = null;
             //如果用户信息为空，就新增用户到数据库中
-            if(userInfo == null){
+//            if(userInfo == null){
                 wechatUserInfoId = wechatUserService.addUserInfo(userObj);
-            }else{
-                wechatUserInfoId = userInfo.getWechatUserId();
-            }
+//            }else{
+//                wechatUserInfoId = userInfo.getWechatUserId();
+//            }
             //根据openId获取用户为空时，就新增一条用户关联app的关系信息到数据库中
             wechatUserService.addUserAndAppMap(wechatAppInfoEntity.getAppInfoId(), wechatUserInfoId, openId);
             userInfo = wechatUserService.getUserInfoByOpenId(openId);
