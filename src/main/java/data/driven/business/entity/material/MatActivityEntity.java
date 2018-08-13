@@ -22,6 +22,10 @@ public class MatActivityEntity {
     private String pictureId;
     /** 活动地址 **/
     private String actUrl;
+    /** 活动回复文字 **/
+    private String actReply;
+    /** 活动标题 **/
+    private String actTitle;
     /** 活动分享标题 **/
     private String actShareTitle;
     /** 活动规则 **/
@@ -93,6 +97,22 @@ public class MatActivityEntity {
 
     public void setActUrl(String actUrl) {
         this.actUrl = actUrl;
+    }
+
+    public String getActReply() {
+        return actReply;
+    }
+
+    public void setActReply(String actReply) {
+        this.actReply = actReply;
+    }
+
+    public String getActTitle() {
+        return actTitle;
+    }
+
+    public void setActTitle(String actTitle) {
+        this.actTitle = actTitle;
     }
 
     public String getActShareTitle() {
