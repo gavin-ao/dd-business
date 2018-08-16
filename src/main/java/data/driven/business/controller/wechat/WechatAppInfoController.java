@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping(path = "/wechat/appinfo")
 public class WechatAppInfoController {
 
-    private static final Logger logger = LoggerFactory.getLogger(WechatTotalController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WechatAppInfoController.class);
 
     @Autowired
     private WechatAppInfoService wechatAppInfoService;
