@@ -28,6 +28,8 @@ public class MatActivityEntity {
     private String actTitle;
     /** 活动分享标题 **/
     private String actShareTitle;
+    /** 活动分享文案 **/
+    private String actShareCopywriting;
     /** 活动规则 **/
     private String actRule;
     /** 兑换规则 **/
@@ -121,6 +123,14 @@ public class MatActivityEntity {
 
     public void setActShareTitle(String actShareTitle) {
         this.actShareTitle = actShareTitle;
+    }
+
+    public String getActShareCopywriting() {
+        return actShareCopywriting;
+    }
+
+    public void setActShareCopywriting(String actShareCopywriting) {
+        this.actShareCopywriting = actShareCopywriting;
     }
 
     public String getActRule() {

@@ -401,14 +401,6 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         return list;
     }
 
-//    private List<WechatTotalTrajectoryVO> getFirstTrajectory(String appInfoId, String startDate, String endDate){
-//        String sql = "select t.help_id as totalId,'0' as from_user_id,'0' as from_user,t.wechat_user_id as to_user_id,tu.nick_name as to_user from wechat_help_detail t"+
-//                " left join wechat_user_info to on t.form_wechat_user_id = to.wechat_user_id" +
-//                " where t.app_info_id = ? and t.create_at between ? and ? and t.status = 1 and fu.wechat_user_id is not null and tu.wechat_user_id is not null order by t.help_at";
-//
-//
-//    }
-
     /**
      * 处理传播轨迹图，如果这个人被统计过，不管出于什么节点，都不统计
      * @param result

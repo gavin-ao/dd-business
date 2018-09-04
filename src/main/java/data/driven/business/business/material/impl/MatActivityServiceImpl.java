@@ -31,8 +31,19 @@ public class MatActivityServiceImpl implements MatActivityService{
 
     @Override
     public MatActivityVO getMatActivityInfo(String actId) {
-        String sql = "select p.file_path,ma.act_id,ma.act_name,ma.act_reply,ma.act_title,ma.act_share_title,ma.act_rule,ma.exchange_rule,ma.partake_num from mat_activity ma left join sys_picture p on p.picture_id = ma.picture_id where ma.act_id = ?";
+        String sql = "select p.file_path,ma.act_id,ma.act_name,ma.act_reply,ma.act_title,ma.act_share_title,ma.act_share_copywriting,ma.act_rule,ma.exchange_rule,ma.partake_num from mat_activity ma left join sys_picture p on p.picture_id = ma.picture_id where ma.act_id = ?";
         List<MatActivityVO> list = jdbcBaseDao.queryList(MatActivityVO.class, sql, actId);
+        if(list != null && list.size() > 0){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public MatActivityVO getMatActivityInfoByApp(String appInfoId) {
+        String sql = "select p.file_path,ma.act_id,ma.act_name,ma.act_reply,ma.act_title,ma.act_share_title,ma.act_share_copywriting,ma.act_rule,ma.exchange_rule,ma.partake_num from mat_activity ma" +
+                " left join sys_picture p on p.picture_id = ma.picture_id where ma.app_info_id = ? and status = 1";
+        List<MatActivityVO> list = jdbcBaseDao.queryList(MatActivityVO.class, sql, appInfoId);
         if(list != null && list.size() > 0){
             return list.get(0);
         }

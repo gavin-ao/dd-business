@@ -109,11 +109,14 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>3.4.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <!--<version>6.0.6</version>-->
             <version>5.1.41</version>
         </dependency>
+
 
         <!-- 通过quartz 2.2.3 找到的c3p0版本 -->
         <dependency>
