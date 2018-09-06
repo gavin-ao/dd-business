@@ -14,27 +14,7 @@
 
         </div>
         <div class="contain_head_right">
-##            <div class="dropdown" style=" float: left;margin-right: 20px;">
-##                <button class="btn btn-default dropdown-toggle" type="button"
-##                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-##                    <span class="selectIndex"> 请选择</span>
-##                    <span class="caret"></span>
-##                </button>
-##                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-##                    <li><a href="#">Action</a></li>
-##                    <li><a href="#">Another action</a></li>
-##                    <li><a href="#">Something else here</a></li>
-##                    <li><a href="#">Separated link</a></li>
-##                </ul>
-##            </div>
-##            <div style="float: left; margin-right: 20px;">
-##                <a href="">帮助</a>
-##            </div>
-##            <div style=" display: table-cell;vertical-align:middle;height: 80px;">
-##                <img src="/static/service/images/login/info.png" alt=""
-##                     style="vertical-align: middle;margin-top: -5px;margin-right: 20px;">
-##            </div>
-        ##                        <iframe src="/index.vm" width="200" height="200"></iframe>
+            <div id="loginOut" style="margin-right: 20px;font-size: 20px; cursor: pointer;">退出</div>
         </div>
 
     </div>
@@ -77,9 +57,17 @@
                 </div>
             </div>
             <div class="contain_main_graph">
-                <span>传播轨迹</span>
+                <span>助力轨迹</span>
                 <div id="main_graph"></div>
             </div>
+##            <div class="contain_main_graph">
+##                <span>传播轨迹</span>
+##                <div id="main_graphs"></div>
+##            </div>
+##            <div class="contain_main_graph">
+##                <span>漏斗</span>
+##                <div id="main_funnel"></div>
+##            </div>
         </div>
     </div>
 </div>

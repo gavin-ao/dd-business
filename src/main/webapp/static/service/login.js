@@ -2,6 +2,9 @@ $(function (){
     $("#loginbtn").bind("click", function (){
         login();
     });
+    $("#loginOut").bind("click", function (){
+        loginOut();
+    });
 });
 
 function login(){
@@ -44,3 +47,14 @@ function validate(){
 
 }
 
+function loginOut(){
+    $.ajax({
+        url : "/service/logout",
+        type : "post",
+        async:false,
+        dataType : "json",
+        success : function(){
+            window.location.reload();
+        }
+    });
+}
