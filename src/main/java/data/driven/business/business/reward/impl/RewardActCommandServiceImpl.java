@@ -51,7 +51,23 @@ public class RewardActCommandServiceImpl implements RewardActCommandService {
     public void insertRewardActCommandHelpMapping(RewardActCommandEntity command, WechatHelpInfoEntity helpInfoEntity) {
         String mapId = UUIDUtil.getUUID();
         Date createAt = new Date();
-        String sql = "insert into reward_act_command_help_mapping(map_id,help_id,command_id,act_id,app_info_id,wechat_user_id,create_at) values(?,?,?,?,?,?,?)";
+        String sql = "insert into reward_act_command_help_mapping(map_id,help_id,command_id,act_id,app_info_id,wechat_user_id,open_window,create_at) values(?,?,?,?,?,?,0,?)";
         jdbcBaseDao.executeUpdate(sql, mapId, helpInfoEntity.getHelpId(), command.getCommandId(), helpInfoEntity.getActId(), helpInfoEntity.getAppInfoId(), helpInfoEntity.getWechatUserId(), createAt);
+    }
+
+    @Override
+    public void updateRewardActCommandHelpMappingOpenWindow(String helpId, String wechatUserId, Integer commandType) {
+        if(getCommandByHelpIdOpenWindow(helpId, wechatUserId)){
+            return ;
+        }
+        String sql = "update reward_act_command_help_mapping rachm left join reward_act_command rac on rac.command_id = rachm.command_id set rachm.open_window = 1 where rachm.help_id = ? and rachm.wechat_user_id = ? and rac.command_type = ?";
+        jdbcBaseDao.executeUpdate(sql, helpId, wechatUserId, commandType);
+    }
+
+    @Override
+    public boolean getCommandByHelpIdOpenWindow(String helpId, String wechatUserId) {
+        String sql = "select c.command from reward_act_command_help_mapping m left join reward_act_command c on c.command_id = m.command_id where m.help_id = ? and m.wechat_user_id = ? and m.open_window = 1 limit 1";
+        Object command = jdbcBaseDao.getColumn(sql, helpId, wechatUserId);
+        return command != null;
     }
 }

@@ -315,8 +315,8 @@ public class WechatHelpApiController {
         }
         //判断是否已经达到活动领取奖励的标准
         List<WechatHelpDetailEntity> helpDetailEntityList = wechatHelpDetailService.findHelpDetailListByHelpId(helpInfoEntity.getHelpId());
-        //TODO 需要动态获取领取奖励的条件
         MatActivityVO matActivityInfo = matActivityService.getMatActivityInfo(helpInfoEntity.getActId());
+        //如果活动未设置助力上限。默认5个助力达成领取条件
         int max = 5;
         if(matActivityInfo != null && matActivityInfo.getPartakeNum() != null){
             max = matActivityInfo.getPartakeNum();
@@ -426,6 +426,48 @@ public class WechatHelpApiController {
             return result;
         }else{
             return putMsg(false, "104", "奖励口令获取失败，没有进行助力，无法领取奖励。");
+        }
+    }
+
+    /**
+     * 点击领取奖励并弹出窗口 - 发起人
+     * @param sessionID
+     * @param helpId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "/getRewardActCommandOpenWindow")
+    public JSONObject getRewardActCommandOpenWindow(String sessionID, String helpId){
+        WechatHelpInfoEntity helpInfoEntity = wechatHelpInfoService.getEntityById(helpId);
+        if(helpInfoEntity != null){
+            WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+            if(!wechatApiSessionBean.getUserInfo().getWechatUserId().equals(helpInfoEntity.getWechatUserId())){
+                return putMsg(false, "101", "记录失败,领取奖励必须是本人。");
+            }
+            rewardActCommandService.updateRewardActCommandHelpMappingOpenWindow(helpInfoEntity.getHelpId(), wechatApiSessionBean.getUserInfo().getWechatUserId(), 1);
+            return putMsg(true, "200", "调用成功");
+        }else{
+            return putMsg(false, "102", "记录失败，助力信息不存在。");
+        }
+    }
+
+    /**
+     * 点击领取奖励并弹出窗口 - 发起人
+     * @param sessionID
+     * @param actId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "/getRewardActCommandOpenWindowByOther")
+    public JSONObject getRewardActCommandOpenWindowByOther(String sessionID, String actId){
+        WechatApiSessionBean wechatApiSessionBean = WechatApiSession.getSessionBean(sessionID);
+        String currentUserId = wechatApiSessionBean.getUserInfo().getWechatUserId();
+        WechatHelpDetailEntity wechatHelpDetailEntity = wechatHelpDetailService.getWechatHelpDetailEntityByToUser(actId, currentUserId);
+        if(wechatHelpDetailEntity != null){
+            rewardActCommandService.updateRewardActCommandHelpMappingOpenWindow(wechatHelpDetailEntity.getHelpId(), currentUserId, 2);
+            return putMsg(true, "200", "调用成功");
+        }else{
+            return putMsg(false, "101", "记录失败，该活动中未给任何人助力，请先助力。");
         }
     }
 

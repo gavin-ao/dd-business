@@ -39,4 +39,20 @@ public interface RewardActCommandService {
      */
     public void insertRewardActCommandHelpMapping(RewardActCommandEntity command, WechatHelpInfoEntity helpInfoEntity);
 
+    /**
+     * 记录是否领取奖励打开了窗口
+     * @param helpId
+     * @param wechatUserId
+     * @param commandType   奖励口令类型，1 - 发起人奖励，2 - 参与人奖励
+     */
+    public void updateRewardActCommandHelpMappingOpenWindow(String helpId, String wechatUserId, Integer commandType);
+
+    /**
+     * 根据helpId判断是否打开过
+     * @param helpId
+     * @param wechatUserId
+     * @return
+     */
+    public boolean getCommandByHelpIdOpenWindow(String helpId, String wechatUserId);
+
 }

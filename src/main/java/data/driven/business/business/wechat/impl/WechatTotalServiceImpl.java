@@ -98,6 +98,20 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         return result;
     }
 
+    /**
+     *
+     * @param list
+     * @return
+     */
+    private List<WechatTotalVO> putAllDate(List<WechatTotalVO> list){
+        if(list == null || list.size() <2){
+            return list;
+        }
+        String startDateStr = list.get(0).getGroupTime();
+        String endDateStr = list.get(list.size()-  1).getGroupTime();
+        return null;
+    }
+
     @Override
     public JSONObject totalSpreadRangeNum(String appInfoId, String startDate, String endDate) {
         JSONObject result = new JSONObject();
