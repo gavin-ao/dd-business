@@ -186,6 +186,10 @@ function chartLineShow(data) {
 // 基于准备好的dom，初始化echarts实例
     var myChartLine = echarts.init(document.getElementById('main_line'));
     var option = {
+        tooltip: {
+            trigger: 'item'
+            // formatter: "{a} <br/>{b} : {c}%"
+        },
         xAxis: {
             type: 'category',
             data: xAxisData
@@ -289,7 +293,7 @@ function chartPieShow(data) {
 }
 
 // 关系图展示
-function chartGraphShow(list) {
+function chartGraphShow(list,id) {
 
 //    传播轨迹图
     var links = [];
@@ -384,8 +388,8 @@ function chartGraphShow(list) {
     var zoom = d3.behavior.zoom()
         .scaleExtent([0, 10])
         .on("zoom", zoomed);
-    var width = $("#main_graph").width(),
-        height = $("#main_graph").height();
+    var width = $(id).width(),
+        height = $(id).height();
 
     var force = d3.layout.force()//layout将json格式转化为力学图可用的格式
         .nodes(d3.values(dataObj.nodes))//设定节点数组
@@ -400,7 +404,7 @@ function chartGraphShow(list) {
         .on("tick", tick)//指时间间隔，隔一段时间刷新一次画面
         .start();//开始转换
 
-    var svg = d3.select("#main_graph").append("svg")
+    var svg = d3.select(id).append("svg")
         .attr("width", width)
         .attr("height", height)
         .call(zoom)
@@ -744,6 +748,87 @@ function chartGraphShow(list) {
 
 }
 
+//漏斗图展示
+function chartFunnelShow(data) {
+    var myChartFunnel = echarts.init(document.getElementById('main_funnel'));
+    var option = {
+        // title: {
+        //     text: '漏斗图',
+        //     subtext: '纯属虚构'
+        // },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c}%"
+        },
+        // toolbox: {
+        //     feature: {
+        //         dataView: {readOnly: false},
+        //         restore: {},
+        //         saveAsImage: {}
+        //     }
+        // },
+        // legend: {
+        //     data: ['展现','点击','访问','咨询','订单']
+        // },
+        calculable: true,
+        series: [
+            {
+                name:'漏斗图',
+                type:'funnel',
+                left: '10%',
+                top: 60,
+                //x2: 80,
+                bottom: 60,
+                width: '80%',
+                // height: {totalHeight} - y - y2,
+                min: 0,
+                max: 100,
+                minSize: '0%',
+                maxSize: '100%',
+                sort: 'descending',
+                gap: 2,
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'inside'
+                    },
+                    emphasis: {
+                        textStyle: {
+                            fontSize: 20
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        length: 10,
+                        lineStyle: {
+                            width: 1,
+                            type: 'solid'
+                        }
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        borderColor: '#fff',
+                        borderWidth: 1
+                    }
+                },
+                data: [
+                    {value: 60, name: '访问'},
+                    {value: 40, name: '咨询'},
+                    {value: 20, name: '订单'},
+                    {value: 80, name: '点击'},
+                    {value: 100, name: '展现'}
+                ]
+            }
+        ]
+    };
+    myChartFunnel.setOption(option);
+    window.onresize = function () {
+        myChartFunnel.resize();
+    }
+}
+
 
 // 筛选条件的选择
 function selecyCondition() {
@@ -779,6 +864,8 @@ function changeTimeAfterDataChange() {
     coreDataShow(wholeAppInfoId);
     newAndOldUsers(wholeAppInfoId)
     graphData(wholeAppInfoId)
+    // graphsData(wholeAppInfoId)
+    // funnelData(wholeAppInfoId)
 }
 
 // 时间选择
@@ -903,7 +990,7 @@ function newAndOldUsers(appInfoId) {
     })
 }
 
-// 传播轨迹 统计
+// 助力轨迹 统计
 function graphData() {
     $.ajax({
         url: "/wechat/total/totalSpreadTrajectory",
@@ -914,12 +1001,44 @@ function graphData() {
 
             $("#main_graph").html("")
             if(data.data&&data.data.length){
-                chartGraphShow(data.data)
+                chartGraphShow(data.data,"#main_graph")
             }
 
         }
     })
 
 }
+// 传播轨迹 统计
+function graphsData() {
+    $.ajax({
+        url: "/wechat/total/totalSpreadTrajectory",
+        type: "post",
+        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
+        dataType: "json",
+        success: function (data) {
+            $("#main_graphs").html("")
+            if(data.data&&data.data.length){
+                chartGraphShow(data.data,"#main_graphs")
+            }
 
+        }
+    })
+}
 
+// 漏斗图 统计
+function funnelData() {
+    // $.ajax({
+    //     url: "/wechat/total/totalSpreadTrajectory",
+    //     type: "post",
+    //     data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
+    //     dataType: "json",
+    //     success: function (data) {
+    //         $("#main_graphs").html("")
+    //         if(data.data&&data.data.length){
+    //             chartGraphShow(data.data,"#main_graphs")
+    //         }
+    //
+    //     }
+    // })
+    chartFunnelShow()
+}
