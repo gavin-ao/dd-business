@@ -67,6 +67,9 @@ public class SceneryApiController {
 //                    if(!sceneryVO.getFilePath().startsWith("/")){
 //                        imgUrl += "/";
 //                    }
+                    if(sceneryVO.getFilePath() == null){
+                        continue;
+                    }
                     jsonObject.put("imgUrl", imgUrl+sceneryVO.getFilePath());
                     jsonObject.put("ord", sceneryVO.getOrd());
                     intrctList.add(jsonObject);
