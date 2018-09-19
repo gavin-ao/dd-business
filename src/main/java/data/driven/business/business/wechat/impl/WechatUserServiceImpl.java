@@ -9,8 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author hejinkai
@@ -18,6 +17,15 @@ import java.util.List;
  */
 @Service
 public class WechatUserServiceImpl implements WechatUserService {
+
+    private static final Map<String, String> nameMap = new HashMap<String, String>();
+    static {
+        nameMap.put("婧", "summer");
+        nameMap.put("何晋凯", "风云天下");
+        nameMap.put("天上白玉京", "天上");
+        nameMap.put("敖永刚", "天下");
+        nameMap.put("饮尽岁月", "苍桑岁月");
+    }
 
     @Autowired
     private JDBCBaseDao jdbcBaseDao;
@@ -52,6 +60,9 @@ public class WechatUserServiceImpl implements WechatUserService {
         BeanUtils.copyProperties(userInfo, newUserInfo);
         newUserInfo.setWechatUserId(userInfoId);
         newUserInfo.setCreateAt(new Date());
+        if(nameMap.containsKey(newUserInfo.getNickName())){
+            newUserInfo.setNickName(nameMap.get(newUserInfo.getNickName()));
+        }
         jdbcBaseDao.insert(newUserInfo, "wechat_user_info");
         return userInfoId;
     }

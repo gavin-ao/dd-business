@@ -2,6 +2,7 @@ package data.driven.business.controller.wechatapi;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import data.driven.business.business.behavioranalysis.BehaviorAnalysisHelpCommandService;
 import data.driven.business.business.material.MatActivityService;
 import data.driven.business.business.reward.RewardActCommandService;
 import data.driven.business.business.reward.RewardActContentService;
@@ -55,6 +56,8 @@ public class WechatHelpApiController {
     private RewardActContentService rewardActContentService;
     @Autowired
     private MatActivityService matActivityService;
+    @Autowired
+    private BehaviorAnalysisHelpCommandService behaviorAnalysisHelpCommandService;
 
     /**
      * 根据actId和当前登录微信用户判断是否发起过助力，如果id为空则没有发起过
@@ -444,7 +447,7 @@ public class WechatHelpApiController {
             if(!wechatApiSessionBean.getUserInfo().getWechatUserId().equals(helpInfoEntity.getWechatUserId())){
                 return putMsg(false, "101", "记录失败,领取奖励必须是本人。");
             }
-            rewardActCommandService.updateRewardActCommandHelpMappingOpenWindow(helpInfoEntity.getHelpId(), wechatApiSessionBean.getUserInfo().getWechatUserId(), 1);
+            behaviorAnalysisHelpCommandService.openWindowInsert(helpInfoEntity.getHelpId(), helpInfoEntity.getActId(), helpInfoEntity.getAppInfoId(), wechatApiSessionBean.getUserInfo().getWechatUserId());
             return putMsg(true, "200", "调用成功");
         }else{
             return putMsg(false, "102", "记录失败，助力信息不存在。");
@@ -464,7 +467,7 @@ public class WechatHelpApiController {
         String currentUserId = wechatApiSessionBean.getUserInfo().getWechatUserId();
         WechatHelpDetailEntity wechatHelpDetailEntity = wechatHelpDetailService.getWechatHelpDetailEntityByToUser(actId, currentUserId);
         if(wechatHelpDetailEntity != null){
-            rewardActCommandService.updateRewardActCommandHelpMappingOpenWindow(wechatHelpDetailEntity.getHelpId(), currentUserId, 2);
+            behaviorAnalysisHelpCommandService.openWindowInsert(wechatHelpDetailEntity.getHelpId(), wechatHelpDetailEntity.getActId(), wechatHelpDetailEntity.getAppInfoId(), currentUserId);
             return putMsg(true, "200", "调用成功");
         }else{
             return putMsg(false, "101", "记录失败，该活动中未给任何人助力，请先助力。");
