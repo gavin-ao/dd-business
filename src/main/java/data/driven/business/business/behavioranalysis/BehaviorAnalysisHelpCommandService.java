@@ -24,4 +24,11 @@ public interface BehaviorAnalysisHelpCommandService {
      */
     public boolean updateClickUrl(String id);
 
+    /**
+     * 判断是否存在
+     * @param id
+     * @return
+     */
+    public boolean exitsId(String id);
+
 }
