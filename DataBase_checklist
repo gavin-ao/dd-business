@@ -1,0 +1,4 @@
+### 字符编码改成utf8mb4
+1. 改三个地方：客户端、到数据库实例的连接、实例内部
+    
+2. 如果是阿里云RDS，详见https://help.aliyun.com/knowledge_detail/41702.html
