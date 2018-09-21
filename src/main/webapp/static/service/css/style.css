@@ -83,7 +83,12 @@
     margin-right: 25px;
     cursor: pointer;
 }
-
+.contain_main_head > div.refreshData {
+    float: right;
+    color:#219DEF;
+    font-size: 20px;
+    margin-right: -15px;
+}
 .contain_main_head > div input {
     margin-right: 5px;
 }

@@ -32,7 +32,11 @@
             <div class="dateSelect">
                 <input type="radio" name="chose" class="userdefined"> 自定义
             </div>
+            <div class="refreshData" id="refreshData">
+                刷新数据
+            </div>
         </div>
+
         <div class="datePicker">
             <input type="text" class="demo-input" placeholder="开始时间" id="startTime">至 <input type="text"
                                                                                              class="demo-input"

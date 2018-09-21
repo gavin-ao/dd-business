@@ -863,7 +863,7 @@ function selecyCondition() {
 function changeTimeAfterDataChange() {
     coreDataShow(wholeAppInfoId);
     newAndOldUsers(wholeAppInfoId)
-    graphData(wholeAppInfoId)
+    // graphData(wholeAppInfoId)
     // graphsData(wholeAppInfoId)
     // funnelData(wholeAppInfoId)
 }
@@ -1042,3 +1042,9 @@ function funnelData() {
     // })
     chartFunnelShow()
 }
+
+
+//刷新数据
+$("#refreshData").on("click",function () {
+    changeTimeAfterDataChange();
+})
