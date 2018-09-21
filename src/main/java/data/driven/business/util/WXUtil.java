@@ -138,7 +138,9 @@ public class WXUtil {
             return new JSONObject();
         }
         JSONObject result = parseObject(resultStr);
-        RedisFactory.setString(key, result.getString("access_token"), 3600);
+        if(result.getString("access_token") != null && result.getString("access_token").trim().length() > 1){
+            RedisFactory.setString(key, result.getString("access_token"), 3600);
+        }
         return result;
     }
 
