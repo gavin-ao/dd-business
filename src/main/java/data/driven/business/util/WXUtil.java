@@ -2,6 +2,7 @@ package data.driven.business.util;
 
 import com.alibaba.fastjson.JSONObject;
 import data.driven.business.common.Constant;
+import data.driven.business.common.RedisFactory;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.UnsupportedEncodingException;
@@ -115,6 +116,8 @@ public class WXUtil {
         }
     }
 
+    public static final String access_token = "access_token_";
+
     /**
      * 根据appid,secret获取access_token
      * @param appid
@@ -122,12 +125,21 @@ public class WXUtil {
      * @return
      */
     public static JSONObject getAccessToken(String appid, String secret){
+        String key = access_token + appid;
+        String acessToken = RedisFactory.get(key);
+        if(acessToken != null && acessToken.trim().length() > 1){
+            JSONObject result = new JSONObject();
+            result.put("access_token", acessToken);
+            return result;
+        }
         String url = token_url+"?grant_type="+GRANT_TYPE_CLIENT_CREDENTIAL+"&appid="+appid+"&secret="+secret;
         String resultStr = HttpUtil.doGetSSL(url);
         if(resultStr == null){
             return new JSONObject();
         }
-        return parseObject(resultStr);
+        JSONObject result = parseObject(resultStr);
+        RedisFactory.setString(key, result.getString("access_token"), 3600);
+        return result;
     }
 
     /**
@@ -190,11 +202,11 @@ public class WXUtil {
 
     public static void main(String[] args){
 //        appid=wx6f8fab67827259b0&secret=ed71f12d39b999ee6c47d0b77a6f2c8c&scene=
-        JSONObject jsonObject = getAccessToken(APPID, SECRET);
+        JSONObject jsonObject = getAccessToken("wx6ab624189a12acfc", "9dc38c8bc08bdcd3e7215faaaee52790");
         System.out.println(jsonObject.toJSONString());
         String accessToken = jsonObject.getString("access_token");
-        JSONObject r = createWXQrcodeA("pages/instrustor/main?actId=8&helpId=5b506d52721f1eecace73f99", accessToken);
-        System.out.println(r.toJSONString());
+//        JSONObject r = createWXQrcodeA("pages/instrustor/main?actId=8&helpId=5b506d52721f1eecace73f99", accessToken);
+//        System.out.println(r.toJSONString());
 
 //        String encryptedData = "hqZuO3yN7xpjh660AgzL0iQwIUrqnDqgclRGaxm7RatzkuH25bpxaTcolvSYQXqbbjZjgSbqRvbmi/ypycmnVRi69LGKy+SwGVDQC6Eoic6cFYJdoC3no5cu4bAfjtwTTW0x1M3gDnc/KNOBAFN/iqgcZbk6wPDA7vJU8wf0WwvC2+0x9z5AZLjnGQrN7cp6oc0e1RCjAQo2RJNp93fO0v5GRrD7HC4+oL/ioaddqSv5t72skesFGjUPI2exP3G/3DUGg5bvz515nxrYV+ocRCmk38bR8PYwhKmn9YiDo1ChQ+kwwKyzlIU7K4cWm91UxWka3UWv9irLNmWNNi/UUFmjutjOP0OH0BQblp4g54USgsjFR1Gylcjz4reyDrQPQxb74NmFuSDaquuyLdT4k1qtFrcZahogCVTbIU97NPimT8k08OR50DRMQYwzSoCnviOSBIvhbiAWg6klclX4w7HMkWgM6pujTuTs6VYTgE4=";
 //        String iv = "tP5c7E8+xkZoxGu6eT1HAQ==";
