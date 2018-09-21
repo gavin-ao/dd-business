@@ -282,9 +282,20 @@ public class WechatHelpApiController {
                 if(helpDetailId != null){
                     return putMsg(false, "101", "助力点击记录失败,已经助力过了");
                 }else{
-                    wechatHelpDetailService.insertHelpDetail(fromUserInfo, toUserInfo, helpInfoEntity);
-                    JSONObject result = putMsg(true, "200", "助力点击记录成功");
-                    return result;
+                    //判断是否已经达到活动领取奖励的标准
+                    List<WechatHelpDetailEntity> helpDetailEntityList = wechatHelpDetailService.findHelpDetailListByHelpId(helpInfoEntity.getHelpId());
+                    MatActivityVO matActivityInfo = matActivityService.getMatActivityInfo(helpInfoEntity.getActId());
+                    //如果活动未设置助力上限。默认5个助力达成领取条件
+                    int max = 5;
+                    if(matActivityInfo != null && matActivityInfo.getPartakeNum() != null){
+                        max = matActivityInfo.getPartakeNum();
+                    }
+                    if(helpDetailEntityList != null && helpDetailEntityList.size() >= max){
+                        return putMsg(false, "105", "助力失败，已经助力完成，不需要再助力。");
+                    }else{
+                        wechatHelpDetailService.insertHelpDetail(fromUserInfo, toUserInfo, helpInfoEntity);
+                        return putMsg(true, "200", "助力点击记录成功");
+                    }
                 }
             }else{
                 return putMsg(false, "102", "助力点击记录失败，助力信息不存在");
