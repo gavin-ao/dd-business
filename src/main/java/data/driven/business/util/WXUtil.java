@@ -130,6 +130,7 @@ public class WXUtil {
         if(acessToken != null && acessToken.trim().length() > 1){
             JSONObject result = new JSONObject();
             result.put("access_token", acessToken);
+            System.out.println(result);
             return result;
         }
         String url = token_url+"?grant_type="+GRANT_TYPE_CLIENT_CREDENTIAL+"&appid="+appid+"&secret="+secret;
@@ -139,7 +140,7 @@ public class WXUtil {
         }
         JSONObject result = parseObject(resultStr);
         if(result.getString("access_token") != null && result.getString("access_token").trim().length() > 1){
-            RedisFactory.setString(key, result.getString("access_token"), 3600);
+            RedisFactory.setString(key, result.getString("access_token"), 3600 * 1000);
         }
         return result;
     }
@@ -205,8 +206,12 @@ public class WXUtil {
     public static void main(String[] args){
 //        appid=wx6f8fab67827259b0&secret=ed71f12d39b999ee6c47d0b77a6f2c8c&scene=
         JSONObject jsonObject = getAccessToken("wx6ab624189a12acfc", "9dc38c8bc08bdcd3e7215faaaee52790");
+//        JSONObject jsonObject = getAccessToken("wx2c560cde533807da", "f3a0460c07461349d0b80cd618eade77");
         System.out.println(jsonObject.toJSONString());
-        String accessToken = jsonObject.getString("access_token");
+//        JSONObject jsonObject2 = getAccessToken(APPID, SECRET);
+//        JSONObject jsonObject2 = getAccessToken("wx2c560cde533807da", "f3a0460c07461349d0b80cd618eade77");
+//        System.out.println(jsonObject2.toJSONString());
+//        String accessToken = jsonObject.getString("access_token");
 //        JSONObject r = createWXQrcodeA("pages/instrustor/main?actId=8&helpId=5b506d52721f1eecace73f99", accessToken);
 //        System.out.println(r.toJSONString());
 

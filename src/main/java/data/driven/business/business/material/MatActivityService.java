@@ -22,11 +22,19 @@ public interface MatActivityService {
      * @return
      */
     public MatActivityVO getMatActivityInfo(String actId);
+
     /**
      * 根据活动id获取图片的url，活动规则，兑换规则
      * @param appInfoId
      * @return
      */
     public MatActivityVO getMatActivityInfoByApp(String appInfoId);
+
+    /**
+     * 根据活动id获取活动id，活动奖励url
+     * @param appInfoId
+     * @return
+     */
+    public MatActivityVO getAnyMatActivityInfoByApp(String appInfoId);
 
 }

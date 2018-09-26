@@ -36,6 +36,8 @@ public class MatActivityEntity {
     private String exchangeRule;
     /** 参与人数 **/
     private Integer partakeNum;
+    /** 活动奖励url **/
+    private String rewardUrl;
     /** 活动开始日期 **/
     private Date startAt;
     /** 活动结束日期 **/
@@ -155,6 +157,14 @@ public class MatActivityEntity {
 
     public void setPartakeNum(Integer partakeNum) {
         this.partakeNum = partakeNum;
+    }
+
+    public String getRewardUrl() {
+        return rewardUrl;
+    }
+
+    public void setRewardUrl(String rewardUrl) {
+        this.rewardUrl = rewardUrl;
     }
 
     public Date getStartAt() {
