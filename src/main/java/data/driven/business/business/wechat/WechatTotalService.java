@@ -126,4 +126,12 @@ public interface WechatTotalService {
      */
     public JSONObject totalSpreadTrajectory(String appInfoId, String startDate, String endDate, Integer type);
 
+    /**
+     * 漏斗图
+     * @param appInfoId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public JSONObject totalFunnelView(String appInfoId, String startDate, String endDate);
 }

@@ -155,5 +155,18 @@ public class WechatTotalController {
         return wechatTotalService.totalSpreadTrajectory(appInfoId, startDate, endDate, type);
     }
 
+    /**
+     * 根据时间范围统计传播轨迹
+     * @param appInfoId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "/totalFunnelView")
+    public JSONObject totalFunnelView(String appInfoId, String startDate, String endDate){
+        return wechatTotalService.totalFunnelView(appInfoId, startDate, endDate);
+    }
+
 
 }
