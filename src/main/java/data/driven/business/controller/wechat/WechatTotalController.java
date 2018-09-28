@@ -156,7 +156,7 @@ public class WechatTotalController {
     }
 
     /**
-     * 根据时间范围统计传播轨迹
+     * 根据时间范围统计漏斗图
      * @param appInfoId
      * @param startDate
      * @param endDate

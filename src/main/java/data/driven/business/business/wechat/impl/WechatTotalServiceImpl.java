@@ -382,7 +382,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
                     existList.clear();
                     existList.add(first.getToUserId());
                 }
-                dealLevelTrajectory(dataList, first, 1, 10, existList, parentExistList, type);
+                dealLevelTrajectory(dataList, first, 1, 10, existList, type);
                 resultList.add(first);
             }
             result.put("data", resultList);
@@ -423,7 +423,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
      * @param maxLevel
      * @param existList
      */
-    private void dealLevelTrajectory(List<WechatTotalTrajectoryVO> result, WechatTotalTrajectoryVO parent, int currentLevel, int maxLevel, List<String> existList, List<String> parentExistList, Integer type){
+    private void dealLevelTrajectory(List<WechatTotalTrajectoryVO> result, WechatTotalTrajectoryVO parent, int currentLevel, int maxLevel, List<String> existList, int type){
 
         List<WechatTotalTrajectoryVO> childList = parent.getChildList();
         if(childList == null){
@@ -448,12 +448,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             return;
         }
         for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : childList){
-//            if(type == 1){
-//                if(parentExistList.contains(wechatTotalTrajectoryVO.getToUserId())){
-//                    continue;
-//                }
-//            }
-            dealLevelTrajectory(result, wechatTotalTrajectoryVO, ++currentLevel, maxLevel, existList, parentExistList, type);
+            dealLevelTrajectory(result, wechatTotalTrajectoryVO, ++currentLevel, maxLevel, existList, type);
         }
 
     }
