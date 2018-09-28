@@ -563,7 +563,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         if(finishTaskList != null && finishTaskList.size() > 0){
             finishTaskNum = finishTaskList.size();
         }
-        finishTaskNumData.put("name", "进入小程序");
+        finishTaskNumData.put("name", "完成任务的人数");
         finishTaskNumData.put("value", finishTaskNum);
         dataList.add(finishTaskNumData);
     }
