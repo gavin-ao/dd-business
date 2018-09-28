@@ -749,8 +749,8 @@ function chartGraphShow(list,id) {
 }
 
 //漏斗图展示
-function chartFunnelShow(data) {
-    var myChartFunnel = echarts.init(document.getElementById('main_funnel'));
+function chartFunnelShow(data,id) {
+    var myChartFunnel = echarts.init(document.getElementById(id));
     var option = {
         // title: {
         //     text: '漏斗图',
@@ -758,7 +758,7 @@ function chartFunnelShow(data) {
         // },
         tooltip: {
             trigger: 'item',
-            formatter: "{a} <br/>{b} : {c}%"
+            formatter: "{b} : {c}人"
         },
         // toolbox: {
         //     feature: {
@@ -813,13 +813,7 @@ function chartFunnelShow(data) {
                         borderWidth: 1
                     }
                 },
-                data: [
-                    {value: 60, name: '访问'},
-                    {value: 40, name: '咨询'},
-                    {value: 20, name: '订单'},
-                    {value: 80, name: '点击'},
-                    {value: 100, name: '展现'}
-                ]
+                data: data
             }
         ]
     };
@@ -865,7 +859,7 @@ function changeTimeAfterDataChange() {
     newAndOldUsers(wholeAppInfoId)
     // graphData(wholeAppInfoId)
     // graphsData(wholeAppInfoId)
-    // funnelData(wholeAppInfoId)
+    funnelData(wholeAppInfoId)
 }
 
 // 时间选择
@@ -1027,20 +1021,20 @@ function graphsData() {
 
 // 漏斗图 统计
 function funnelData() {
-    // $.ajax({
-    //     url: "/wechat/total/totalSpreadTrajectory",
-    //     type: "post",
-    //     data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
-    //     dataType: "json",
-    //     success: function (data) {
-    //         $("#main_graphs").html("")
-    //         if(data.data&&data.data.length){
-    //             chartGraphShow(data.data,"#main_graphs")
-    //         }
-    //
-    //     }
-    // })
-    chartFunnelShow()
+    $.ajax({
+        url: "/wechat/total/totalFunnelView",
+        type: "post",
+        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
+        dataType: "json",
+        success: function (data) {
+            $("#main_funnel").html("")
+            if(data.data&&data.data.length){
+                console.log(data)
+                chartFunnelShow(data.data,"main_funnel")
+            }
+        }
+    })
+    // chartFunnelShow()
 }
 
 
