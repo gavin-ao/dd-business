@@ -1007,7 +1007,7 @@ function graphsData() {
     $.ajax({
         url: "/wechat/total/totalSpreadTrajectory",
         type: "post",
-        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
+        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime,type:1},
         dataType: "json",
         success: function (data) {
             $("#main_graphs").html("")
