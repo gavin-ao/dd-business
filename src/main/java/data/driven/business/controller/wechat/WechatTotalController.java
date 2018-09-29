@@ -152,7 +152,8 @@ public class WechatTotalController {
     @ResponseBody
     @RequestMapping(path = "/totalSpreadTrajectory")
     public JSONObject totalSpreadTrajectory(String appInfoId, String startDate, String endDate, Integer type){
-        return wechatTotalService.totalSpreadTrajectory(appInfoId, startDate, endDate, type);
+        JSONObject result = wechatTotalService.totalSpreadTrajectory(appInfoId, startDate, endDate, type);
+        return result;
     }
 
     /**
