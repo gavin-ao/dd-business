@@ -858,7 +858,7 @@ function changeTimeAfterDataChange() {
     coreDataShow(wholeAppInfoId);
     newAndOldUsers(wholeAppInfoId)
     // graphData(wholeAppInfoId)
-    // graphsData(wholeAppInfoId)
+    graphsData(wholeAppInfoId)
     funnelData(wholeAppInfoId)
 }
 
