@@ -303,7 +303,7 @@ function chartGraphShow(list,id) {
     var num = 0;
     function xunhuans(list) {
         for (var i = 0; i < list.length; i++) {
-            var strId = list[i].totalId + list[i].toUserId+list[i].fromUserId;
+            var strId = list[i].totalId + list[i].toUserId;
             console.log(list[i].fromUserId+ "-----" + list[i].fromUser)
             console.log(list[i].toUserId + "-----" + list[i].toUser)
             console.log(strId)
