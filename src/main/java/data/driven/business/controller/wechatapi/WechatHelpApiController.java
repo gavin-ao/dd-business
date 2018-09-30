@@ -40,7 +40,7 @@ import static data.driven.business.util.JSONUtil.putMsg;
 @Controller
 @RequestMapping(path = "/wechatapi/help")
 public class WechatHelpApiController {
-    private static final Logger logger = LoggerFactory.getLogger(WechatShareApiController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WechatHelpApiController.class);
 
     private Lock lock = new ReentrantLock();
 

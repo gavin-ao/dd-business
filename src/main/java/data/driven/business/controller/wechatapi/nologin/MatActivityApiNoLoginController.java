@@ -5,7 +5,6 @@ import data.driven.business.business.material.BtnCopywritingService;
 import data.driven.business.business.material.MatActivityService;
 import data.driven.business.business.wechat.WechatAppInfoService;
 import data.driven.business.common.Constant;
-import data.driven.business.controller.wechatapi.WechatShareApiController;
 import data.driven.business.entity.wechat.WechatAppInfoEntity;
 import data.driven.business.util.JSONUtil;
 import data.driven.business.vo.material.MatActivityVO;
@@ -27,7 +26,7 @@ import static data.driven.business.util.JSONUtil.putMsg;
 @Controller
 @RequestMapping(path = "/wechatapi/nologin/activity")
 public class MatActivityApiNoLoginController {
-    private static final Logger logger = LoggerFactory.getLogger(WechatShareApiController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MatActivityApiNoLoginController.class);
 
     @Autowired
     private MatActivityService matActivityService;

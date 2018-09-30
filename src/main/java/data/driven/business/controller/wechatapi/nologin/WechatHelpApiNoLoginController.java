@@ -7,7 +7,6 @@ import data.driven.business.business.material.MatActivityService;
 import data.driven.business.business.wechat.WechatAppInfoService;
 import data.driven.business.business.wechat.WechatHelpDetailService;
 import data.driven.business.business.wechat.WechatUserService;
-import data.driven.business.controller.wechatapi.WechatShareApiController;
 import data.driven.business.entity.wechat.WechatAppInfoEntity;
 import data.driven.business.vo.material.MatActivityVO;
 import data.driven.business.vo.wechat.WechatHelpDetailUserVO;
@@ -32,7 +31,7 @@ import static data.driven.business.util.JSONUtil.putMsg;
 @Controller
 @RequestMapping(path = "/wechatapi/nologin/help")
 public class WechatHelpApiNoLoginController {
-    private static final Logger logger = LoggerFactory.getLogger(WechatShareApiController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WechatHelpApiNoLoginController.class);
 
     @Autowired
     private WechatHelpDetailService wechatHelpDetailService;
