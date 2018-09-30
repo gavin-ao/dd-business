@@ -303,10 +303,7 @@ function chartGraphShow(list,id) {
     var num = 0;
     function xunhuans(list) {
         for (var i = 0; i < list.length; i++) {
-            var strId = list[i].totalId + list[i].toUserId+list[i].fromUserId;
-            console.log(list[i].fromUserId+ "-----" + list[i].fromUser)
-            console.log(list[i].toUserId + "-----" + list[i].toUser)
-            console.log(strId)
+            var strId = list[i].totalId + list[i].toUserId;
             var indexArr = $.inArray(strId,childArr)
             if(indexArr>=0){
                 list[i]["id"] = indexArr;
@@ -1010,7 +1007,7 @@ function graphsData() {
     $.ajax({
         url: "/wechat/total/totalSpreadTrajectory",
         type: "post",
-        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime,type:1},
+        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime,type:0},
         dataType: "json",
         success: function (data) {
             $("#main_graphs").html("")
@@ -1027,7 +1024,7 @@ function funnelData() {
     $.ajax({
         url: "/wechat/total/totalFunnelView",
         type: "post",
-        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime,type:0},
+        data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
         dataType: "json",
         success: function (data) {
             $("#main_funnel").html("")
