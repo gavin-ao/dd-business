@@ -9,7 +9,8 @@
         <meta http-equiv="pragma" content="no-cache"/>
         <meta http-equiv="cache-control" content="no-cache"/>
         <meta http-equiv="x-ua-compatible" content="IE=Edge, chrome=1"/>
-        <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+##        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+##            <link rel="stylesheet" href="/static/plugins/css/bootstrap-datetimepicker.min.css">
         <style>
             html,body{
                 height: 100%;
@@ -39,11 +40,11 @@
 ##<script type="text/javascript" src="/static/plugins/baidu-statistics.js"></script>
 ##<script type="text/javascript" src="/static/common/js/application-common.js?v=20170703154841"></script>
 ##<script type="text/javascript" src="/static/plugins/common.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 ##<script src="/static/plugins/bootstrap.min.js"></script>
 ##<script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/static/plugins/laydate/laydate.js"></script>
-<script src="https://cdn.bootcss.com/echarts/4.1.0/echarts.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.1.0/echarts.min.js"></script>
 ##<script src="/static/plugins/echarts.min.js"></script>
 <script src="/static/plugins/common/d3.js"></script>
 <script src="/static/service/login.js"></script>
