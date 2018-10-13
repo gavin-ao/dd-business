@@ -750,6 +750,13 @@ function chartGraphShow(list,id) {
 //漏斗图展示
 function chartFunnelShow(data,id) {
     var myChartFunnel = echarts.init(document.getElementById(id));
+    var max=0;
+    for(var i=0;i<data.length;i++){
+        if(max<data[i].value){
+            max = data[i].value;
+        }
+    }
+    console.log(max)
     var option = {
         // title: {
         //     text: '漏斗图',
@@ -781,7 +788,7 @@ function chartFunnelShow(data,id) {
                 width: '80%',
                 // height: {totalHeight} - y - y2,
                 min: 0,
-                max: 100,
+                max: max,
                 minSize: '0%',
                 maxSize: '100%',
                 sort: 'descending',

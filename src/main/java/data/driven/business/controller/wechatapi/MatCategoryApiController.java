@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(path = "/wechatapi/category")
 public class MatCategoryApiController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScenicSpotApiController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MatCategoryApiController.class);
 
     @Autowired
     private MatCategoryService matCategoryService;

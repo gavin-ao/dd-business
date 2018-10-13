@@ -371,6 +371,9 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             List<String> parentExistList = new ArrayList<String>();
             List<WechatTotalTrajectoryVO> resultList = new ArrayList<WechatTotalTrajectoryVO>();
             List<String> existList = new ArrayList<String>();
+            //按照fromUserId分组
+            Map<String, List<WechatTotalTrajectoryVO>> trajectoryMap = dataList.stream().collect(Collectors.groupingBy(o -> o.getFromUserId()));
+
             for(WechatTotalTrajectoryVO first : firstTrajectoryList){
                 if(parentExistList.contains(first.getToUserId())){
                     continue;
@@ -382,7 +385,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
                     existList.clear();
                     existList.add(first.getToUserId());
                 }
-                dealLevelTrajectory(dataList, first, 1, 10, existList, type);
+                dealLevelTrajectory(trajectoryMap, first, 1, 10, existList, type);
                 resultList.add(first);
             }
             result.put("data", resultList);
@@ -420,36 +423,39 @@ public class WechatTotalServiceImpl implements WechatTotalService {
 
     /**
      * 处理传播轨迹图，如果这个人被统计过，不管出于什么节点，都不统计
-     * @param dataList
+     * @param trajectoryMap
      * @param parent
      * @param currentLevel
      * @param maxLevel
      * @param existList
      */
-    private void dealLevelTrajectory(List<WechatTotalTrajectoryVO> dataList, WechatTotalTrajectoryVO parent, int currentLevel, int maxLevel, List<String> existList, int type){
-        Iterator<WechatTotalTrajectoryVO> iterator = dataList.iterator();
+    private void dealLevelTrajectory(Map<String, List<WechatTotalTrajectoryVO>> trajectoryMap, WechatTotalTrajectoryVO parent, int currentLevel, int maxLevel, List<String> existList, int type){
         List<WechatTotalTrajectoryVO> childList = parent.getChildList();
         if(childList == null){
             childList = new ArrayList<WechatTotalTrajectoryVO>();
             parent.setChildList(childList);
         }
+        String currentUserId = parent.getToUserId();
+        List<WechatTotalTrajectoryVO> tempTrajectoryList = trajectoryMap.get(currentUserId);
+        if(tempTrajectoryList == null || tempTrajectoryList.size() < 1){
+            return;
+        }
+        Iterator<WechatTotalTrajectoryVO> iterator = tempTrajectoryList.iterator();
+
         while (iterator.hasNext()){
             WechatTotalTrajectoryVO wechatTotalTrajectoryVO = iterator.next();
             if(type == 0 && existList.contains(wechatTotalTrajectoryVO.getToUserId())){
-                iterator.remove();
                 continue;
             }
             if(type == 0){
                 if(parent.getToUserId().equals(wechatTotalTrajectoryVO.getFromUserId())){
                     childList.add(wechatTotalTrajectoryVO);
-                    iterator.remove();
                     existList.add(wechatTotalTrajectoryVO.getToUserId());
                 }
             }else{
                 if(parent.getTotalId().equals(wechatTotalTrajectoryVO.getTotalId()) && parent.getToUserId().equals(wechatTotalTrajectoryVO.getFromUserId())){
                     childList.add(wechatTotalTrajectoryVO);
-                    iterator.remove();
-//                    existList.add(wechatTotalTrajectoryVO.getToUserId());
+                    existList.add(wechatTotalTrajectoryVO.getToUserId());
                 }
             }
         }
@@ -461,7 +467,7 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             return;
         }
         for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : childList){
-            dealLevelTrajectory(dataList, wechatTotalTrajectoryVO, ++currentLevel, maxLevel, existList, type);
+            dealLevelTrajectory(trajectoryMap, wechatTotalTrajectoryVO, ++currentLevel, maxLevel, existList, type);
         }
 
     }

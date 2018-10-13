@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping(path = "/wechatapi/product")
 public class MatProductApiController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ScenicSpotApiController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MatProductApiController.class);
 
     @Autowired
     private MatCategoryService matCategoryService;
