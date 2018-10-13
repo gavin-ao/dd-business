@@ -294,7 +294,6 @@ function chartPieShow(data) {
 
 // 关系图展示
 function chartGraphShow(list,id) {
-
 //    传播轨迹图
     var links = [];
     var nodes = [];
@@ -857,8 +856,6 @@ function selecyCondition() {
 function changeTimeAfterDataChange() {
     coreDataShow(wholeAppInfoId);
     newAndOldUsers(wholeAppInfoId)
-    graphData(wholeAppInfoId)
-    graphsData(wholeAppInfoId)
     funnelData(wholeAppInfoId)
 }
 
@@ -1039,6 +1036,19 @@ function funnelData() {
 
 
 //刷新数据
+$("#refreshData").off("click")
 $("#refreshData").on("click",function () {
     changeTimeAfterDataChange();
+})
+//助力轨迹图
+$("#mainGraph").off("click")
+$("#mainGraph").on("click",function () {
+    $(this.parentNode).css({"height":"600px"});
+    graphData(wholeAppInfoId);
+})
+//传播轨迹图
+$("#mainGraphs").off("click")
+$("#mainGraphs").on("click",function () {
+    $(this.parentNode).css({"height":"600px"});
+    graphsData(wholeAppInfoId)
 })
