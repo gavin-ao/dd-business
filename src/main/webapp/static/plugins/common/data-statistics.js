@@ -749,14 +749,15 @@ function chartGraphShow(list,id) {
 
 //漏斗图展示
 function chartFunnelShow(data,id) {
-    var myChartFunnel = echarts.init(document.getElementById(id));
-    var max=0;
+    var max=1;
     for(var i=0;i<data.length;i++){
         if(max<data[i].value){
             max = data[i].value;
         }
     }
-    console.log(max)
+    console.log(data)
+    var myChartFunnel = echarts.init(document.getElementById(id));
+
     var option = {
         // title: {
         //     text: '漏斗图',
@@ -789,8 +790,6 @@ function chartFunnelShow(data,id) {
                 // height: {totalHeight} - y - y2,
                 min: 0,
                 max: max,
-                minSize: '0%',
-                maxSize: '100%',
                 sort: 'descending',
                 gap: 2,
                 label: {
@@ -1031,9 +1030,7 @@ function funnelData() {
         data: {appInfoId: wholeAppInfoId, startDate: wholeStartTime, endDate: wholeEndTime},
         dataType: "json",
         success: function (data) {
-            $("#main_funnel").html("")
             if(data.data&&data.data.length){
-                console.log(data)
                 chartFunnelShow(data.data,"main_funnel")
             }
         }
