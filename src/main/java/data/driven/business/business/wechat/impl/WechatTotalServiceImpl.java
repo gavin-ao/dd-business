@@ -444,16 +444,14 @@ public class WechatTotalServiceImpl implements WechatTotalService {
 
         while (iterator.hasNext()){
             WechatTotalTrajectoryVO wechatTotalTrajectoryVO = iterator.next();
-            if(type == 0 && existList.contains(wechatTotalTrajectoryVO.getToUserId())){
+            if(existList.contains(wechatTotalTrajectoryVO.getToUserId())){
                 continue;
             }
             if(type == 0){
-                if(parent.getToUserId().equals(wechatTotalTrajectoryVO.getFromUserId())){
-                    childList.add(wechatTotalTrajectoryVO);
-                    existList.add(wechatTotalTrajectoryVO.getToUserId());
-                }
+                childList.add(wechatTotalTrajectoryVO);
+                existList.add(wechatTotalTrajectoryVO.getToUserId());
             }else{
-                if(parent.getTotalId().equals(wechatTotalTrajectoryVO.getTotalId()) && parent.getToUserId().equals(wechatTotalTrajectoryVO.getFromUserId())){
+                if(parent.getTotalId().equals(wechatTotalTrajectoryVO.getTotalId())){
                     childList.add(wechatTotalTrajectoryVO);
                     existList.add(wechatTotalTrajectoryVO.getToUserId());
                 }
@@ -467,6 +465,10 @@ public class WechatTotalServiceImpl implements WechatTotalService {
             return;
         }
         for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : childList){
+            if(wechatTotalTrajectoryVO.getFromUserId().equals(wechatTotalTrajectoryVO.getToUserId())){
+                wechatTotalTrajectoryVO.setToUserId(wechatTotalTrajectoryVO.getToUserId() + "-repeat");
+                continue;
+            }
             dealLevelTrajectory(trajectoryMap, wechatTotalTrajectoryVO, ++currentLevel, maxLevel, existList, type);
         }
 

@@ -1,5 +1,6 @@
 package data.driven.business.controller.wechat;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import data.driven.business.business.wechat.WechatTotalService;
 import org.slf4j.Logger;
@@ -153,6 +154,25 @@ public class WechatTotalController {
     @RequestMapping(path = "/totalSpreadTrajectory")
     public JSONObject totalSpreadTrajectory(String appInfoId, String startDate, String endDate, Integer type){
         JSONObject result = wechatTotalService.totalSpreadTrajectory(appInfoId, startDate, endDate, type);
+        return result;
+    }
+
+    /**
+     * 根据时间范围统计传播轨迹
+     * @param appInfoId
+     * @param startDate
+     * @param endDate
+     * @param type  统计方式  A-C 在 B-A之前， 为0时按照A-C和B独立出，为1时按照A-C和B-A出现
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(path = "/totalSpreadTrajectoryTop")
+    public JSONObject totalSpreadTrajectoryTop(String appInfoId, String startDate, String endDate, Integer type){
+        JSONObject result = wechatTotalService.totalSpreadTrajectory(appInfoId, startDate, endDate, type);
+        JSONArray jsonArray = result.getJSONArray("data");
+        if(jsonArray != null && jsonArray.size() > 50){
+            result.put("data", jsonArray.subList(0, 50));
+        }
         return result;
     }
 

@@ -1,6 +1,5 @@
 package data.driven.business.component;
 
-import com.alibaba.fastjson.JSONObject;
 import data.driven.business.common.ApplicationSessionFactory;
 import data.driven.business.entity.user.UserInfoEntity;
 import org.slf4j.Logger;
@@ -53,8 +52,6 @@ public class SessionFilter implements Filter{
                     response.sendRedirect(serverName + SERVICE_URL + "/login");
                     return ;
                 }
-                logger.info("filter-uri:{}", uri);
-                logger.info("user:{}", JSONObject.toJSONString(user));
             }
         }
         filterChain.doFilter(request, response);
