@@ -74,4 +74,10 @@
             </div>
         </div>
     </div>
+    <div class="extendGraph">
+        <div>
+            <span id="extendClose">✖</span>
+            <div id="extendGraph"></div>
+        </div>
+    </div>
 </div>

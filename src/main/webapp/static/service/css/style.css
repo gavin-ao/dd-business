@@ -194,7 +194,7 @@
 
 .contain_main_graph {
     width: 100%;
-    /*height: 600px;*/
+    height: 600px;
     font-size: 16px;
     margin-top: 20px;
 }
@@ -211,3 +211,38 @@
     /*border: 1px solid #ccc;*/
 /*}*/
 
+.extendGraph{
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(166,166,166,0.8);
+    z-index: 1000;
+    display: none;
+}
+.extendGraph > div{
+    max-width: 1366px;
+    width: 90%;
+    height: calc(100% - 120px);
+    margin: 0 auto;
+    margin-top: 60px;
+    background-color: #fff;
+}
+.extendGraph > div > span{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #FFF;
+    background-color: #219DEF;
+    font-size: 24px;
+    float: right;
+    margin-top: -40px;
+    cursor: pointer;
+}
+.extendGraph > div > div{
+    width: 100%;
+    height: 100%;
+}
