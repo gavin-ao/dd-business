@@ -7,32 +7,22 @@
 		<property name="driverClass">com.mysql.jdbc.Driver</property>
 		<!--<property name="driverClass">com.mysql.cj.jdbc.Driver</property>-->
 
-		<!-- 正式环境 - 变成了测试环境 -->
-		<!--<property name="jdbcUrl">jdbc:mysql://101.201.34.29:3306/dd-business?characterEncoding=utf-8&amp;useSSL=false</property>-->
-		<!--<property name="user">root</property>-->
-		<!--<property name="password">AOyg123!@#</property>-->
-
-		<!--测试环境 - 变成了正式环境-->
-		<!--<property name="jdbcUrl">jdbc:mysql://101.201.34.29:3306/dd-business-test?characterEncoding=utf-8&amp;useSSL=false</property>-->
-		<!--<property name="user">root</property>-->
-		<!--<property name="password">AOyg123!@#</property>-->
-
 		<!--aliyun正式环境-->
 		<!--<property name="jdbcUrl">jdbc:mysql://rm-2ze3je9fdk20d823r.mysql.rds.aliyuncs.com:3306/dd-business?characterEncoding=utf-8&amp;useSSL=true</property>-->
 		<!--<property name="user">user_online</property>-->
 		<!--<property name="password">AOyg123!@#</property>-->
 
 		<!--aliyun测试环境-->
-		<!--<property name="jdbcUrl">jdbc:mysql://rm-2ze3je9fdk20d823r.mysql.rds.aliyuncs.com:3306/dd-business-test?characterEncoding=utf-8&amp;useSSL=true</property>-->
-		<!--<property name="user">user_test</property>-->
-		<!--<property name="password">AOyg123!@#</property>-->
-
-		<!--aliyun测试数据库外网环境- 本地启动使用 -->
-		<property name="jdbcUrl">jdbc:mysql://rm-2ze3je9fdk20d823rqo.mysql.rds.aliyuncs.com:3306/dd-business-test?characterEncoding=utf-8&amp;useSSL=true</property>
+		<property name="jdbcUrl">jdbc:mysql://rm-2ze3je9fdk20d823r.mysql.rds.aliyuncs.com:3306/dd-business-test?characterEncoding=utf-8&amp;useSSL=true</property>
 		<property name="user">user_test</property>
 		<property name="password">AOyg123!@#</property>
 
-		<!--<property name="jdbcUrl">jdbc:mysql://127.0.0.1:3306/dd-business-test?characterEncoding=utf-8&amp;useSSL=false</property>-->
+		<!--aliyun测试数据库外网环境- 本地启动使用 -->
+		<!--<property name="jdbcUrl">jdbc:mysql://rm-2ze3je9fdk20d823rqo.mysql.rds.aliyuncs.com:3306/dd-business-test?characterEncoding=utf-8&amp;useSSL=true</property>-->
+		<!--<property name="user">user_test</property>-->
+		<!--<property name="password">AOyg123!@#</property>-->
+
+		<!--<property name="jdbcUrl">jdbc:mysql://127.0.0.1:3306/dd-business?characterEncoding=utf-8&amp;useSSL=false</property>-->
 		<!--<property name="user">root</property>-->
 		<!--<property name="password"></property>-->
 
