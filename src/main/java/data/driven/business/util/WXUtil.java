@@ -117,6 +117,7 @@ public class WXUtil {
     }
 
     public static final String access_token = "access_token_";
+    public static final int access_token_time = 2700 * 1000;
 
     /**
      * 根据appid,secret获取access_token
@@ -140,7 +141,7 @@ public class WXUtil {
         }
         JSONObject result = parseObject(resultStr);
         if(result.getString("access_token") != null && result.getString("access_token").trim().length() > 1){
-            RedisFactory.setString(key, result.getString("access_token"), 3600 * 1000);
+            RedisFactory.setString(key, result.getString("access_token"), access_token_time);
         }
         return result;
     }
@@ -201,48 +202,6 @@ public class WXUtil {
             e.printStackTrace();
         }
         return result;
-    }
-
-    public static void main(String[] args){
-//        appid=wx6f8fab67827259b0&secret=ed71f12d39b999ee6c47d0b77a6f2c8c&scene=
-        JSONObject jsonObject = getAccessToken("wx6ab624189a12acfc", "9dc38c8bc08bdcd3e7215faaaee52790");
-//        JSONObject jsonObject = getAccessToken("wx2c560cde533807da", "f3a0460c07461349d0b80cd618eade77");
-        System.out.println(jsonObject.toJSONString());
-//        JSONObject jsonObject2 = getAccessToken(APPID, SECRET);
-//        JSONObject jsonObject2 = getAccessToken("wx2c560cde533807da", "f3a0460c07461349d0b80cd618eade77");
-//        System.out.println(jsonObject2.toJSONString());
-//        String accessToken = jsonObject.getString("access_token");
-//        JSONObject r = createWXQrcodeA("pages/instrustor/main?actId=8&helpId=5b506d52721f1eecace73f99", accessToken);
-//        System.out.println(r.toJSONString());
-
-//        String encryptedData = "hqZuO3yN7xpjh660AgzL0iQwIUrqnDqgclRGaxm7RatzkuH25bpxaTcolvSYQXqbbjZjgSbqRvbmi/ypycmnVRi69LGKy+SwGVDQC6Eoic6cFYJdoC3no5cu4bAfjtwTTW0x1M3gDnc/KNOBAFN/iqgcZbk6wPDA7vJU8wf0WwvC2+0x9z5AZLjnGQrN7cp6oc0e1RCjAQo2RJNp93fO0v5GRrD7HC4+oL/ioaddqSv5t72skesFGjUPI2exP3G/3DUGg5bvz515nxrYV+ocRCmk38bR8PYwhKmn9YiDo1ChQ+kwwKyzlIU7K4cWm91UxWka3UWv9irLNmWNNi/UUFmjutjOP0OH0BQblp4g54USgsjFR1Gylcjz4reyDrQPQxb74NmFuSDaquuyLdT4k1qtFrcZahogCVTbIU97NPimT8k08OR50DRMQYwzSoCnviOSBIvhbiAWg6klclX4w7HMkWgM6pujTuTs6VYTgE4=";
-//        String iv = "tP5c7E8+xkZoxGu6eT1HAQ==";
-//        String sessionKey = "YowUQR+UWuSTMzZmWmnv5g==";
-//        String appId = "wx4f4bc4dec97d474b";
-//        String sessionKey = "tiihtNczf5v6AKRyjwEUhQ==";
-//        String encryptedData =
-//                "CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZM"+
-//                        "QmRzooG2xrDcvSnxIMXFufNstNGTyaGS"+
-//                        "9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+"+
-//                        "3hVbJSRgv+4lGOETKUQz6OYStslQ142d"+
-//                        "NCuabNPGBzlooOmB231qMM85d2/fV6Ch"+
-//                        "evvXvQP8Hkue1poOFtnEtpyxVLW1zAo6"+
-//                        "/1Xx1COxFvrc2d7UL/lmHInNlxuacJXw"+
-//                        "u0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn"+
-//                        "/Hz7saL8xz+W//FRAUid1OksQaQx4CMs"+
-//                        "8LOddcQhULW4ucetDf96JcR3g0gfRK4P"+
-//                        "C7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB"+
-//                        "6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns"+
-//                        "/8wR2SiRS7MNACwTyrGvt9ts8p12PKFd"+
-//                        "lqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYV"+
-//                        "oKlaRv85IfVunYzO0IKXsyl7JCUjCpoG"+
-//                        "20f0a04COwfneQAGGwd5oa+T8yO5hzuy"+
-//                        "Db/XcxxmK01EpqOyuxINew==";
-//        String iv = "r7BXXKkLb8qrSNn05n0qiA==";
-//        JSONObject j = executeDecodeUserInfo(encryptedData, iv, sessionKey);
-//        System.out.println(getSessionKey("sss"));
-//        System.out.println(getSessionKey("a","b","2"));
-//        System.out.println(j);
     }
 
 }
