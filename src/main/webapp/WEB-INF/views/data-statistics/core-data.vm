@@ -1,20 +1,20 @@
-<div data-iden="totalActivityNumView">
+<div data-iden="totalActivityNumView" data-num="点击次数">
     <p>活跃度(点击次数)</p>
     <p class="activitySum">$!{activityNum}</p>
 </div>
-<div data-iden="totalSpreadRangeNumView">
+<div data-iden="totalSpreadRangeNumView"  data-num="点击人数">
     <p>传播范围(点击人数)</p>
     <p class="activitySum">$!{spreadRangeNum}</p>
 </div>
-<div data-iden="totalFissionEffectNewPeopleNumView">
+<div data-iden="totalFissionEffectNewPeopleNumView"  data-num="新增人数">
     <p>裂变效果(新增人数)</p>
     <p class="activitySum">$!{fissionEffectNewPeopleNum}</p>
 </div>
-<div data-iden="totalShareNumView">
+<div data-iden="totalShareNumView" data-num="分享次数">
     <p>分享次数</p>
     <p class="activitySum">$!{shareNum}</p>
 </div>
-<div data-iden="totalSharePeopleNumView">
+<div data-iden="totalSharePeopleNumView" data-num="分享人数">
     <p>分享人数</p>
     <p class="activitySum">$!{sharePeopleNum}</p>
 </div>

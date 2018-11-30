@@ -176,7 +176,7 @@ function chartShow(id, type) {
     // });
 }
 // 折线图展示
-function chartLineShow(data) {
+function chartLineShow(data,titleData) {
     var  xAxisData = [],datas=[];
     for(var i =0;i<data.length;i++){
         xAxisData.push(data[i].groupTime)
@@ -187,8 +187,8 @@ function chartLineShow(data) {
     var myChartLine = echarts.init(document.getElementById('main_line'));
     var option = {
         tooltip: {
-            trigger: 'item'
-            // formatter: "{a} <br/>{b} : {c}%"
+            trigger: 'item',
+            formatter: "时间：{b} <br/>"+titleData+"：{c}"
         },
         xAxis: {
             type: 'category',
@@ -942,7 +942,8 @@ function coreDataSel() {
         $(this).siblings().attr("class", "")
         $(this).attr("class", "selectData")
         var urlName = $(this).attr("data-iden");
-        dataTrendDiagram(urlName);
+        var title = $(this).attr("data-num");
+        dataTrendDiagram(urlName,title);
 
     })
 
@@ -965,7 +966,7 @@ function coreDataShow(appInfoId) {
 }
 
 // 数据走势图 数据请求
-function dataTrendDiagram(urlName) {
+function dataTrendDiagram(urlName,title) {
     $.ajax({
         url: "/wechat/total/"+urlName,
         dataType: "json",
@@ -974,7 +975,7 @@ function dataTrendDiagram(urlName) {
         success: function (data) {
 
             if(data.success){
-                chartLineShow(data.data)
+                chartLineShow(data.data,title)
 
             }
         }
