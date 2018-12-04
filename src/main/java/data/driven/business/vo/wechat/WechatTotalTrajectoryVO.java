@@ -8,7 +8,7 @@ import java.util.List;
  * @author hejinkai
  * @date 2018/7/18
  */
-public class WechatTotalTrajectoryVO {
+public class WechatTotalTrajectoryVO implements Comparable<WechatTotalTrajectoryVO>{
     private String totalId;
     private String fromUserId;
     private String fromUser;
@@ -16,7 +16,23 @@ public class WechatTotalTrajectoryVO {
     private String toUser;
     private Date totalDate;
     private Integer frequency;
+    private Integer maxLevel;
     private List<WechatTotalTrajectoryVO> childList;
+
+    @Override
+    public int compareTo(WechatTotalTrajectoryVO o) {
+        if(o == null){
+            return 1;
+        }
+        if(maxLevel == null && o.getMaxLevel() == null){
+            return 0;
+        }else if(o.getMaxLevel() == null){
+            return 1;
+        }else if(maxLevel == null){
+            return -1;
+        }
+        return maxLevel - o.getMaxLevel();
+    }
 
     public String getTotalId() {
         return totalId;
@@ -80,5 +96,13 @@ public class WechatTotalTrajectoryVO {
 
     public void setChildList(List<WechatTotalTrajectoryVO> childList) {
         this.childList = childList;
+    }
+
+    public Integer getMaxLevel() {
+        return maxLevel;
+    }
+
+    public void setMaxLevel(Integer maxLevel) {
+        this.maxLevel = maxLevel;
     }
 }

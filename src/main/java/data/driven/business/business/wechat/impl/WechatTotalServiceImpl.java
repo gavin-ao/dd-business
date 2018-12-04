@@ -385,9 +385,11 @@ public class WechatTotalServiceImpl implements WechatTotalService {
                     existList.clear();
                     existList.add(first.getToUserId());
                 }
-                dealLevelTrajectory(trajectoryMap, first, 1, 10, existList, type);
+                dealLevelTrajectory(trajectoryMap, first, 1, -1, existList, type);
                 resultList.add(first);
             }
+            Collections.sort(resultList);
+            Collections.reverse(resultList);
             result.put("data", resultList);
         }
         return result;
@@ -429,16 +431,17 @@ public class WechatTotalServiceImpl implements WechatTotalService {
      * @param maxLevel
      * @param existList
      */
-    private void dealLevelTrajectory(Map<String, List<WechatTotalTrajectoryVO>> trajectoryMap, WechatTotalTrajectoryVO parent, int currentLevel, int maxLevel, List<String> existList, int type){
+    private int dealLevelTrajectory(Map<String, List<WechatTotalTrajectoryVO>> trajectoryMap, WechatTotalTrajectoryVO parent, int currentLevel, int maxLevel, List<String> existList, int type){
         List<WechatTotalTrajectoryVO> childList = parent.getChildList();
         if(childList == null){
             childList = new ArrayList<WechatTotalTrajectoryVO>();
             parent.setChildList(childList);
         }
+        parent.setMaxLevel(currentLevel);
         String currentUserId = parent.getToUserId();
         List<WechatTotalTrajectoryVO> tempTrajectoryList = trajectoryMap.get(currentUserId);
         if(tempTrajectoryList == null || tempTrajectoryList.size() < 1){
-            return;
+            return currentLevel;
         }
         Iterator<WechatTotalTrajectoryVO> iterator = tempTrajectoryList.iterator();
 
@@ -459,19 +462,26 @@ public class WechatTotalServiceImpl implements WechatTotalService {
         }
 
         if(childList.size() < 1){
-            return;
+            return currentLevel;
         }
-        if(currentLevel >= maxLevel){
-            return;
+        if(currentLevel >= maxLevel && maxLevel != -1){
+            return currentLevel;
         }
+        int tempLevel = currentLevel;
         for(WechatTotalTrajectoryVO wechatTotalTrajectoryVO : childList){
             if(wechatTotalTrajectoryVO.getFromUserId().equals(wechatTotalTrajectoryVO.getToUserId())){
                 wechatTotalTrajectoryVO.setToUserId(wechatTotalTrajectoryVO.getToUserId() + "-repeat");
                 continue;
             }
-            dealLevelTrajectory(trajectoryMap, wechatTotalTrajectoryVO, ++currentLevel, maxLevel, existList, type);
+            int level = dealLevelTrajectory(trajectoryMap, wechatTotalTrajectoryVO, currentLevel + 1, maxLevel, existList, type);
+            if(level > tempLevel){
+                tempLevel = level;
+            }
         }
-
+        if(parent.getMaxLevel() == null || parent.getMaxLevel().intValue() < tempLevel){
+            parent.setMaxLevel(tempLevel);
+        }
+        return tempLevel;
     }
 
     @Override
